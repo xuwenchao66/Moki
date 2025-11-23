@@ -289,12 +289,15 @@ struct JournalItemView: View {
       }
 
       // 3. 底部元数据 (时间 + 标签)
-      HStack(spacing: Theme.spacing.sm) {
+      HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.sm) {
         Text(time)
           .font(Theme.font.caption2)
           .foregroundColor(Theme.color.foregroundTertiary)
 
-        TagFlowLayout(tags: tags)
+        // 使用 ForEach 替代 TagFlowLayout，避免布局 bug
+        ForEach(tags, id: \.self) { tag in
+          TagCapsule(tag)
+        }
 
         Spacer()
 
@@ -305,7 +308,6 @@ struct JournalItemView: View {
       }
     }
     .padding(.vertical, Theme.spacing.md)
-    // 去除卡片背景，直接使用分割线或留白
   }
 }
 
