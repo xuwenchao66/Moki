@@ -32,16 +32,16 @@ struct AppColors {
   // 琥珀色系，用于日期强调等
 
   /// 主强调色 - 琥珀橙 (用于日期胶囊背景等)
-  static let accent = Color(hex: "E8926B")
+  static let accent = Color(hex: "c96442")  // Claude Primary
 
   /// 强调色前景
   static let accentForeground = Color.white
 
   /// 浅色强调背景 - (用于日期胶囊背景)
-  static let accentLightBackground = Color(hex: "F5E6DE")
+  static let accentLightBackground = Color(hex: "F4EAE6")  // 柔和的陶土色背景
 
   /// 深色强调文本 - (用于日期胶囊文字)
-  static let accentDarkText = Color(hex: "C46945")
+  static let accentDarkText = Color(hex: "c96442")  // Claude Primary
 
   // MARK: - 动作色 (Action)
   // 用于按钮、交互元素，统一为黑色

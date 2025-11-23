@@ -237,9 +237,9 @@ struct JournalDateHeader: View {
   var body: some View {
     HStack {
       Text(date)
-        .font(Theme.font.tag)
+        .font(Theme.font.tag.weight(.semibold))
         .foregroundColor(Theme.color.accentDarkText)
-        .padding(.horizontal, Theme.spacing.md)
+        .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(Theme.color.accentLightBackground)
         .clipShape(Capsule())
