@@ -21,7 +21,7 @@ struct JournalItemView: View {
       Text(content)
         .font(Theme.font.body)
         .foregroundColor(Theme.color.foreground)
-        .lineSpacing(6)
+        .lineSpacing(Theme.spacing.compact)  // 6
         .fixedSize(horizontal: false, vertical: true)
 
       // 2. 图片区域 (模拟)
@@ -58,7 +58,7 @@ struct JournalItemView: View {
           Image(systemName: "ellipsis")
             .font(.system(size: 14))
             .foregroundColor(Theme.color.foregroundTertiary)
-            .padding(4)  // 增加点击区域
+            .padding(Theme.spacing.xxs)  // 4
         }
       }
     }

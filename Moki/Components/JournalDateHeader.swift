@@ -16,8 +16,8 @@ struct JournalDateHeader: View {
       Text(date)
         .font(Theme.font.tag.weight(.semibold))
         .foregroundColor(Theme.color.accentDarkText)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
+        .padding(.horizontal, Theme.spacing.sm)  // 12
+        .padding(.vertical, Theme.spacing.compact)  // 6
         .background(Theme.color.accentLightBackground)
         .clipShape(Capsule())
 

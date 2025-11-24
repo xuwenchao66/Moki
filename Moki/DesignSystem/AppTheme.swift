@@ -29,8 +29,14 @@ enum Theme {
 // MARK: - Spacing (间距系统)
 
 struct Spacing {
+  /// 微小间距 - 2pt (新增)
+  static let xxxs: CGFloat = 2
+
   /// 极小间距 - 4pt
   static let xxs: CGFloat = 4
+
+  /// 稍小间距 - 6pt (新增，用于紧凑布局)
+  static let compact: CGFloat = 6
 
   /// 很小间距 - 8pt
   static let xs: CGFloat = 8
