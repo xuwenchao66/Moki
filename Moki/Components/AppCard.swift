@@ -78,3 +78,5 @@ struct AppCard<Content: View>: View {
     .background(Theme.color.background)
 }
 
+
+
