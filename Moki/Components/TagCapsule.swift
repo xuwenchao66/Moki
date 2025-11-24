@@ -51,7 +51,7 @@ struct TagFlowLayout: View {
 
 /// 简易流式布局
 struct FlowLayout: Layout {
-  var spacing: CGFloat = Theme.spacing.xs // 默认 8
+  var spacing: CGFloat = Theme.spacing.xs  // 默认 8
 
   func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
     let result = FlowResult(
@@ -115,7 +115,7 @@ struct FlowLayout: Layout {
     )
     .padding()
     .background(Color.white)
-    .cornerRadius(Theme.radius.sm) // 8
+    .cornerRadius(Theme.radius.sm)  // 8
   }
   .padding(Theme.spacing.lg)
   .frame(maxWidth: .infinity, maxHeight: .infinity)
