@@ -9,8 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
   var body: some View {
-    // 展示设计系统预览
-    DesignSystemPreview()
+    // 首页直接展示 Timeline
+    TimelineView()
   }
 }
 
