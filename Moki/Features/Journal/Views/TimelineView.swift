@@ -6,11 +6,16 @@
 //  展示按日期分组的日记流
 //
 
+import SQLiteData
 import SwiftUI
 
 struct TimelineView: View {
 
   // MARK: - Data
+
+  // 从数据库自动拉取所有日记，并按创建时间倒序排列
+  @FetchAll(JournalEntry.order { $0.createdAt.desc() })
+  private var entries: [JournalEntry]
 
   // 用于分组展示的数据结构
   struct DailyGroup: Identifiable {
@@ -18,10 +23,6 @@ struct TimelineView: View {
     let date: String
     let entries: [JournalEntry]
   }
-
-  // 临时数据源，接入真实数据库后替换
-  @State private var entries: [JournalEntry] =
-    JournalEntry.mockDayOneImport + [JournalEntry.welcomeEntry]
 
   // 按日期分组的计算属性
   var groupedEntries: [DailyGroup] {
@@ -34,6 +35,7 @@ struct TimelineView: View {
 
     // 按日期倒序排序
     return grouped.keys.sorted(by: >).map { dateString in
+      // 组内也按时间倒序 (数据库已经排过序了，但分组后可能乱序，保险起见再排一次)
       let sortedEntries = grouped[dateString]!.sorted { $0.createdAt > $1.createdAt }
       return DailyGroup(id: dateString, date: dateString, entries: sortedEntries)
     }
@@ -73,28 +75,41 @@ struct TimelineView: View {
 
         // 2. 滚动内容区
         ScrollView {
-          LazyVStack(spacing: 0) {
-            ForEach(groupedEntries) { group in
-              VStack(spacing: 0) {
-                // 日期头
-                JournalDateHeader(date: group.date)
-                  .padding(.top, Theme.spacing.lg)
+          if entries.isEmpty {
+            // 空状态
+            VStack(spacing: Theme.spacing.lg) {
+              Spacer(minLength: 100)
+              Image(systemName: "book.closed")
+                .font(.system(size: 48))
+                .foregroundColor(Theme.color.foregroundTertiary)
+              Text("还没有日记")
+                .font(Theme.font.body)
+                .foregroundColor(Theme.color.foregroundSecondary)
+            }
+          } else {
+            LazyVStack(spacing: 0) {
+              ForEach(groupedEntries) { group in
+                VStack(spacing: 0) {
+                  // 日期头
+                  JournalDateHeader(date: group.date)
+                    .padding(.top, Theme.spacing.lg)
 
-                // 当天的日记条目
-                ForEach(group.entries) { entry in
-                  JournalItemView(
-                    content: entry.text,
-                    time: formatTime(entry.createdAt),
-                    tags: entry.tags,
-                    images: entry.photos.map { $0.filename }  // 暂时直接显示文件名，后续需处理
-                  )
+                  // 当天的日记条目
+                  ForEach(group.entries) { entry in
+                    JournalItemView(
+                      content: entry.text,
+                      time: formatTime(entry.createdAt),
+                      tags: [],  // 暂时移除 tags 支持
+                      images: []  // 暂时移除 photos 支持
+                    )
+                  }
                 }
               }
-            }
 
-            Spacer(minLength: 100)  // 底部留白
+              Spacer(minLength: 100)  // 底部留白
+            }
+            .padding(.horizontal, Theme.spacing.lg)
           }
-          .padding(.horizontal, Theme.spacing.lg)
         }
       }
       .background(Theme.color.background)
@@ -126,5 +141,6 @@ struct TimelineView: View {
 }
 
 #Preview {
-  TimelineView()
+  configureAppDependencies()
+  return TimelineView()
 }

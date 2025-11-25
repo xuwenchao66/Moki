@@ -6,15 +6,13 @@
 //
 
 import Foundation
-// import SQLiteData // 暂时注释，假设你已经添加了依赖
+import SQLiteData
 import SwiftUI
 
-// 注意：你需要确保项目中已添加 PointFree 的 SQLiteData 依赖
-// @Table("journal_entries")
-// 暂时使用普通 struct 模拟，等你集成好 sqlite-data 后取消注释 @Table 即可
+@Table("diaries")
 struct JournalEntry: Identifiable, Codable, Equatable, Hashable {
 
-  /// 唯一标识符 (对应 Day One 的 UUID)
+  /// 唯一标识符
   let id: UUID
 
   /// 日记正文 (必填)
@@ -26,15 +24,8 @@ struct JournalEntry: Identifiable, Codable, Equatable, Hashable {
   /// 修改时间
   var modifiedAt: Date?
 
-  /// 是否标星/收藏
-  var isStarred: Bool
-
-  /// 标签列表
-  var tags: [String]
-
-  /// 图片元数据映射
-  /// 用于解析 text 中的 ![](dayone-moment://ID)
-  var photos: [EntryPhoto]
+  /// 是否标星
+  var isStarred: Bool = false
 
   // MARK: - Init
 
@@ -42,33 +33,37 @@ struct JournalEntry: Identifiable, Codable, Equatable, Hashable {
     id: UUID = UUID(),
     text: String,
     createdAt: Date = Date(),
-    tags: [String] = [],
-    photos: [EntryPhoto] = [],
     isStarred: Bool = false
   ) {
     self.id = id
     self.text = text
     self.createdAt = createdAt
     self.modifiedAt = nil
-    self.tags = tags
-    self.photos = photos
     self.isStarred = isStarred
   }
 }
 
-/// 图片元数据
-struct EntryPhoto: Codable, Equatable, Hashable, Identifiable {
-  var id: String { identifier }
+extension JournalEntry {
+  /// 内置欢迎条目，用于首次启动时填充数据库
+  static var welcomeEntry: JournalEntry {
+    JournalEntry(
+      text: """
+        # 👋 欢迎来到 Moki
 
-  /// Day One 的图片唯一标识 (Markdown 中引用的 ID)
-  let identifier: String
+        这是一个简单的开始。Moki 旨在帮助你记录生活中的闪光时刻，让回忆更有质感。
 
-  /// 图片文件名 (如 IMG_123.JPG)
-  let filename: String
+        ### 为什么叫 Moki (木几)？
+        "木几" 取自 "机" 字的拆解，寓意**有机的生活**与**自然的记录**。我们希望剥离复杂的社交干扰，回归记录的本质。
 
-  /// 图片宽度
-  let width: Int
+        ### 你可以尝试：
+        - 📝 写下你的第一篇日记
+        - ⭐️ 标记重要的时刻
+        - 📅 按时间轴回顾你的生活
 
-  /// 图片高度
-  let height: Int
+        祝你记录愉快！
+        """,
+      createdAt: Date(),
+      isStarred: true
+    )
+  }
 }
