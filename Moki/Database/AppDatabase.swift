@@ -18,12 +18,6 @@ enum AppDatabase {
     return databaseQueue
   }
 
-  static func makeInMemoryWriter() throws -> DatabaseQueue {
-    let databaseQueue = try DatabaseQueue(path: ":memory:")
-    try AppDatabaseMigrator.migrate(databaseQueue)
-    return databaseQueue
-  }
-
   private static func makeShared() -> DatabaseQueue {
     do {
       return try makeWriter()
