@@ -24,6 +24,6 @@ struct MokiApp: App {
 
 func configureAppDependencies() {
   prepareDependencies {
-    $0.defaultDatabase = .journalDatabase
+    $0.defaultDatabase = AppDatabase.shared
   }
 }
