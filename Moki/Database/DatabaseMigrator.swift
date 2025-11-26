@@ -16,7 +16,7 @@ enum AppDatabaseMigrator {
   static func migrator() -> SQLiteData.DatabaseMigrator {
     var migrator = DatabaseMigrator()
 
-    migrator.registerMigration("create-diaries") { db in
+    migrator.registerMigration("Create initial tables") { db in
       try #sql(
         """
         CREATE TABLE IF NOT EXISTS "diaries" (
@@ -54,4 +54,3 @@ enum AppDatabaseMigrator {
     return migrator
   }
 }
-
