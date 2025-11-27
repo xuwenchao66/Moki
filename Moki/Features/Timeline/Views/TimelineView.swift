@@ -14,14 +14,14 @@ struct TimelineView: View {
   // MARK: - Data
 
   // 从数据库自动拉取所有日记，并按创建时间倒序排列
-  @FetchAll(JournalEntry.order { $0.createdAt.desc() })
-  private var entries: [JournalEntry]
+  @FetchAll(MokiDiary.order { $0.createdAt.desc() })
+  private var entries: [MokiDiary]
 
   // 用于分组展示的数据结构
   struct DailyGroup: Identifiable {
     let id: String  // 使用日期字符串作为 ID
     let date: String
-    let entries: [JournalEntry]
+    let entries: [MokiDiary]
   }
 
   // 按日期分组的计算属性

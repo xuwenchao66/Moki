@@ -1,16 +1,9 @@
-//
-//  JournalEntry.swift
-//  Moki
-//
-//  日记核心模型 (基于 sqlite-data)
-//
-
 import Foundation
 import SQLiteData
 import SwiftUI
 
 @Table("diaries")
-struct JournalEntry: Identifiable, Codable, Equatable, Hashable {
+struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
 
   /// 唯一标识符
   let id: UUID
@@ -43,10 +36,10 @@ struct JournalEntry: Identifiable, Codable, Equatable, Hashable {
   }
 }
 
-extension JournalEntry {
+extension MokiDiary {
   /// 内置欢迎条目，用于首次启动时填充数据库
-  static var welcomeEntry: JournalEntry {
-    JournalEntry(
+  static var welcomeEntry: MokiDiary {
+    MokiDiary(
       text: """
         # 👋 欢迎来到 Moki
 

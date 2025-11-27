@@ -32,10 +32,10 @@ enum AppDatabaseMigrator {
     }
 
     migrator.registerMigration("seed-welcome-entry") { db in
-      let entryCount = try JournalEntry.count().fetchOne(db) ?? 0
+      let entryCount = try MokiDiary.count().fetchOne(db) ?? 0
       guard entryCount == 0 else { return }
 
-      let welcomeEntry = JournalEntry.welcomeEntry
+      let welcomeEntry = MokiDiary.welcomeEntry
       try #sql(
         """
         INSERT INTO "diaries" ("id", "text", "createdAt", "modifiedAt", "isStarred")
