@@ -21,7 +21,7 @@ struct JournalItemView: View {
       Text(time)
         .font(Theme.font.subheadline)
         .foregroundColor(Theme.color.foregroundSecondary)
-        .frame(width: 50, alignment: .leading) // 固定宽度保证对齐
+        .frame(width: 50, alignment: .leading)  // 固定宽度保证对齐
 
       // 2. 右侧内容区域
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
@@ -71,6 +71,7 @@ struct JournalItemView: View {
       }
     }
     .padding(.vertical, Theme.spacing.md)
+    .frame(maxWidth: .infinity, alignment: .leading)  // 确保占满宽度并左对齐
   }
 }
 
