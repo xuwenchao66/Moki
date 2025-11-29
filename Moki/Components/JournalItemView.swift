@@ -19,9 +19,10 @@ struct JournalItemView: View {
     HStack(alignment: .top, spacing: Theme.spacing.md) {
       // 1. 左侧时间
       Text(time)
-        .font(Theme.font.subheadline)
+        .font(Theme.font.timeStamp)  // 使用 Serif 字体
         .foregroundColor(Theme.color.foregroundSecondary)
         .frame(width: 50, alignment: .leading)  // 固定宽度保证对齐
+        .padding(.top, 2)  // 微调顶部对齐，因为 Serif 字体通常基线不同
 
       // 2. 右侧内容区域
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {

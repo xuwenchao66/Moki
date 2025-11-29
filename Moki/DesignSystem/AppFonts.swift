@@ -12,8 +12,11 @@ struct AppFonts {
     
     // MARK: - 标题字体 (Headings)
     
-    /// 特大标题 - 用于品牌/欢迎页
+    /// 特大标题 - 用于品牌/欢迎页 (Serif)
     static let largeTitle = Font.system(size: 34, weight: .bold, design: .serif)
+    
+    /// 日期标题 - 首页顶部 (Serif - 增加文学感)
+    static let dateTitle = Font.system(size: 20, weight: .semibold, design: .serif)
     
     /// 一级标题 - 页面标题
     static let title1 = Font.system(size: 28, weight: .semibold, design: .rounded)
@@ -27,7 +30,7 @@ struct AppFonts {
     
     // MARK: - 正文字体 (Body)
     
-    /// 正文 - 日记内容主体
+    /// 正文 - 日记内容主体 (保持易读性，使用 Default)
     static let body = Font.system(size: 17, weight: .regular, design: .default)
     
     /// 正文强调
@@ -50,6 +53,9 @@ struct AppFonts {
     
     
     // MARK: - 特殊字体 (Special)
+    
+    /// 时间戳字体 - (Serif - 像打字机或书信注脚)
+    static let timeStamp = Font.system(size: 14, weight: .medium, design: .serif)
     
     /// 标签字体 - 小号圆体
     static let tag = Font.system(size: 13, weight: .medium, design: .rounded)
@@ -105,4 +111,3 @@ extension Font.Weight {
     /// 极粗 (900)
     static let black = Font.Weight.black
 }
-
