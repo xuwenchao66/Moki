@@ -17,28 +17,10 @@ struct TimelineView: View {
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
   private var entries: [MokiDiary]
 
-  // 用于分组展示的数据结构
-  struct DailyGroup: Identifiable {
-    let id: String  // 使用日期字符串作为 ID
-    let date: String
-    let entries: [MokiDiary]
-  }
-
-  // 按日期分组的计算属性
-  var groupedEntries: [DailyGroup] {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd"
-
-    let grouped = Dictionary(grouping: entries) { entry in
-      formatter.string(from: entry.createdAt)
-    }
-
-    // 按日期倒序排序
-    return grouped.keys.sorted(by: >).map { dateString in
-      // 组内也按时间倒序 (数据库已经排过序了，但分组后可能乱序，保险起见再排一次)
-      let sortedEntries = grouped[dateString]!.sorted { $0.createdAt > $1.createdAt }
-      return DailyGroup(id: dateString, date: dateString, entries: sortedEntries)
-    }
+  // 仅展示今天的日记
+  var todaysEntries: [MokiDiary] {
+    let calendar = Calendar.current
+    return entries.filter { calendar.isDateInToday($0.createdAt) }
   }
 
   // MARK: - View
@@ -56,7 +38,7 @@ struct TimelineView: View {
 
           Spacer()
 
-          Text("Moki")
+          Text(formattedDate(Date()))
             .font(Theme.font.title3.weight(.bold))
             .foregroundColor(Theme.color.foreground)
 
@@ -75,40 +57,35 @@ struct TimelineView: View {
 
         // 2. 滚动内容区
         ScrollView {
-          if entries.isEmpty {
+          if todaysEntries.isEmpty {
             // 空状态
             VStack(spacing: Theme.spacing.lg) {
               Spacer(minLength: 100)
-              Image(systemName: "book.closed")
+              Image(systemName: "square.and.pencil")
                 .font(.system(size: 48))
                 .foregroundColor(Theme.color.foregroundTertiary)
-              Text("还没有日记")
+              Text("记录当下的想法...")
                 .font(Theme.font.body)
                 .foregroundColor(Theme.color.foregroundSecondary)
             }
           } else {
             LazyVStack(spacing: 0) {
-              ForEach(groupedEntries) { group in
-                VStack(spacing: 0) {
-                  // 日期头
-                  JournalDateHeader(date: group.date)
-                    .padding(.top, Theme.spacing.lg)
+              ForEach(todaysEntries) { entry in
+                JournalItemView(
+                  content: entry.text,
+                  time: formatTime(entry.createdAt),
+                  tags: [],  // 暂时移除 tags 支持
+                  images: []  // 暂时移除 photos 支持
+                )
 
-                  // 当天的日记条目
-                  ForEach(group.entries) { entry in
-                    JournalItemView(
-                      content: entry.text,
-                      time: formatTime(entry.createdAt),
-                      tags: [],  // 暂时移除 tags 支持
-                      images: []  // 暂时移除 photos 支持
-                    )
-                  }
-                }
+                // 分割线 (可选，保持简约可不加，这里为了区分)
+                // Divider().padding(.leading, 50)
               }
 
               Spacer(minLength: 100)  // 底部留白
             }
             .padding(.horizontal, Theme.spacing.lg)
+            .padding(.top, Theme.spacing.md)
           }
         }
       }
@@ -135,12 +112,18 @@ struct TimelineView: View {
 
   private func formatTime(_ date: Date) -> String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "HH:mm:ss"
+    formatter.dateFormat = "HH:mm"  // 23:42
+    return formatter.string(from: date)
+  }
+
+  private func formattedDate(_ date: Date) -> String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "M月d日"
     return formatter.string(from: date)
   }
 }
 
 #Preview {
-  configureAppDependencies()
+  // configureAppDependencies() // Preview might not have this
   return TimelineView()
 }
