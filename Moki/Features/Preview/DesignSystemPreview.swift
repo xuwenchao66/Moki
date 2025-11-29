@@ -170,5 +170,6 @@ struct JournalCardExamplesView: View {
 // MARK: - Preview
 
 #Preview("设计系统") {
-  DesignSystemPreview()
+  configureAppDependencies()
+  return DesignSystemPreview()
 }
