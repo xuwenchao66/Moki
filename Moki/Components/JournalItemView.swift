@@ -16,7 +16,7 @@ struct JournalItemView: View {
   var onMoreTapped: (() -> Void)? = nil
 
   var body: some View {
-    HStack(alignment: .top, spacing: Theme.spacing.md) {
+    HStack(alignment: .top, spacing: Theme.spacing.sm) {  // 间距从 md(16) 减小到 sm(12)
       // 1. 左侧时间
       Text(time)
         .font(Theme.font.timeStamp)  // 使用 Serif 字体

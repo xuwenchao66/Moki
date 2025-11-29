@@ -79,22 +79,23 @@ struct TimelineView: View {
         HStack {
           Button(action: {}) {
             Image(systemName: "line.3.horizontal")
-              .font(.title2)
-              .foregroundColor(Theme.color.foreground)
+              .font(.system(size: 18, weight: .regular))  // 恢复常规字重
+              .foregroundColor(Theme.color.foregroundSecondary)
           }
 
           Spacer()
 
           Text(formattedDate(Date()))
-            .font(Theme.font.dateTitle)  // 使用衬线体
+            .font(Theme.font.dateTitle)  // 保持 Serif
+            .fontWeight(.medium)
             .foregroundColor(Theme.color.foreground)
 
           Spacer()
 
           Button(action: {}) {
             Image(systemName: "magnifyingglass")
-              .font(.title2)
-              .foregroundColor(Theme.color.foreground)
+              .font(.system(size: 18, weight: .regular))  // 恢复常规字重
+              .foregroundColor(Theme.color.foregroundSecondary)
           }
         }
         .padding(.horizontal, Theme.spacing.lg)
