@@ -30,7 +30,6 @@ struct EditView: View {
           .padding(.horizontal, -4)
       }
       .padding(.horizontal, Theme.spacing.md)  // 缩小水平边距 (24 -> 16)
-      .padding(.top, Theme.spacing.md)  // 缩小顶部留白 (24 -> 16)
 
       // 2. 底部工具栏
       VStack(spacing: 0) {
