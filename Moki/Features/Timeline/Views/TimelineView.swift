@@ -1,17 +1,11 @@
-//
-//  TimelineView.swift
-//  Moki
-//
-//  日记时间轴首页
-//  展示按日期分组的日记流
-//
-
 import SQLiteData
 import SwiftUI
 
 struct TimelineView: View {
 
   // MARK: - Data
+
+  @State private var showAddEntry = false
 
   // 从数据库自动拉取所有日记，并按创建时间倒序排列
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
@@ -128,9 +122,6 @@ struct TimelineView: View {
                   tags: entry.tags,
                   images: entry.images
                 )
-
-                // 分割线 (可选)
-                // Divider().padding(.leading, 50)
               }
 
               Spacer(minLength: 100)  // 底部留白
@@ -164,7 +155,7 @@ struct TimelineView: View {
 
       // 3. 悬浮按钮 (FAB)
       Button(action: {
-        // TODO: 新增日记动作
+        showAddEntry = true
       }) {
         Image(systemName: "plus")
           .font(.system(size: 24, weight: .medium))
@@ -176,6 +167,11 @@ struct TimelineView: View {
       }
       .padding(.trailing, Theme.spacing.lg)
       .padding(.bottom, Theme.spacing.lg)
+    }
+    .sheet(isPresented: $showAddEntry) {
+      EditView()
+        .presentationDetents([.fraction(0.3), .fraction(0.5), .fraction(0.8)])
+        .presentationDragIndicator(.visible)
     }
   }
 
