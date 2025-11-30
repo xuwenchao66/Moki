@@ -33,6 +33,9 @@ struct AppFonts {
     /// 正文 - 日记内容主体 (保持易读性，使用 Default)
     static let body = Font.system(size: 17, weight: .regular, design: .default)
     
+    /// 日记正文 - 用于阅读和写作 (增加行高和呼吸感)
+    static let journalBody = Font.system(size: 17, weight: .regular, design: .default)
+    
     /// 正文强调
     static let bodyBold = Font.system(size: 17, weight: .semibold, design: .default)
     

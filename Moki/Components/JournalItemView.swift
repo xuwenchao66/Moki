@@ -28,9 +28,9 @@ struct JournalItemView: View {
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
         // 文本内容
         Text(content)
-          .font(Theme.font.body)
+          .font(Theme.font.journalBody)
           .foregroundColor(Theme.color.foreground)
-          .lineSpacing(Theme.spacing.compact)
+          .lineSpacing(Theme.spacing.textLineSpacing)
           .fixedSize(horizontal: false, vertical: true)
 
         // 图片区域
