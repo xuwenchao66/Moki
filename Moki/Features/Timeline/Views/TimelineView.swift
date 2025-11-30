@@ -169,9 +169,9 @@ struct TimelineView: View {
       .padding(.bottom, Theme.spacing.lg)
     }
     .sheet(isPresented: $showAddEntry) {
-      EditView()
-        .presentationDetents([.fraction(0.3), .fraction(0.5), .fraction(0.8)])
-        .presentationDragIndicator(.visible)
+      NavigationStack {
+        EditView()
+      }
     }
   }
 

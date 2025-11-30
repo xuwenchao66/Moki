@@ -37,53 +37,44 @@ struct EditView: View {
         Divider()
           .overlay(Theme.color.divider)
 
-        HStack(spacing: 20) {  // 缩小图标间距 (24 -> 20)
-          // 左侧功能区
-          Group {
-            Button(action: { /* TODO: Tag */  }) {
-              Image(systemName: "number")
-            }
-
-            Button(action: { /* TODO: Photo */  }) {
-              Image(systemName: "photo")
-            }
-
-            Button(action: { /* TODO: Format */  }) {
-              Image(systemName: "bold")
-            }
-
-            Button(action: { /* TODO: List */  }) {
-              Image(systemName: "list.bullet")
-            }
+        HStack(spacing: 20) {
+          // 功能图标
+          Button(action: { /* TODO: Tag */  }) {
+            Image(systemName: "number")
           }
-          .font(.system(size: 20, weight: .light))
-          .foregroundColor(Theme.color.foregroundSecondary)
+
+          Button(action: { /* TODO: Photo */  }) {
+            Image(systemName: "photo")
+          }
+
+          Button(action: { /* TODO: Format */  }) {
+            Image(systemName: "bold")
+          }
+
+          Button(action: { /* TODO: List */  }) {
+            Image(systemName: "list.bullet")
+          }
 
           Spacer()
-
-          // 发送按钮
-          Button(action: {
-            saveEntry()
-          }) {
-            Image(systemName: "arrow.up")
-              .font(.system(size: 18, weight: .bold))
-              .foregroundColor(Theme.color.primaryActionForeground)
-              .frame(width: 32, height: 32)  // 稍微调小一点，更精致
-              .background(
-                content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                  ? Theme.color.foregroundTertiary.opacity(0.3)
-                  : Theme.color.primaryAction
-              )
-              .clipShape(Circle())
-          }
-          .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
         }
+        .font(.system(size: 20, weight: .light))
+        .foregroundColor(Theme.color.foregroundSecondary)
         .padding(.horizontal, Theme.spacing.md)
         .padding(.vertical, Theme.spacing.sm)
         .background(Theme.color.cardBackground)
       }
     }
     .background(Theme.color.cardBackground)
+    .navigationTitle(formattedDate())
+    .navigationBarTitleDisplayMode(.inline)
+    .toolbar {
+      ToolbarItem(placement: .confirmationAction) {
+        Button("完成") {
+          saveEntry()
+        }
+        .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+      }
+    }
     .onAppear {
       isFocused = true
     }
@@ -93,6 +84,13 @@ struct EditView: View {
     // TODO: 保存到数据库
     print("Saving entry: \(content)")
     dismiss()
+  }
+
+  private func formattedDate() -> String {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.dateFormat = "M月d日 EEEE"  // 11月30日 星期日
+    return formatter.string(from: Date())
   }
 }
 
