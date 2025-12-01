@@ -55,6 +55,11 @@ struct Spacing {
 
   /// 超大间距 - 48pt
   static let xxl: CGFloat = 48
+  
+  // MARK: - Semantic Spacing
+  
+  /// 文本行间距 - 优化阅读体验 (8pt)
+  static let textLineSpacing: CGFloat = 8
 }
 
 // MARK: - Radius (圆角系统)

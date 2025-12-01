@@ -16,53 +16,63 @@ struct JournalItemView: View {
   var onMoreTapped: (() -> Void)? = nil
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Theme.spacing.md) {
-      // 1. 文本内容 (大号，深色)
-      Text(content)
-        .font(Theme.font.body)
-        .foregroundColor(Theme.color.foreground)
-        .lineSpacing(Theme.spacing.compact)  // 6
-        .fixedSize(horizontal: false, vertical: true)
+    HStack(alignment: .top, spacing: Theme.spacing.sm) {  // 间距从 md(16) 减小到 sm(12)
+      // 1. 左侧时间
+      Text(time)
+        .font(Theme.font.timeStamp)  // 使用 Serif 字体
+        .foregroundColor(Theme.color.foregroundSecondary)
+        .frame(width: 50, alignment: .leading)  // 固定宽度保证对齐
+        .padding(.top, 2)  // 微调顶部对齐，因为 Serif 字体通常基线不同
 
-      // 2. 图片区域 (模拟)
-      if !images.isEmpty {
-        HStack(spacing: Theme.spacing.sm) {
-          ForEach(0..<images.count, id: \.self) { _ in
-            RoundedRectangle(cornerRadius: Theme.radius.md)
-              .fill(Theme.color.border)  // 占位颜色
-              .overlay(
-                Image(systemName: "photo")
-                  .foregroundColor(Theme.color.foregroundSecondary)
-              )
-              .frame(height: 120)
-              .frame(maxWidth: .infinity)
-              .clipped()
+      // 2. 右侧内容区域
+      VStack(alignment: .leading, spacing: Theme.spacing.sm) {
+        // 文本内容
+        Text(content)
+          .font(Theme.font.journalBody)
+          .foregroundColor(Theme.color.foreground)
+          .lineSpacing(Theme.spacing.textLineSpacing)
+          .fixedSize(horizontal: false, vertical: true)
+
+        // 图片区域
+        if !images.isEmpty {
+          HStack(spacing: Theme.spacing.sm) {
+            ForEach(0..<images.count, id: \.self) { _ in
+              RoundedRectangle(cornerRadius: Theme.radius.md)
+                .fill(Theme.color.border)
+                .overlay(
+                  Image(systemName: "photo")
+                    .foregroundColor(Theme.color.foregroundSecondary)
+                )
+                .frame(height: 120)
+                .frame(maxWidth: .infinity)
+                .clipped()
+            }
           }
         }
-      }
 
-      // 3. 底部元数据 (时间 + 标签)
-      HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.sm) {
-        Text(time)
-          .font(Theme.font.caption2)
-          .foregroundColor(Theme.color.foregroundTertiary)
+        // 底部元数据 (标签 + 更多)
+        if !tags.isEmpty || onMoreTapped != nil {
+          HStack(spacing: Theme.spacing.sm) {
+            ForEach(tags, id: \.self) { tag in
+              TagCapsule(tag)
+            }
 
-        ForEach(tags, id: \.self) { tag in
-          TagCapsule(tag)
-        }
+            Spacer()
 
-        Spacer()
-
-        // 更多操作菜单
-        Button(action: { onMoreTapped?() }) {
-          Image(systemName: "ellipsis")
-            .font(.system(size: 14))
-            .foregroundColor(Theme.color.foregroundTertiary)
-            .padding(Theme.spacing.xxs)  // 4
+            if let onMoreTapped = onMoreTapped {
+              Button(action: onMoreTapped) {
+                Image(systemName: "ellipsis")
+                  .font(.system(size: 14))
+                  .foregroundColor(Theme.color.foregroundTertiary)
+                  .padding(Theme.spacing.xxs)
+              }
+            }
+          }
         }
       }
     }
     .padding(.vertical, Theme.spacing.md)
+    .frame(maxWidth: .infinity, alignment: .leading)  // 确保占满宽度并左对齐
   }
 }
 
