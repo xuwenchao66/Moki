@@ -37,9 +37,9 @@ struct ContentView: View {
       SideMenu(selectedTab: $selectedTab) {
         setMenu(open: false, animated: true)
       }
-        .frame(width: menuWidth)
-        .offset(x: menuOffset)
-        .zIndex(2)
+      .frame(width: menuWidth)
+      .offset(x: menuOffset)
+      .zIndex(2)
     }
     .gesture(
       DragGesture()
