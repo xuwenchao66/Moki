@@ -18,8 +18,15 @@ struct ContentView: View {
   var body: some View {
     ZStack(alignment: .leading) {
       // 1. 主内容区域 - 固定不动
-      TimelineView(isSideMenuPresented: $isMenuOpen)
-        .disabled(isMenuOpen)
+      TimelineView(
+        isSideMenuPresented: Binding(
+          get: { isMenuOpen },
+          set: { newValue in
+            setMenu(open: newValue, animated: true)
+          }
+        )
+      )
+      .disabled(isMenuOpen)
 
       // 2. 遮罩层
       if menuOffset > -menuWidth {
@@ -27,7 +34,7 @@ struct ContentView: View {
           .opacity(dimmingOpacity)
           .ignoresSafeArea()
           .onTapGesture {
-            closeMenu(animated: true)
+            setMenu(open: false, animated: true)
           }
           .zIndex(1)
       }
@@ -56,16 +63,16 @@ struct ContentView: View {
           if isMenuOpen {
             // 已打开：向左拖超过阈值则关闭，否则回到打开
             if translation < -threshold {
-              closeMenu(animated: true)
+              setMenu(open: false, animated: true)
             } else {
-              openMenu(animated: true)
+              setMenu(open: true, animated: true)
             }
           } else {
             // 已关闭：向右拖超过一半则打开，否则回到关闭
             if translation > threshold {
-              openMenu(animated: true)
+              setMenu(open: true, animated: true)
             } else {
-              closeMenu(animated: true)
+              setMenu(open: false, animated: true)
             }
           }
         }
@@ -74,22 +81,10 @@ struct ContentView: View {
 
   // MARK: - Helpers
 
-  private func openMenu(animated: Bool) {
+  private func setMenu(open: Bool, animated: Bool) {
     let action = {
-      isMenuOpen = true
-      menuOffset = 0
-    }
-    if animated {
-      withAnimation(.easeOut(duration: 0.2), action)
-    } else {
-      action()
-    }
-  }
-
-  private func closeMenu(animated: Bool) {
-    let action = {
-      isMenuOpen = false
-      menuOffset = -menuWidth
+      isMenuOpen = open
+      menuOffset = open ? 0 : -menuWidth
     }
     if animated {
       withAnimation(.easeOut(duration: 0.2), action)
