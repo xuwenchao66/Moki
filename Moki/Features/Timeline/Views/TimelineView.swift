@@ -138,26 +138,6 @@ struct TimelineView: View {
       }
       .background(Theme.color.background)
 
-      // 0. 背景光斑 (Komorebi Effect)
-      GeometryReader { proxy in
-        Circle()
-          .fill(
-            RadialGradient(
-              gradient: Gradient(colors: [
-                Theme.color.accent.opacity(0.12),  // 温暖的光晕
-                Theme.color.background.opacity(0),
-              ]),
-              center: .center,
-              startRadius: 10,
-              endRadius: 250
-            )
-          )
-          .frame(width: 500, height: 500)
-          .position(x: proxy.size.width * 0.8, y: proxy.size.height * 0.15)
-          .blur(radius: 60)
-      }
-      .ignoresSafeArea()
-
       // 3. 悬浮按钮 (FAB)
       Button(action: {
         showAddEntry = true
