@@ -50,10 +50,11 @@ struct ContentView: View {
         }
         .onEnded { value in
           let translation = value.translation.width
-          let threshold = menuWidth / 2
+          // 降低开合阈值，让轻扫也能触发。约为菜单宽度的 1/4
+          let threshold = menuWidth / 4
 
           if isMenuOpen {
-            // 已打开：向左拖超过一半则关闭，否则回到打开
+            // 已打开：向左拖超过阈值则关闭，否则回到打开
             if translation < -threshold {
               closeMenu(animated: true)
             } else {
@@ -101,8 +102,10 @@ struct ContentView: View {
 
   /// 遮罩层透明度 (0 ~ 0.4)
   private var dimmingOpacity: Double {
-    let progress = 1 - ((menuOffset + menuWidth) / menuWidth)  // 0 (关) ~ 1 (开)
-    return Double(progress) * 0.4
+    // menuOffset: [-menuWidth, 0] → progress: [0, 1]
+    let rawProgress = (menuOffset + menuWidth) / menuWidth
+    let clamped = max(0, min(1, rawProgress))
+    return Double(clamped) * 0.4
   }
 }
 
