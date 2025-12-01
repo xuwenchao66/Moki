@@ -9,8 +9,13 @@
 import SwiftUI
 
 struct SideMenu: View {
-  // 当前选中的菜单项，默认为 .timeline
-  @State private var selectedTab: Tab = .timeline
+  @Binding var selectedTab: Tab
+  var onSelect: (() -> Void)?
+
+  init(selectedTab: Binding<Tab>, onSelect: (() -> Void)? = nil) {
+    _selectedTab = selectedTab
+    self.onSelect = onSelect
+  }
 
   enum Tab {
     case timeline
@@ -35,28 +40,28 @@ struct SideMenu: View {
               icon: "dock.rectangle",
               title: "时间轴",
               isSelected: selectedTab == .timeline,
-              action: { selectedTab = .timeline }
+              action: { select(.timeline) }
             )
 
             MenuButton(
               icon: "calendar",
               title: "日历",
               isSelected: selectedTab == .calendar,
-              action: { selectedTab = .calendar }
+              action: { select(.calendar) }
             )
 
             MenuButton(
               icon: "number",
               title: "标签",
               isSelected: selectedTab == .tags,
-              action: { selectedTab = .tags }
+              action: { select(.tags) }
             )
 
             MenuButton(
               icon: "chart.bar",
               title: "统计",
               isSelected: selectedTab == .stats,
-              action: { selectedTab = .stats }
+              action: { select(.stats) }
             )
           }
           .padding(.horizontal, Theme.spacing.xl)  // 水平间距 32
@@ -68,7 +73,7 @@ struct SideMenu: View {
             icon: "gearshape",
             title: "设置",
             isSelected: selectedTab == .settings,
-            action: { selectedTab = .settings }
+            action: { select(.settings) }
           )
           .padding(.horizontal, Theme.spacing.xl)
           .padding(.bottom, Theme.spacing.xxl)  // 底部留出较多空白，显得沉稳
@@ -81,6 +86,19 @@ struct SideMenu: View {
         Spacer()
       }
     }
+  }
+}
+
+// MARK: - Private
+
+private extension SideMenu {
+  func select(_ tab: Tab) {
+    guard selectedTab != tab else {
+      onSelect?()
+      return
+    }
+    selectedTab = tab
+    onSelect?()
   }
 }
 
@@ -115,6 +133,6 @@ private struct MenuButton: View {
 #Preview {
   ZStack {
     Color.black.opacity(0.3).ignoresSafeArea()
-    SideMenu()
+    SideMenu(selectedTab: .constant(.timeline))
   }
 }
