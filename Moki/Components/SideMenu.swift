@@ -25,20 +25,14 @@ struct SideMenu: View {
       HStack(spacing: 0) {
         // 1. 侧边栏主体
         VStack(alignment: .leading, spacing: 0) {
-          // Header: Logo
-          VStack(alignment: .leading) {
-            Text("Moki")
-              .font(Theme.font.largeTitle)  // Serif 34pt Bold
-              .foregroundColor(Theme.color.foreground)
-          }
-          .padding(.top, 60)  // 增加顶部留白，适应刘海屏
-          .padding(.horizontal, Theme.spacing.xl)  // 增加水平间距 24 -> 32
-          .padding(.bottom, Theme.spacing.xxl)
+          // 留白 Header
+          Spacer()
+            .frame(height: 100)
 
           // Menu Items
-          VStack(spacing: Theme.spacing.md) {  // 增加菜单项垂直间距 12 -> 16
+          VStack(spacing: 20) {  // 将 spacing 调整为 20，配合较小的 padding，更紧凑精致
             MenuButton(
-              icon: "dock.rectangle",  // 类似时间轴的图标
+              icon: "dock.rectangle",
               title: "时间轴",
               isSelected: selectedTab == .timeline,
               action: { selectedTab = .timeline }
@@ -52,48 +46,38 @@ struct SideMenu: View {
             )
 
             MenuButton(
-              icon: "number",  // 标签图标
+              icon: "number",
               title: "标签",
               isSelected: selectedTab == .tags,
               action: { selectedTab = .tags }
             )
 
             MenuButton(
-              icon: "chart.bar",  // 统计图标
+              icon: "chart.bar",
               title: "统计",
               isSelected: selectedTab == .stats,
               action: { selectedTab = .stats }
             )
           }
-          .padding(.horizontal, Theme.spacing.lg)  // 增加菜单水平间距 16 -> 24
+          .padding(.horizontal, Theme.spacing.xl)  // 水平间距 32
 
           Spacer()
 
-          // Footer
-          VStack(spacing: Theme.spacing.lg) {
-            // 设置按钮 (作为菜单项样式但未选中)
-            MenuButton(
-              icon: "gearshape",
-              title: "设置",
-              isSelected: selectedTab == .settings,
-              action: { selectedTab = .settings }
-            )
-
-            // 版本号
-            Text("V1.0.0")
-              .font(Theme.font.caption)
-              .foregroundColor(Theme.color.foregroundTertiary)
-              .frame(maxWidth: .infinity, alignment: .center)
-              .padding(.bottom, Theme.spacing.lg)
-          }
-          .padding(.horizontal, Theme.spacing.lg)
-          .padding(.bottom, Theme.spacing.md)  // 底部安全区预留
+          // Settings Bottom
+          MenuButton(
+            icon: "gearshape",
+            title: "设置",
+            isSelected: selectedTab == .settings,
+            action: { selectedTab = .settings }
+          )
+          .padding(.horizontal, Theme.spacing.xl)
+          .padding(.bottom, Theme.spacing.xxl)  // 底部留出较多空白，显得沉稳
         }
-        .frame(width: 280)  // 固定侧边栏宽度
-        .background(Theme.color.background)  // 使用主背景色，与 README 一致 (Beige/Warm White)
+        .frame(width: 280)
+        .background(Theme.color.background)
         .edgesIgnoringSafeArea(.all)
 
-        // 2. 透明占位区域 (点击此处也可关闭，由父视图控制)
+        // 2. 透明占位区域
         Spacer()
       }
     }
@@ -112,24 +96,19 @@ private struct MenuButton: View {
     Button(action: action) {
       HStack(spacing: Theme.spacing.md) {
         Image(systemName: icon)
-          .font(.system(size: 20, weight: isSelected ? .medium : .regular))  // 增加图标字重和尺寸
-          .frame(width: 24)
+          .font(.system(size: 17, weight: isSelected ? .medium : .light))  // 图标微调小一点，Weight 变轻
+          .frame(width: 22)  // 限制图标宽度
 
         Text(title)
-          .font(Theme.font.body)  // 保持 17pt
-          .fontWeight(isSelected ? .medium : .regular)  // 选中态加粗，未选中态常规，符合截图
+          .font(.system(size: 16))  // 字体稍微改小一点点，更精致
+          .fontWeight(isSelected ? .medium : .regular)
       }
-      .foregroundColor(isSelected ? Theme.color.cardBackground : Theme.color.foregroundSecondary)  // 选中反白，未选中深灰
-      .padding(.vertical, 14)  // 增加垂直内边距 12 -> 14
-      .padding(.horizontal, Theme.spacing.md)
+      .foregroundColor(isSelected ? Theme.color.foreground : Theme.color.foregroundSecondary)
+      .padding(.vertical, 4)  // 大幅减小垂直 Padding，依靠 Stack spacing 控制间距
       .frame(maxWidth: .infinity, alignment: .leading)
-      .background(
-        RoundedRectangle(cornerRadius: Theme.radius.md)
-          .fill(isSelected ? Theme.color.primaryAction : Color.clear)  // 选中态黑色背景
-      )
+      .contentShape(Rectangle())
     }
-    .buttonStyle(.plain)  // 移除默认点击效果，使用自定义样式
-    .contentShape(Rectangle())  // 扩大点击区域
+    .buttonStyle(.plain)
   }
 }
 
