@@ -64,10 +64,8 @@ struct TagsView: View {
   private var content: some View {
     if tags.isEmpty {
       EmptyStateView(
-        icon: "number",
         title: "暂无标签",
-        message: "点击右上角的 + 创建第一个标签",
-        actionTitle: "创建标签"
+        message: "点击右上角的 + 创建第一个标签"
       ) {
         isPresentingAddSheet = true
       }
@@ -195,12 +193,9 @@ private struct TagRow: View {
 
   var body: some View {
     HStack(spacing: Theme.spacing.sm) {
-      VStack(alignment: .leading, spacing: Theme.spacing.xxxs) {
-        TagCapsule(tag.name)
-        Text(tag.createdAt.toRelativeString())
-          .font(Theme.font.caption)
-          .foregroundColor(Theme.color.foregroundTertiary)
-      }
+      Text("#\(tag.name)")
+        .font(Theme.font.body)
+        .foregroundColor(Theme.color.foreground)
 
       Spacer()
 
