@@ -110,6 +110,22 @@ extension View {
   }
 }
 
+// MARK: - Toolbar Helpers
+
+extension View {
+  /// 标准导航栏图标样式，确保字号与颜色统一
+  func toolbarIconStyle(
+    size: CGFloat = 16,
+    weight: Font.Weight = .regular,
+    color: Color = Theme.color.foregroundSecondary
+  ) -> some View {
+    self
+      .font(.system(size: size, weight: weight))
+      .foregroundColor(color)
+      .tint(color)
+  }
+}
+
 // MARK: - Text Styles (文字样式)
 
 extension View {

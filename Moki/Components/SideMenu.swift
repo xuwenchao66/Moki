@@ -91,8 +91,8 @@ struct SideMenu: View {
 
 // MARK: - Private
 
-private extension SideMenu {
-  func select(_ tab: Tab) {
+extension SideMenu {
+  fileprivate func select(_ tab: Tab) {
     guard selectedTab != tab else {
       onSelect?()
       return

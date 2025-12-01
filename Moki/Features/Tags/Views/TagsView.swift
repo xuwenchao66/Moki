@@ -18,6 +18,7 @@ struct TagsView: View {
     NavigationStack {
       content
         .navigationTitle("标签")
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
           ToolbarItem(placement: .navigationBarLeading) {
             Button {
@@ -25,6 +26,7 @@ struct TagsView: View {
             } label: {
               Image(systemName: "line.3.horizontal")
             }
+            .toolbarIconStyle()
             .accessibilityLabel("打开侧边栏")
           }
 
@@ -34,6 +36,7 @@ struct TagsView: View {
             } label: {
               Image(systemName: "plus")
             }
+            .toolbarIconStyle()
             .accessibilityLabel("新增标签")
           }
         }
