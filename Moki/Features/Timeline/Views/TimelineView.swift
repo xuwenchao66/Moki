@@ -2,6 +2,7 @@ import SQLiteData
 import SwiftUI
 
 struct TimelineView: View {
+  @Binding var isSideMenuPresented: Bool
 
   // MARK: - Data
 
@@ -71,7 +72,11 @@ struct TimelineView: View {
       VStack(spacing: 0) {
         // 1. 自定义顶部导航栏
         HStack {
-          Button(action: {}) {
+          Button(action: {
+            withAnimation {
+              isSideMenuPresented.toggle()
+            }
+          }) {
             Image(systemName: "line.3.horizontal")
               .font(.system(size: 18, weight: .regular))  // 恢复常规字重
               .foregroundColor(Theme.color.foregroundSecondary)
@@ -192,5 +197,5 @@ struct TimelineView: View {
 
 #Preview {
   // configureAppDependencies() // Preview might not have this
-  return TimelineView()
+  return TimelineView(isSideMenuPresented: .constant(false))
 }

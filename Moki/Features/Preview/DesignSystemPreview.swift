@@ -163,7 +163,7 @@ struct ComponentLibraryView: View {
 struct JournalCardExamplesView: View {
   var body: some View {
     // 复用 TimelineView 以展示真实效果
-    TimelineView()
+    TimelineView(isSideMenuPresented: .constant(false))
   }
 }
 
