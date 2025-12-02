@@ -10,9 +10,10 @@ struct TagsView: View {
 
   var onMenuButtonTapped: (() -> Void)? = nil
 
-  @State private var isPresentingAddSheet = false
-  @State private var editingTag: MokiTag?
   @State private var alert: AlertContext?
+  @State private var editorMode: TagEditorMode = .create
+  @State private var editorName: String = ""
+  @State private var isEditorPresented = false
 
   var body: some View {
     NavigationStack {
@@ -32,7 +33,7 @@ struct TagsView: View {
 
           ToolbarItem(placement: .primaryAction) {
             Button {
-              isPresentingAddSheet = true
+              presentEditor(.create)
             } label: {
               Image(systemName: "plus")
             }
@@ -41,22 +42,26 @@ struct TagsView: View {
           }
         }
     }
-    .sheet(isPresented: $isPresentingAddSheet) {
-      TagEditorSheet(mode: .create) { newName in
-        handleCreate(name: newName)
-      }
-    }
-    .sheet(item: $editingTag) { tag in
-      TagEditorSheet(mode: .edit(tag)) { newName in
-        handleRename(tag: tag, newName: newName)
-      }
-    }
     .alert(item: $alert) { info in
       Alert(
         title: Text(info.title),
         message: Text(info.message),
         dismissButton: .default(Text("好的"))
       )
+    }
+    .alert(editorTitle, isPresented: $isEditorPresented) {
+      TextField("例如：灵感、阅读、健身...", text: $editorName)
+        .textInputAutocapitalization(.never)
+        .disableAutocorrection(true)
+
+      Button(editorActionTitle) {
+        commitEditor()
+      }
+      .disabled(editorName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+
+      Button("取消", role: .cancel) {
+        isEditorPresented = false
+      }
     }
   }
 
@@ -67,7 +72,7 @@ struct TagsView: View {
         title: "暂无标签",
         message: "点击右上角的 + 创建第一个标签"
       ) {
-        isPresentingAddSheet = true
+        presentEditor(.create)
       }
       .background(Theme.color.background)
     } else {
@@ -173,7 +178,7 @@ struct TagsView: View {
   @ViewBuilder
   private func tagMenu(for tag: MokiTag) -> some View {
     Button {
-      editingTag = tag
+      presentEditor(.edit(tag))
     } label: {
       Label("重命名", systemImage: "pencil")
     }
@@ -182,6 +187,49 @@ struct TagsView: View {
       delete(tag: tag)
     } label: {
       Label("删除", systemImage: "trash")
+    }
+  }
+
+  private func presentEditor(_ mode: TagEditorMode) {
+    editorMode = mode
+    editorName = mode.initialName
+    isEditorPresented = true
+  }
+
+  private func commitEditor() {
+    let mode = editorMode
+    let trimmed = editorName.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard trimmed.isEmpty == false else { return }
+
+    let isSuccess: Bool
+    switch mode {
+    case .create:
+      isSuccess = handleCreate(name: trimmed)
+    case let .edit(tag):
+      isSuccess = handleRename(tag: tag, newName: trimmed)
+    }
+
+    if isSuccess {
+      isEditorPresented = false
+      editorName = ""
+    }
+  }
+
+  private var editorTitle: String {
+    switch editorMode {
+    case .create:
+      return "新建标签"
+    case .edit:
+      return "编辑标签"
+    }
+  }
+
+  private var editorActionTitle: String {
+    switch editorMode {
+    case .create:
+      return "创建"
+    case .edit:
+      return "保存"
     }
   }
 }
@@ -198,89 +246,18 @@ private struct AlertContext: Identifiable {
   }
 }
 
-// MARK: - Editor Sheet
+// MARK: - Editor Helpers
 
-private struct TagEditorSheet: View {
-  enum Mode {
-    case create
-    case edit(MokiTag)
+private enum TagEditorMode {
+  case create
+  case edit(MokiTag)
 
-    var title: String {
-      switch self {
-      case .create:
-        return "新建标签"
-      case .edit:
-        return "编辑标签"
-      }
-    }
-
-    var actionTitle: String {
-      switch self {
-      case .create:
-        return "创建"
-      case .edit:
-        return "保存"
-      }
-    }
-
-    var initialName: String {
-      switch self {
-      case .create:
-        return ""
-      case let .edit(tag):
-        return tag.name
-      }
-    }
-  }
-
-  @Environment(\.dismiss) private var dismiss
-
-  let mode: Mode
-  let onSubmit: (String) -> Bool
-
-  @State private var name: String
-  @FocusState private var isFocused: Bool
-
-  init(mode: Mode, onSubmit: @escaping (String) -> Bool) {
-    self.mode = mode
-    self.onSubmit = onSubmit
-    _name = State(initialValue: mode.initialName)
-  }
-
-  var body: some View {
-    NavigationStack {
-      Form {
-        Section(header: Text("名称")) {
-          TextField("例如：灵感、阅读、健身...", text: $name)
-            .focused($isFocused)
-            .submitLabel(.done)
-        }
-      }
-      .navigationTitle(mode.title)
-      .navigationBarTitleDisplayMode(.inline)
-      .toolbar {
-        ToolbarItem(placement: .cancellationAction) {
-          Button("取消") {
-            dismiss()
-          }
-        }
-
-        ToolbarItem(placement: .confirmationAction) {
-          Button(mode.actionTitle) {
-            let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard trimmed.isEmpty == false else { return }
-            if onSubmit(trimmed) {
-              dismiss()
-            }
-          }
-          .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-        }
-      }
-      .onAppear {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-          isFocused = true
-        }
-      }
+  var initialName: String {
+    switch self {
+    case .create:
+      return ""
+    case let .edit(tag):
+      return tag.name
     }
   }
 }
