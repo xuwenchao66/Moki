@@ -55,7 +55,7 @@ struct TagsView: View {
       Button(editorActionTitle) {
         commit()
       }
-      .disabled(editorName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+      .disabled(isEditorNameInvalid)
 
       Button("取消", role: .cancel) {
         isEditorPresented = false
@@ -198,8 +198,8 @@ struct TagsView: View {
 
   private func commit() {
     let mode = editorMode
-    let trimmed = editorName.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard trimmed.isEmpty == false else { return }
+    let trimmed = trimmedEditorName
+    guard isEditorNameInvalid == false else { return }
 
     let isSuccess: Bool
     switch mode {
@@ -231,6 +231,16 @@ struct TagsView: View {
     case .edit:
       return "保存"
     }
+  }
+
+  /// 去掉前后空白后的输入内容
+  private var trimmedEditorName: String {
+    editorName.trimmingCharacters(in: .whitespacesAndNewlines)
+  }
+
+  /// 当前输入是否无效（为空）
+  private var isEditorNameInvalid: Bool {
+    trimmedEditorName.isEmpty
   }
 }
 
