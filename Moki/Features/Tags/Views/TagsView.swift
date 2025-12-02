@@ -114,6 +114,7 @@ struct TagsView: View {
   private func handleCreate(name: String) -> Bool {
     do {
       try insertTag(named: name)
+      debugPrint("[TagsView] ✅ Created tag: \(name)")
       return true
     } catch {
       alert = .error(title: "创建失败", message: errorMessage(for: error))
@@ -124,6 +125,7 @@ struct TagsView: View {
   private func handleRename(tag: MokiTag, newName: String) -> Bool {
     do {
       try rename(tag: tag, to: newName)
+      debugPrint("[TagsView] ✅ Renamed tag \(tag.id) -> \(newName)")
       return true
     } catch {
       alert = .error(title: "重命名失败", message: errorMessage(for: error))
@@ -135,10 +137,10 @@ struct TagsView: View {
     do {
       try database.write { db in
         try MokiTag
-          .where { $0.id.eq(tag.id) }
-          .delete()
+          .delete(tag)
           .execute(db)
       }
+      debugPrint("[TagsView] ✅ Delete attempt name=\(tag.name)")
     } catch {
       alert = .error(title: "删除失败", message: errorMessage(for: error))
     }
