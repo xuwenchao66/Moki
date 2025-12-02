@@ -127,13 +127,10 @@ struct TagsView: View {
   private func delete(tag: MokiTag) {
     do {
       try database.write { db in
-        try #sql(
-          """
-          DELETE FROM "tags"
-          WHERE "id" = \(tag.id.uuidString)
-          """
-        )
-        .execute(db)
+        try MokiTag
+          .where { $0.id.eq(tag.id) }
+          .delete()
+          .execute(db)
       }
     } catch {
       alert = .error(title: "删除失败", message: errorMessage(for: error))
@@ -146,18 +143,8 @@ struct TagsView: View {
 
     let tag = MokiTag(name: sanitized)
     try database.write { db in
-      try #sql(
-        """
-        INSERT INTO "tags" ("id", "name", "color", "createdAt")
-        VALUES (
-          \(tag.id.uuidString),
-          \(tag.name),
-          \(tag.color),
-          \(tag.createdAt)
-        )
-        """
-      )
-      .execute(db)
+      try MokiTag.insert { tag }
+        .execute(db)
     }
   }
 
@@ -166,14 +153,10 @@ struct TagsView: View {
     guard sanitized.isEmpty == false else { return }
 
     try database.write { db in
-      try #sql(
-        """
-        UPDATE "tags"
-        SET "name" = \(sanitized)
-        WHERE "id" = \(tag.id.uuidString)
-        """
-      )
-      .execute(db)
+      try MokiTag
+        .update { $0.name = sanitized }
+        .where { $0.id.eq(tag.id) }
+        .execute(db)
     }
   }
 
