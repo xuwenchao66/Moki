@@ -72,13 +72,11 @@ struct TagsView: View {
       .background(Theme.color.background)
     } else {
       List {
-        Section(
-          footer: Text("共 \(tags.count) 个标签")
-            .font(Theme.font.caption)
-            .foregroundColor(Theme.color.foregroundTertiary)
-        ) {
+        Section {
           ForEach(tags) { tag in
-            TagRow(tag: tag)
+            Text("#\(tag.name)")
+              .font(Theme.font.body)
+              .foregroundColor(Theme.color.foreground)
               .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                 Button {
                   editingTag = tag
@@ -170,25 +168,6 @@ struct TagsView: View {
 }
 
 // MARK: - Helpers
-
-private struct TagRow: View {
-  let tag: MokiTag
-
-  var body: some View {
-    HStack(spacing: Theme.spacing.sm) {
-      Text("#\(tag.name)")
-        .font(Theme.font.body)
-        .foregroundColor(Theme.color.foreground)
-
-      Spacer()
-
-      Image(systemName: "chevron.right")
-        .font(.system(size: 13, weight: .semibold))
-        .foregroundColor(Theme.color.foregroundTertiary)
-    }
-    .padding(.vertical, Theme.spacing.xs)
-  }
-}
 
 private struct AlertContext: Identifiable {
   let id = UUID()
