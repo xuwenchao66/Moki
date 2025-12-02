@@ -32,7 +32,7 @@ struct TagsView: View {
 
           ToolbarItem(placement: .primaryAction) {
             Button {
-              presentEditor(.create)
+              showEditor(.create)
             } label: {
               Image(systemName: "plus")
             }
@@ -53,7 +53,7 @@ struct TagsView: View {
         .disableAutocorrection(true)
 
       Button(editorActionTitle) {
-        commitEditor()
+        commit()
       }
       .disabled(editorName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
 
@@ -70,7 +70,7 @@ struct TagsView: View {
         title: "暂无标签",
         message: "点击右上角的 + 创建第一个标签"
       ) {
-        presentEditor(.create)
+        showEditor(.create)
       }
       .background(Theme.color.background)
     } else {
@@ -178,7 +178,7 @@ struct TagsView: View {
   @ViewBuilder
   private func tagMenu(for tag: MokiTag) -> some View {
     Button {
-      presentEditor(.edit(tag))
+      showEditor(.edit(tag))
     } label: {
       Label("重命名", systemImage: "pencil")
     }
@@ -190,13 +190,13 @@ struct TagsView: View {
     }
   }
 
-  private func presentEditor(_ mode: TagEditorMode) {
+  private func showEditor(_ mode: TagEditorMode) {
     editorMode = mode
     editorName = mode.initialName
     isEditorPresented = true
   }
 
-  private func commitEditor() {
+  private func commit() {
     let mode = editorMode
     let trimmed = editorName.trimmingCharacters(in: .whitespacesAndNewlines)
     guard trimmed.isEmpty == false else { return }
