@@ -103,7 +103,6 @@ struct TagsView: View {
   private func handleCreate(name: String) -> Bool {
     do {
       try insertTag(named: name)
-      AppToast.show("已创建标签「\(name)」")
       return true
     } catch {
       AppToast.show(errorMessage(for: error))
@@ -114,7 +113,6 @@ struct TagsView: View {
   private func handleRename(tag: MokiTag, newName: String) -> Bool {
     do {
       try rename(tag: tag, to: newName)
-      AppToast.show("已重命名为「\(newName)」")
       return true
     } catch {
       AppToast.show(errorMessage(for: error))
@@ -129,7 +127,6 @@ struct TagsView: View {
           .delete(tag)
           .execute(db)
       }
-      AppToast.show("已删除标签「\(tag.name)」")
     } catch {
       AppToast.show(errorMessage(for: error))
     }
