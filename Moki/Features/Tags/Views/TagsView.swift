@@ -74,23 +74,27 @@ struct TagsView: View {
       List {
         Section {
           ForEach(tags) { tag in
-            Text("#\(tag.name)")
-              .font(Theme.font.body)
-              .foregroundColor(Theme.color.foreground)
-              .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                Button {
-                  editingTag = tag
-                } label: {
-                  Label("重命名", systemImage: "pencil")
-                }
-                .tint(Theme.color.accent)
+            HStack {
+              Text("#\(tag.name)")
+                .font(Theme.font.body)
+                .foregroundColor(Theme.color.foreground)
 
-                Button(role: .destructive) {
-                  delete(tag: tag)
-                } label: {
-                  Label("删除", systemImage: "trash")
-                }
+              Spacer()
+
+              Menu {
+                tagMenu(for: tag)
+              } label: {
+                Image(systemName: "ellipsis")
+                  .font(.system(size: 16))
+                  .foregroundColor(Theme.color.foregroundTertiary)
+                  .frame(width: 38, height: 38, alignment: .trailing)
+                  .contentShape(Rectangle())
               }
+              .buttonStyle(.plain)  // 避免点击整行触发 Menu
+            }
+            .contextMenu {
+              tagMenu(for: tag)
+            }
           }
         }
       }
@@ -164,6 +168,21 @@ struct TagsView: View {
       return "标签名称已存在，换一个试试。"
     }
     return "发生错误：\(message)"
+  }
+
+  @ViewBuilder
+  private func tagMenu(for tag: MokiTag) -> some View {
+    Button {
+      editingTag = tag
+    } label: {
+      Label("重命名", systemImage: "pencil")
+    }
+
+    Button(role: .destructive) {
+      delete(tag: tag)
+    } label: {
+      Label("删除", systemImage: "trash")
+    }
   }
 }
 
