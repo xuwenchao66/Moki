@@ -1,5 +1,5 @@
 {
-  "originHash" : "099237ae805acba12a1e1206eb9b6b4a6d0e3a8f9334d0c1292d9f5487729389",
+  "originHash" : "2bb29281fda792bab4c700f6aa02f77e9ab0f51878690f16ef84997857c1a745",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -125,6 +125,15 @@
       "state" : {
         "revision" : "4799286537280063c85a32f09884cfbca301b1a1",
         "version" : "602.0.0"
+      }
+    },
+    {
+      "identity" : "toast-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/scalessec/Toast-Swift",
+      "state" : {
+        "revision" : "ddccd20d6fb718448d9b179c454c561653fda7d5",
+        "version" : "5.1.1"
       }
     },
     {

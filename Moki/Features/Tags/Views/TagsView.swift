@@ -9,8 +9,6 @@ struct TagsView: View {
   @Dependency(\.defaultDatabase) private var database
 
   var onMenuButtonTapped: (() -> Void)? = nil
-
-  @State private var alert: AlertContext?
   @State private var editorMode: TagEditorMode = .create
   @State private var editorName: String = ""
   @State private var isEditorPresented = false
@@ -39,13 +37,6 @@ struct TagsView: View {
             .toolbarIconStyle()
           }
         }
-    }
-    .alert(item: $alert) { info in
-      Alert(
-        title: Text(info.title),
-        message: Text(info.message),
-        dismissButton: .default(Text("好的"))
-      )
     }
     .alert(editorTitle, isPresented: $isEditorPresented) {
       TextField("例如：灵感、阅读、健身...", text: $editorName)
@@ -112,10 +103,10 @@ struct TagsView: View {
   private func handleCreate(name: String) -> Bool {
     do {
       try insertTag(named: name)
-      debugPrint("[TagsView] ✅ Created tag: \(name)")
+      AppToast.show("已创建标签「\(name)」")
       return true
     } catch {
-      alert = .error(title: "创建失败", message: errorMessage(for: error))
+      AppToast.show(errorMessage(for: error))
       return false
     }
   }
@@ -123,10 +114,10 @@ struct TagsView: View {
   private func handleRename(tag: MokiTag, newName: String) -> Bool {
     do {
       try rename(tag: tag, to: newName)
-      debugPrint("[TagsView] ✅ Renamed tag \(tag.id) -> \(newName)")
+      AppToast.show("已重命名为「\(newName)」")
       return true
     } catch {
-      alert = .error(title: "重命名失败", message: errorMessage(for: error))
+      AppToast.show(errorMessage(for: error))
       return false
     }
   }
@@ -138,9 +129,9 @@ struct TagsView: View {
           .delete(tag)
           .execute(db)
       }
-      debugPrint("[TagsView] ✅ Delete attempt name=\(tag.name)")
+      AppToast.show("已删除标签「\(tag.name)」")
     } catch {
-      alert = .error(title: "删除失败", message: errorMessage(for: error))
+      AppToast.show(errorMessage(for: error))
     }
   }
 
@@ -241,18 +232,6 @@ struct TagsView: View {
   /// 当前输入是否无效（为空）
   private var isEditorNameInvalid: Bool {
     trimmedEditorName.isEmpty
-  }
-}
-
-// MARK: - Helpers
-
-private struct AlertContext: Identifiable {
-  let id = UUID()
-  let title: String
-  let message: String
-
-  static func error(title: String, message: String) -> AlertContext {
-    AlertContext(title: title, message: message)
   }
 }
 
