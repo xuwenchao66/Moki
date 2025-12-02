@@ -221,7 +221,6 @@ private struct FeaturePlaceholderView: View {
             Image(systemName: "line.3.horizontal")
           }
           .toolbarIconStyle()
-          .accessibilityLabel("打开侧边栏")
         }
       }
     }

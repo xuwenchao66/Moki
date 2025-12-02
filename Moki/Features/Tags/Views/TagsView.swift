@@ -28,7 +28,6 @@ struct TagsView: View {
               Image(systemName: "line.3.horizontal")
             }
             .toolbarIconStyle()
-            .accessibilityLabel("打开侧边栏")
           }
 
           ToolbarItem(placement: .primaryAction) {
@@ -38,7 +37,6 @@ struct TagsView: View {
               Image(systemName: "plus")
             }
             .toolbarIconStyle()
-            .accessibilityLabel("新增标签")
           }
         }
     }

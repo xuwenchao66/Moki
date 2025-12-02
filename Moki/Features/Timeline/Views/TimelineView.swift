@@ -136,7 +136,6 @@ struct TimelineView: View {
             Image(systemName: "line.3.horizontal")
           }
           .toolbarIconStyle()
-          .accessibilityLabel("打开侧边栏")
         }
 
         ToolbarItem(placement: .primaryAction) {
@@ -146,7 +145,6 @@ struct TimelineView: View {
             Image(systemName: "magnifyingglass")
           }
           .toolbarIconStyle()
-          .accessibilityLabel("搜索日记")
         }
       }
     }
