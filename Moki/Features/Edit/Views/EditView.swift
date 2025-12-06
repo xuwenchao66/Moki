@@ -29,8 +29,6 @@ struct EditView: View {
           .tint(Theme.color.primaryAction)  // 设置光标颜色为主色调
           .focused($isFocused)
           .frame(maxHeight: .infinity)
-          // TextEditor 默认有内边距，这里负向补偿以对齐边缘
-          .padding(.horizontal, -4)
       }
       .padding(.horizontal, Theme.spacing.md)  // 缩小水平边距 (24 -> 16)
 
@@ -47,14 +45,6 @@ struct EditView: View {
 
           Button(action: { /* TODO: Photo */  }) {
             Image(systemName: "photo")
-          }
-
-          Button(action: { /* TODO: Format */  }) {
-            Image(systemName: "bold")
-          }
-
-          Button(action: { /* TODO: List */  }) {
-            Image(systemName: "list.bullet")
           }
 
           Spacer()
