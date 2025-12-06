@@ -61,12 +61,6 @@ struct AppColors {
   /// 选中态背景
   static let selected = Color("selected")
 
-  // MARK: - 功能色 (Functional)
-
-  static let success = Color("success")
-  static let warning = Color("warning")
-  static let destructive = Color("destructive")
-
   // MARK: - 标签颜色 (Tags)
 
   static let tagText = Color("tagText")
