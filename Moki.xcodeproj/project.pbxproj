@@ -108,11 +108,12 @@
 				};
 			};
 			buildConfigurationList = D42ECC5F2ED33574001E34F5 /* Build configuration list for PBXProject "Moki" */;
-			developmentRegion = en;
+			developmentRegion = zh_CN;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 				Base,
+				zh_CN,
 			);
 			mainGroup = D42ECC5B2ED33574001E34F5;
 			minimizedProjectReferenceProxies = 1;

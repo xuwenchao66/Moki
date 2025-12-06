@@ -8,6 +8,31 @@
 import SwiftUI
 import UIKit
 
+// MARK: - Custom UITextView with Full Menu Support
+
+private class FullMenuTextView: UITextView {
+  /// 确保所有标准编辑菜单项都可用（剪切、拷贝、粘贴、全选等）
+  override func canPerformAction(_ action: Selector, withSender sender: Any?) -> Bool {
+    // 全选：始终可用
+    if action == #selector(selectAll(_:)) {
+      return true
+    }
+
+    // 剪切/拷贝：有选中文本时可用
+    if action == #selector(cut(_:)) || action == #selector(copy(_:)) {
+      return selectedRange.length > 0
+    }
+
+    // 粘贴：剪贴板有内容时可用
+    if action == #selector(paste(_:)) {
+      return UIPasteboard.general.hasStrings
+    }
+
+    // 其他操作由系统决定
+    return super.canPerformAction(action, withSender: sender)
+  }
+}
+
 struct PlainTextEditor: UIViewRepresentable {
   @Binding var text: String
   @Binding var isFocused: Bool
@@ -26,7 +51,7 @@ struct PlainTextEditor: UIViewRepresentable {
   // MARK: - UIViewRepresentable
 
   func makeUIView(context: Context) -> UITextView {
-    let textView = UITextView()
+    let textView = FullMenuTextView()
     textView.delegate = context.coordinator
     textView.backgroundColor = .clear
     textView.text = text
