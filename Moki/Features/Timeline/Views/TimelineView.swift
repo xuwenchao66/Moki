@@ -141,7 +141,6 @@ struct TimelineView: View {
             Image(systemName: "line.3.horizontal")
           }
           .toolbarIconStyle()
-          .foregroundColor(Theme.color.primaryAction)  // 改为主要黑色
         }
 
         ToolbarItem(placement: .primaryAction) {
@@ -151,7 +150,6 @@ struct TimelineView: View {
             Image(systemName: "magnifyingglass")
           }
           .toolbarIconStyle()
-          .foregroundColor(Theme.color.primaryAction)  // 改为主要黑色
         }
       }
     }
