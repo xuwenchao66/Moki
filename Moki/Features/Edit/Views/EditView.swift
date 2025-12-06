@@ -26,6 +26,7 @@ struct EditView: View {
           .foregroundColor(Theme.color.foreground)
           .scrollContentBackground(.hidden)  // 移除默认背景
           .background(Color.clear)
+          .tint(Theme.color.primaryAction)  // 设置光标颜色为主色调
           .focused($isFocused)
           .frame(maxHeight: .infinity)
           // TextEditor 默认有内边距，这里负向补偿以对齐边缘
@@ -65,7 +66,7 @@ struct EditView: View {
         .background(Theme.color.cardBackground)
       }
     }
-    .background(Theme.color.cardBackground)
+    .background(Theme.color.background)  // 统一使用背景色
     .navigationTitle(formattedDate())
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
