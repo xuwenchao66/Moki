@@ -13,6 +13,18 @@ struct PlainTextEditor: UIViewRepresentable {
   @Binding var isFocused: Bool
   var placeholder: String
 
+  // MARK: - Constants
+
+  private enum Constants {
+    static let fontSize: CGFloat = 17
+    static let placeholderTag = 999
+    static let horizontalInset: CGFloat = 5
+    static let verticalInset: CGFloat = 8
+    static let placeholderLeadingOffset: CGFloat = 6
+  }
+
+  // MARK: - UIViewRepresentable
+
   func makeUIView(context: Context) -> UITextView {
     let textView = UITextView()
     textView.delegate = context.coordinator
@@ -20,69 +32,97 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.text = text
 
     // 字体/颜色
-    textView.font = UIFont.systemFont(ofSize: 17)  // 对应 Theme.font.journalBody
+    textView.font = UIFont.systemFont(ofSize: Constants.fontSize)
     textView.textColor = UIColor(named: "foreground") ?? .label
     textView.tintColor = UIColor(named: "primaryAction") ?? .black
 
-    // 行高
-    applyParagraphStyle(to: textView)
-
-    // 输入行为
-    textView.autocapitalizationType = .none
+    // 输入行为（适合日记场景）
+    textView.autocapitalizationType = .sentences  // 句首字母大写
     textView.autocorrectionType = .yes
-    textView.smartDashesType = .no
-    textView.smartQuotesType = .no
     textView.isScrollEnabled = true
     textView.alwaysBounceVertical = true
-    textView.textContainerInset = UIEdgeInsets(top: 8, left: 5, bottom: 8, right: 5)
+    textView.textContainerInset = UIEdgeInsets(
+      top: Constants.verticalInset,
+      left: Constants.horizontalInset,
+      bottom: Constants.verticalInset,
+      right: Constants.horizontalInset
+    )
 
-    // 占位符（兼容较低 iOS 版本，直接基于 textContainerInsets 手动布局）
-    let placeholderLabel = UILabel()
-    placeholderLabel.text = placeholder
-    placeholderLabel.font = textView.font
-    placeholderLabel.textColor = UIColor(named: "foregroundTertiary") ?? .secondaryLabel
-    placeholderLabel.numberOfLines = 0
-    placeholderLabel.tag = 999
-    placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
-    textView.addSubview(placeholderLabel)
+    // 占位符
+    setupPlaceholder(in: textView)
 
-    NSLayoutConstraint.activate([
-      // 微调占位符位置，使其与光标垂直居中对齐
-      placeholderLabel.topAnchor.constraint(
-        equalTo: textView.topAnchor, constant: textView.textContainerInset.top),
-      placeholderLabel.leadingAnchor.constraint(
-        equalTo: textView.leadingAnchor, constant: textView.textContainerInset.left + 6),
-      placeholderLabel.trailingAnchor.constraint(
-        equalTo: textView.trailingAnchor, constant: -(textView.textContainerInset.right + 6)),
-    ])
-    placeholderLabel.isHidden = !text.isEmpty
+    // 初始样式
+    applyParagraphStyle(to: textView)
 
     return textView
   }
 
   func updateUIView(_ uiView: UITextView, context: Context) {
-    if uiView.text != text {
-      uiView.text = text
-    }
+    let needsTextUpdate = uiView.text != text
 
-    // 每次更新都重新应用段落样式（确保空/非空状态切换时光标高度正确）
-    applyParagraphStyle(to: uiView)
+    if needsTextUpdate {
+      uiView.text = text
+      // 只在非输入法状态下更新样式，避免打断中文输入
+      if uiView.markedTextRange == nil {
+        applyParagraphStyle(to: uiView)
+      }
+    }
 
     // 占位符显隐
-    if let placeholderLabel = uiView.viewWithTag(999) as? UILabel {
-      placeholderLabel.isHidden = !text.isEmpty
-    }
+    updatePlaceholder(in: uiView)
 
     // 焦点同步
-    if isFocused, !uiView.isFirstResponder {
-      uiView.becomeFirstResponder()
-    } else if !isFocused, uiView.isFirstResponder {
-      uiView.resignFirstResponder()
-    }
+    syncFocus(with: uiView)
   }
 
   func makeCoordinator() -> Coordinator {
     Coordinator(self)
+  }
+
+  // MARK: - Private Helpers
+
+  private func setupPlaceholder(in textView: UITextView) {
+    let placeholderLabel = UILabel()
+    placeholderLabel.text = placeholder
+    placeholderLabel.font = textView.font
+    placeholderLabel.textColor = UIColor(named: "foregroundTertiary") ?? .secondaryLabel
+    placeholderLabel.numberOfLines = 0
+    placeholderLabel.tag = Constants.placeholderTag
+    placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
+    textView.addSubview(placeholderLabel)
+
+    NSLayoutConstraint.activate([
+      placeholderLabel.topAnchor.constraint(
+        equalTo: textView.topAnchor,
+        constant: textView.textContainerInset.top
+      ),
+      placeholderLabel.leadingAnchor.constraint(
+        equalTo: textView.leadingAnchor,
+        constant: textView.textContainerInset.left + Constants.placeholderLeadingOffset
+      ),
+      placeholderLabel.trailingAnchor.constraint(
+        equalTo: textView.trailingAnchor,
+        constant: -(textView.textContainerInset.right + Constants.placeholderLeadingOffset)
+      ),
+    ])
+
+    placeholderLabel.isHidden = !text.isEmpty
+  }
+
+  private func placeholder(in textView: UITextView) -> UILabel? {
+    textView.viewWithTag(Constants.placeholderTag) as? UILabel
+  }
+
+  private func updatePlaceholder(in textView: UITextView) {
+    placeholder(in: textView)?.isHidden = !text.isEmpty
+  }
+
+  private func syncFocus(with textView: UITextView) {
+    if isFocused, !textView.isFirstResponder {
+      textView.becomeFirstResponder()
+    } else if !isFocused, textView.isFirstResponder {
+      textView.resignFirstResponder()
+    }
   }
 
   private func applyParagraphStyle(to textView: UITextView) {
@@ -104,19 +144,30 @@ struct PlainTextEditor: UIViewRepresentable {
     if !textView.text.isEmpty {
       let attr = NSMutableAttributedString(string: textView.text)
       attr.addAttributes(
-        textView.typingAttributes, range: NSRange(location: 0, length: attr.length))
+        textView.typingAttributes,
+        range: NSRange(location: 0, length: attr.length)
+      )
       textView.attributedText = attr
     }
   }
 
+  // MARK: - Coordinator
+
   final class Coordinator: NSObject, UITextViewDelegate {
     var parent: PlainTextEditor
-    init(_ parent: PlainTextEditor) { self.parent = parent }
+
+    init(_ parent: PlainTextEditor) {
+      self.parent = parent
+    }
 
     func textViewDidChange(_ textView: UITextView) {
       parent.text = textView.text
-      if let placeholderLabel = textView.viewWithTag(999) as? UILabel {
-        placeholderLabel.isHidden = !textView.text.isEmpty
+      parent.updatePlaceholder(in: textView)
+
+      // 文本变化时重新应用样式（空/非空切换时更新光标高度）
+      // 只在非输入法状态下更新，避免打断中文输入
+      if textView.markedTextRange == nil {
+        parent.applyParagraphStyle(to: textView)
       }
     }
 
