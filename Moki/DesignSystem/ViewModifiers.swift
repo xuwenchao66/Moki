@@ -117,7 +117,7 @@ extension View {
   func toolbarIconStyle(
     size: CGFloat = 16,
     weight: Font.Weight = .regular,
-    color: Color = Theme.color.foregroundSecondary
+    color: Color = Theme.color.primaryAction
   ) -> some View {
     self
       .font(.system(size: size, weight: weight))

@@ -71,9 +71,12 @@ struct EditView: View {
     .toolbar {
       ToolbarItem(placement: .confirmationAction) {
         Button("完成") {
-          saveEntry()
+          if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            dismiss()
+          } else {
+            saveEntry()
+          }
         }
-        .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
       }
     }
     .onAppear {
@@ -90,7 +93,7 @@ struct EditView: View {
   private func formattedDate() -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "M月d日 EEEE"  // 11月30日 星期日
+    formatter.dateFormat = "M月d日 EEEE HH:mm"  // 11月30日 星期日 20:30
     return formatter.string(from: Date())
   }
 }
