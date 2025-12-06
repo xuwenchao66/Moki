@@ -53,9 +53,10 @@ struct JournalItemView: View {
             Spacer()
             Button(action: { onMoreTapped?() }) {
               Image(systemName: "ellipsis")
+                .rotationEffect(.degrees(90))
                 .foregroundColor(Theme.color.foregroundTertiary)
+                .frame(width: 24, height: 24)  // 增加点击区域并解决旋转后的对齐问题
                 .padding(.leading, 8)
-                .padding(.bottom, 8)  // 增加一点点击区域
             }
           }
         }
