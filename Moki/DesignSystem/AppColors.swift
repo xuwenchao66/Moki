@@ -39,9 +39,6 @@ struct AppColors {
   /// 浅色强调背景
   static let accentLightBackground = Color("accentLightBackground")
 
-  /// 深色强调文本
-  static let accentDarkText = Color("accentDarkText")
-
   // MARK: - 动作色 (Action)
 
   /// 主动作色
