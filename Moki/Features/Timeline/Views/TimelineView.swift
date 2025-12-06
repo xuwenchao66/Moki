@@ -113,12 +113,12 @@ struct TimelineView: View {
           showAddEntry = true
         }) {
           Image(systemName: "plus")
-            .font(.system(size: 24, weight: .medium))
+            .font(.system(size: 22, weight: .light))
             .foregroundColor(.white)
-            .frame(width: 56, height: 56)
+            .frame(width: 48, height: 48)
             .background(Theme.color.primaryAction)
             .clipShape(Circle())
-            .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
         }
         .padding(.trailing, Theme.spacing.lg)
         .padding(.bottom, Theme.spacing.lg)
