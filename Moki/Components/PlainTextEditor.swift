@@ -20,7 +20,7 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.text = text
 
     // 字体/颜色
-    textView.font = UIFont.systemFont(ofSize: 17) // 对应 Theme.font.journalBody
+    textView.font = UIFont.systemFont(ofSize: 17)  // 对应 Theme.font.journalBody
     textView.textColor = UIColor(named: "foreground") ?? .label
     textView.tintColor = UIColor(named: "primaryAction") ?? .black
 
@@ -45,10 +45,15 @@ struct PlainTextEditor: UIViewRepresentable {
     placeholderLabel.tag = 999
     placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
     textView.addSubview(placeholderLabel)
+
     NSLayoutConstraint.activate([
-      placeholderLabel.topAnchor.constraint(equalTo: textView.topAnchor, constant: textView.textContainerInset.top),
-      placeholderLabel.leadingAnchor.constraint(equalTo: textView.leadingAnchor, constant: textView.textContainerInset.left + 2),
-      placeholderLabel.trailingAnchor.constraint(equalTo: textView.trailingAnchor, constant: -(textView.textContainerInset.right + 2))
+      // 微调占位符位置，使其与光标垂直居中对齐
+      placeholderLabel.topAnchor.constraint(
+        equalTo: textView.topAnchor, constant: textView.textContainerInset.top),
+      placeholderLabel.leadingAnchor.constraint(
+        equalTo: textView.leadingAnchor, constant: textView.textContainerInset.left + 6),
+      placeholderLabel.trailingAnchor.constraint(
+        equalTo: textView.trailingAnchor, constant: -(textView.textContainerInset.right + 6)),
     ])
     placeholderLabel.isHidden = !text.isEmpty
 
@@ -58,8 +63,10 @@ struct PlainTextEditor: UIViewRepresentable {
   func updateUIView(_ uiView: UITextView, context: Context) {
     if uiView.text != text {
       uiView.text = text
-      applyParagraphStyle(to: uiView)
     }
+
+    // 每次更新都重新应用段落样式（确保空/非空状态切换时光标高度正确）
+    applyParagraphStyle(to: uiView)
 
     // 占位符显隐
     if let placeholderLabel = uiView.viewWithTag(999) as? UILabel {
@@ -79,20 +86,25 @@ struct PlainTextEditor: UIViewRepresentable {
   }
 
   private func applyParagraphStyle(to textView: UITextView) {
+    guard let font = textView.font else { return }
+
     let paragraph = NSMutableParagraphStyle()
-    paragraph.lineSpacing = Theme.spacing.textLineSpacing
+    // 空文本时不设置 lineSpacing，光标保持字体默认高度
+    // 有文本时再应用行间距
+    paragraph.lineSpacing = textView.text.isEmpty ? 0 : Theme.spacing.textLineSpacing
 
     // typingAttributes 影响新输入和光标
     textView.typingAttributes = [
-      .font: textView.font as Any,
+      .font: font,
       .foregroundColor: textView.textColor as Any,
-      .paragraphStyle: paragraph
+      .paragraphStyle: paragraph,
     ]
 
     // 已有文本也应用行高
     if !textView.text.isEmpty {
       let attr = NSMutableAttributedString(string: textView.text)
-      attr.addAttributes(textView.typingAttributes, range: NSRange(location: 0, length: attr.length))
+      attr.addAttributes(
+        textView.typingAttributes, range: NSRange(location: 0, length: attr.length))
       textView.attributedText = attr
     }
   }
@@ -117,4 +129,3 @@ struct PlainTextEditor: UIViewRepresentable {
     }
   }
 }
-
