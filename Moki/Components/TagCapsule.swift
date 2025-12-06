@@ -114,7 +114,7 @@ struct FlowLayout: Layout {
       tags: ["Naval", "幸福", "成长", "学习", "智慧", "生活", "思考"]
     )
     .padding()
-    .background(Color.white)
+    .background(Theme.color.cardBackground)
     .cornerRadius(Theme.radius.sm)  // 8
   }
   .padding(Theme.spacing.lg)

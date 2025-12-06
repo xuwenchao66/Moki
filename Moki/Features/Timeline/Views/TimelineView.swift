@@ -2,6 +2,7 @@ import SQLiteData
 import SwiftUI
 
 struct TimelineView: View {
+  @Binding var isSideMenuPresented: Bool
 
   // MARK: - Data
 
@@ -67,106 +68,85 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
-    ZStack(alignment: .bottomTrailing) {
-      VStack(spacing: 0) {
-        // 1. 自定义顶部导航栏
-        HStack {
-          Button(action: {}) {
-            Image(systemName: "line.3.horizontal")
-              .font(.system(size: 18, weight: .regular))  // 恢复常规字重
-              .foregroundColor(Theme.color.foregroundSecondary)
-          }
+    NavigationStack {
+      ZStack(alignment: .bottomTrailing) {
+        ScrollView {
+          VStack(spacing: 0) {
+            // 暂时强制使用 mockEntries 进行预览
+            // if todaysEntries.isEmpty {
+            if false {
+              // 空状态
+              VStack(spacing: Theme.spacing.lg) {
+                Spacer(minLength: 100)
+                Image(systemName: "square.and.pencil")
+                  .font(.system(size: 48))
+                  .foregroundColor(Theme.color.foregroundTertiary)
+                Text("记录当下的想法...")
+                  .font(Theme.font.body)
+                  .foregroundColor(Theme.color.foregroundSecondary)
+              }
+              .frame(maxWidth: .infinity)
+              .padding(.top, Theme.spacing.xl)
+            } else {
+              LazyVStack(spacing: 0) {
+                // 使用 mockEntries 替代 todaysEntries
+                ForEach(mockEntries) { entry in
+                  JournalItemView(
+                    content: entry.content,
+                    time: formatTime(entry.date),
+                    tags: entry.tags,
+                    images: entry.images
+                  )
+                }
 
-          Spacer()
-
-          Text(formattedDate(Date()))
-            .font(Theme.font.dateTitle)  // 保持 Serif
-            .fontWeight(.medium)
-            .foregroundColor(Theme.color.foreground)
-
-          Spacer()
-
-          Button(action: {}) {
-            Image(systemName: "magnifyingglass")
-              .font(.system(size: 18, weight: .regular))  // 恢复常规字重
-              .foregroundColor(Theme.color.foregroundSecondary)
+                Spacer(minLength: 100)  // 底部留白
+              }
+              .padding(.horizontal, Theme.spacing.lg)
+              .padding(.top, Theme.spacing.md)
+            }
           }
         }
-        .padding(.horizontal, Theme.spacing.lg)
-        .padding(.top, Theme.spacing.md)
-        .padding(.bottom, Theme.spacing.md)
         .background(Theme.color.background)
 
-        // 2. 滚动内容区
-        ScrollView {
-          // 暂时强制使用 mockEntries 进行预览
-          // if todaysEntries.isEmpty {
-          if false {
-            // 空状态
-            VStack(spacing: Theme.spacing.lg) {
-              Spacer(minLength: 100)
-              Image(systemName: "square.and.pencil")
-                .font(.system(size: 48))
-                .foregroundColor(Theme.color.foregroundTertiary)
-              Text("记录当下的想法...")
-                .font(Theme.font.body)
-                .foregroundColor(Theme.color.foregroundSecondary)
-            }
-          } else {
-            LazyVStack(spacing: 0) {
-              // 使用 mockEntries 替代 todaysEntries
-              ForEach(mockEntries) { entry in
-                JournalItemView(
-                  content: entry.content,
-                  time: formatTime(entry.date),
-                  tags: entry.tags,
-                  images: entry.images
-                )
-              }
-
-              Spacer(minLength: 100)  // 底部留白
-            }
-            .padding(.horizontal, Theme.spacing.lg)
-            .padding(.top, Theme.spacing.md)
-          }
+        // 3. 悬浮按钮 (FAB)
+        Button(action: {
+          showAddEntry = true
+        }) {
+          Image(systemName: "plus")
+            .font(.system(size: 22, weight: .light))
+            .foregroundColor(Theme.color.primaryActionForeground)
+            .frame(width: 48, height: 48)
+            .background(Theme.color.primaryAction)
+            .clipShape(Circle())
+            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
         }
+        .padding(.trailing, Theme.spacing.lg)
+        .padding(.bottom, Theme.spacing.lg)
       }
       .background(Theme.color.background)
+      .navigationTitle(formattedDate(Date()))
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .navigationBarLeading) {
+          Button {
+            withAnimation {
+              isSideMenuPresented.toggle()
+            }
+          } label: {
+            Image(systemName: "line.3.horizontal")
+          }
+          .toolbarIconStyle()
+        }
 
-      // 0. 背景光斑 (Komorebi Effect)
-      GeometryReader { proxy in
-        Circle()
-          .fill(
-            RadialGradient(
-              gradient: Gradient(colors: [
-                Theme.color.accent.opacity(0.12),  // 温暖的光晕
-                Theme.color.background.opacity(0),
-              ]),
-              center: .center,
-              startRadius: 10,
-              endRadius: 250
-            )
-          )
-          .frame(width: 500, height: 500)
-          .position(x: proxy.size.width * 0.8, y: proxy.size.height * 0.15)
-          .blur(radius: 60)
+        ToolbarItem(placement: .primaryAction) {
+          Button {
+            // TODO: 搜索逻辑
+          } label: {
+            Image(systemName: "magnifyingglass")
+          }
+          .toolbarIconStyle()
+        }
       }
-      .ignoresSafeArea()
-
-      // 3. 悬浮按钮 (FAB)
-      Button(action: {
-        showAddEntry = true
-      }) {
-        Image(systemName: "plus")
-          .font(.system(size: 24, weight: .medium))
-          .foregroundColor(.white)
-          .frame(width: 56, height: 56)
-          .background(Theme.color.primaryAction)
-          .clipShape(Circle())
-          .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
-      }
-      .padding(.trailing, Theme.spacing.lg)
-      .padding(.bottom, Theme.spacing.lg)
     }
     .sheet(isPresented: $showAddEntry) {
       NavigationStack {
@@ -192,5 +172,5 @@ struct TimelineView: View {
 
 #Preview {
   // configureAppDependencies() // Preview might not have this
-  return TimelineView()
+  return TimelineView(isSideMenuPresented: .constant(false))
 }
