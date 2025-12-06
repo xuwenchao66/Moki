@@ -89,12 +89,16 @@ struct TimelineView: View {
           LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
             ForEach(groupedEntries, id: \.month) { group in
               Section(header: monthHeader(group.month)) {
-                ForEach(group.entries) { entry in
+                ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
+                  // 判断是否显示日期：如果是第一条，或者跟上一条不是同一天，则显示
+                  let showDate = shouldShowDate(entries: group.entries, currentIndex: index)
+
                   JournalItemView(
                     content: entry.content,
                     date: entry.date,
                     tags: entry.tags,
                     images: entry.images,
+                    showDate: showDate,
                     onMoreTapped: {
                       // TODO: More Action
                     }
@@ -170,6 +174,17 @@ struct TimelineView: View {
       Spacer()
     }
     .background(Theme.color.background)  // 确保吸顶时遮挡内容
+  }
+
+  /// 判断当前条目是否需要显示日期
+  private func shouldShowDate(entries: [MockEntry], currentIndex: Int) -> Bool {
+    if currentIndex == 0 { return true }
+
+    let currentEntry = entries[currentIndex]
+    let previousEntry = entries[currentIndex - 1]
+
+    let calendar = Calendar.current
+    return !calendar.isDate(currentEntry.date, inSameDayAs: previousEntry.date)
   }
 }
 
