@@ -129,7 +129,7 @@ struct TimelineView: View {
         .padding(.bottom, Theme.spacing.lg)
       }
       .background(Theme.color.background)
-      .navigationTitle("")  // 去掉标题
+      .navigationTitle("Moki")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
