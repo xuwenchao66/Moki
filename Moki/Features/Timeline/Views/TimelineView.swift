@@ -85,48 +85,53 @@ struct TimelineView: View {
   var body: some View {
     NavigationStack {
       ZStack(alignment: .bottomTrailing) {
-        ScrollView {
-          LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-            ForEach(groupedEntries, id: \.month) { group in
-              Section(header: monthHeader(group.month)) {
-                ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
-                  // 判断是否显示日期：如果是第一条，或者跟上一条不是同一天，则显示
-                  let showDate = shouldShowDate(entries: group.entries, currentIndex: index)
+        ScrollViewReader { proxy in
+          ScrollView {
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+              // 添加一个隐藏的顶部锚点
+              Color.clear.frame(height: 1).id("top")
 
-                  JournalItemView(
-                    content: entry.content,
-                    date: entry.date,
-                    tags: entry.tags,
-                    images: entry.images,
-                    showDate: showDate,
-                    onMoreTapped: {
-                      // TODO: More Action
-                    }
-                  )
+              ForEach(groupedEntries, id: \.month) { group in
+                Section(header: monthHeader(group.month, proxy: proxy)) {
+                  ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
+                    // 判断是否显示日期：如果是第一条，或者跟上一条不是同一天，则显示
+                    let showDate = shouldShowDate(entries: group.entries, currentIndex: index)
+
+                    JournalItemView(
+                      content: entry.content,
+                      date: entry.date,
+                      tags: entry.tags,
+                      images: entry.images,
+                      showDate: showDate,
+                      onMoreTapped: {
+                        // TODO: More Action
+                      }
+                    )
+                  }
                 }
               }
+
+              Spacer(minLength: 100)  // 底部留白
             }
-
-            Spacer(minLength: 100)  // 底部留白
+            .padding(.top, Theme.spacing.md)
           }
-          .padding(.top, Theme.spacing.md)
-        }
-        .background(Theme.color.background)
+          .background(Theme.color.background)
 
-        // 3. 悬浮按钮 (FAB)
-        Button(action: {
-          showAddEntry = true
-        }) {
-          Image(systemName: "plus")
-            .font(.system(size: 22, weight: .light))
-            .foregroundColor(Theme.color.primaryActionForeground)
-            .frame(width: 48, height: 48)
-            .background(Theme.color.primaryAction)
-            .clipShape(Circle())
-            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
+          // 3. 悬浮按钮 (FAB)
+          Button(action: {
+            showAddEntry = true
+          }) {
+            Image(systemName: "plus")
+              .font(.system(size: 22, weight: .light))
+              .foregroundColor(Theme.color.primaryActionForeground)
+              .frame(width: 48, height: 48)
+              .background(Theme.color.primaryAction)
+              .clipShape(Circle())
+              .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
+          }
+          .padding(.trailing, Theme.spacing.lg)
+          .padding(.bottom, Theme.spacing.lg)
         }
-        .padding(.trailing, Theme.spacing.lg)
-        .padding(.bottom, Theme.spacing.lg)
       }
       .background(Theme.color.background)
       .navigationTitle("Moki")
@@ -162,7 +167,7 @@ struct TimelineView: View {
 
   // MARK: - Helpers
 
-  private func monthHeader(_ month: String) -> some View {
+  private func monthHeader(_ month: String, proxy: ScrollViewProxy) -> some View {
     HStack {
       Text(month)
         .font(Theme.font.title2)  // 比如 2025.12
@@ -172,6 +177,11 @@ struct TimelineView: View {
       Spacer()
     }
     .background(Theme.color.background)  // 确保吸顶时遮挡内容
+    .onTapGesture {
+      withAnimation {
+        proxy.scrollTo("top", anchor: .top)
+      }
+    }
   }
 
   /// 判断当前条目是否需要显示日期
