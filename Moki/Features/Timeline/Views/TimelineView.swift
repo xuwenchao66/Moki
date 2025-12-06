@@ -114,7 +114,7 @@ struct TimelineView: View {
         }) {
           Image(systemName: "plus")
             .font(.system(size: 22, weight: .light))
-            .foregroundColor(.white)
+            .foregroundColor(Theme.color.primaryActionForeground)
             .frame(width: 48, height: 48)
             .background(Theme.color.primaryAction)
             .clipShape(Circle())
