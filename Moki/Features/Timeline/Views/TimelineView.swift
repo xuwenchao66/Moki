@@ -13,58 +13,11 @@ struct TimelineView: View {
   private var entries: [MokiDiary]
 
   // 临时 Mock 数据模型
-  struct MockEntry: Identifiable {
-    let id = UUID()
-    let content: String
-    let date: Date
-    let images: [String]
-    let tags: [String]
-  }
+  // MockEntry is now defined in Moki/Features/Timeline/Models/MockTimelineData.swift
 
   // 硬编码的演示数据
   private var mockEntries: [MockEntry] {
-    let now = Date()
-    let calendar = Calendar.current
-
-    // 辅助函数：生成今天指定时间的 Date 对象
-    func time(_ dayOffset: Int, _ hour: Int, _ minute: Int) -> Date {
-      let day = calendar.date(byAdding: .day, value: dayOffset, to: now) ?? now
-      return calendar.date(bySettingHour: hour, minute: minute, second: 0, of: day) ?? day
-    }
-
-    return [
-      MockEntry(
-        content: "欲望是你跟自己签的协议：在得到你想要的东西之前，你一直不会快乐。",
-        date: time(0, 23, 42),
-        images: [],
-        tags: ["Naval", "智慧"]
-      ),
-      MockEntry(
-        content: "下班路上的光影，治愈了一整天的疲惫。",
-        date: time(0, 20, 15),
-        images: ["1"],
-        tags: ["摄影"]
-      ),
-      MockEntry(
-        content: "趁着午休时间去公园走了走，秋天真的太美了。\n\n阳光透过树叶洒下来，像是给地面铺了一层金箔。空气里有桂花的香味，深呼吸，感觉肺都被净化了。",
-        date: time(0, 12, 30),
-        images: ["1", "2"],
-        tags: []
-      ),
-      MockEntry(
-        content: "早安 Moki。新的一天，保持专注。",
-        date: time(0, 08, 00),
-        images: [],
-        tags: ["早安"]
-      ),
-      // 添加一些昨天的数据来演示分组
-      MockEntry(
-        content: "昨天的记录，测试时间线分组功能。",
-        date: time(-1, 22, 00),
-        images: [],
-        tags: ["测试"]
-      ),
-    ]
+    return MockEntry.examples
   }
 
   // 按月份分组的数据
