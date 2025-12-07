@@ -4,32 +4,18 @@ struct EditView: View {
   @Environment(\.dismiss) private var dismiss
 
   @State private var content: String = ""
-  @FocusState private var isFocused: Bool
+  @State private var isFocused: Bool = false
 
   var body: some View {
     VStack(spacing: 0) {
       // 1. 输入区域
       ZStack(alignment: .topLeading) {
-        if content.isEmpty {
-          Text("记录当下的想法...")
-            .font(Theme.font.journalBody)
-            .foregroundColor(Theme.color.foregroundTertiary)
-            .lineSpacing(Theme.spacing.textLineSpacing)
-            // 微调占位符位置，使其与 TextEditor 光标对齐
-            .padding(.top, 8)
-            .padding(.leading, 5)
-        }
-
-        TextEditor(text: $content)
-          .font(Theme.font.journalBody)
-          .lineSpacing(Theme.spacing.textLineSpacing)
-          .foregroundColor(Theme.color.foreground)
-          .scrollContentBackground(.hidden)  // 移除默认背景
-          .background(Color.clear)
-          .focused($isFocused)
-          .frame(maxHeight: .infinity)
-          // TextEditor 默认有内边距，这里负向补偿以对齐边缘
-          .padding(.horizontal, -4)
+        PlainTextEditor(
+          text: $content,
+          isFocused: $isFocused,
+          placeholder: "记录当下的想法..."
+        )
+        .frame(maxHeight: .infinity)
       }
       .padding(.horizontal, Theme.spacing.md)  // 缩小水平边距 (24 -> 16)
 
@@ -48,14 +34,6 @@ struct EditView: View {
             Image(systemName: "photo")
           }
 
-          Button(action: { /* TODO: Format */  }) {
-            Image(systemName: "bold")
-          }
-
-          Button(action: { /* TODO: List */  }) {
-            Image(systemName: "list.bullet")
-          }
-
           Spacer()
         }
         .font(.system(size: 20, weight: .light))
@@ -65,7 +43,7 @@ struct EditView: View {
         .background(Theme.color.cardBackground)
       }
     }
-    .background(Theme.color.cardBackground)
+    .background(Theme.color.background)  // 统一使用背景色
     .navigationTitle(formattedDate())
     .navigationBarTitleDisplayMode(.inline)
     .toolbar {
