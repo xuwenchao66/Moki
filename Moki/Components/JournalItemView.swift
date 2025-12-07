@@ -19,29 +19,22 @@ struct JournalItemView: View {
   var body: some View {
     HStack(alignment: .top, spacing: Theme.spacing.md) {
       // 1. 左侧日期区域
-      VStack(alignment: .center, spacing: 2) {
+      VStack(alignment: .center, spacing: 6) {
         if showDate {
           Text(dayString)
-            .font(.system(size: 24, weight: .bold, design: .serif))
+            .font(Theme.font.title3)
             .foregroundColor(Theme.color.foreground)
 
           Text(weekdayString)
-            .font(.system(size: 12, weight: .medium))
+            .font(Theme.font.caption)
             .foregroundColor(Theme.color.foregroundSecondary)
         }
       }
-      .frame(width: 44)  // 固定宽度，确保时间轴对齐
-      .padding(.top, 4)  // 微调顶部对齐
+      .frame(width: 32)
+      .padding(.top, 4)
 
       // 2. 右侧卡片区域
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
-        // 顶部：更多按钮 (如果需要放在右上角，或者跟内容混排)
-        // 这里暂时保持简洁，将更多按钮放在右下角或跟随内容?
-        // 截图通常更多按钮在卡片右上角或者右下角。
-        // 根据之前的布局，更多按钮在底部。
-        // 但卡片式设计，右上角放更多按钮比较常见。
-        // 让我们把更多按钮放在右上角，如果提供了的话。
-
         HStack(alignment: .top) {
           Text(content)
             .font(Theme.font.journalBody)
@@ -83,7 +76,7 @@ struct JournalItemView: View {
         HStack(alignment: .center, spacing: Theme.spacing.sm) {
           // 时间
           Text(timeString)
-            .font(Theme.font.caption)  // 或者 .system(size: 12)
+            .font(Theme.font.caption)
             .foregroundColor(Theme.color.foregroundTertiary)
 
           // 标签

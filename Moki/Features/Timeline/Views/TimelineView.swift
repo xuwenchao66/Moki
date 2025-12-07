@@ -119,9 +119,9 @@ struct TimelineView: View {
   private func monthHeader(_ month: String) -> some View {
     HStack {
       Text(month)
-        .font(Theme.font.title2)  // 比如 2025.12
+        .font(Theme.font.title2)
         .foregroundColor(Theme.color.foreground)
-        .padding(.horizontal, Theme.spacing.lg)
+        .padding(.horizontal, Theme.spacing.md2)
         .padding(.vertical, Theme.spacing.sm)
       Spacer()
     }

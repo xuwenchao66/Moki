@@ -47,6 +47,9 @@ struct Spacing {
   /// 默认间距 - 16pt
   static let md: CGFloat = 16
 
+  /// 中等间距 - 20pt
+  static let md2: CGFloat = 20
+
   /// 大间距 - 24pt
   static let lg: CGFloat = 24
 
@@ -55,9 +58,9 @@ struct Spacing {
 
   /// 超大间距 - 48pt
   static let xxl: CGFloat = 48
-  
+
   // MARK: - Semantic Spacing
-  
+
   /// 文本行间距 - 优化阅读体验 (8pt)
   static let textLineSpacing: CGFloat = 8
 }
