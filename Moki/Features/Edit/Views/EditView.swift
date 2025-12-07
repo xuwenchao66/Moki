@@ -37,14 +37,12 @@ struct EditView: View {
       .padding(.bottom, Theme.spacing.sm)
 
       // 2. 输入区域
-      ZStack(alignment: .topLeading) {
-        PlainTextEditor(
-          text: $content,
-          isFocused: $isFocused,
-          placeholder: "在这里记录你的想法..."
-        )
-        .frame(maxHeight: .infinity)
-      }
+      PlainTextEditor(
+        text: $content,
+        isFocused: $isFocused,
+        placeholder: "在这里记录你的想法..."
+      )
+      .frame(maxHeight: .infinity)
       .padding(.horizontal, Theme.spacing.md)
 
       // 3. 底部工具栏
