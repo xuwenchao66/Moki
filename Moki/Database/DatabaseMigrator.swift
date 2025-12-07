@@ -16,57 +16,38 @@ enum AppDatabaseMigrator {
   static func migrator() -> SQLiteData.DatabaseMigrator {
     var migrator = DatabaseMigrator()
 
+    // 使用 Query Interface (推荐的 GRDB 方式)
     migrator.registerMigration("Create initial tables") { db in
-      try #sql(
-        """
-        CREATE TABLE IF NOT EXISTS "diaries" (
-          "id" TEXT NOT NULL PRIMARY KEY,
-          "text" TEXT NOT NULL,
-          "createdAt" TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-          "modifiedAt" TEXT,
-          "isStarred" INTEGER NOT NULL DEFAULT 0
-        ) STRICT
-        """
-      )
-      .execute(db)
+      try db.create(table: "diaries") { t in
+        t.primaryKey("id", .text)
+        t.column("text", .text).notNull()
+        t.column("createdAt", .text).notNull().defaults(sql: "CURRENT_TIMESTAMP")
+        t.column("modifiedAt", .text)
+        t.column("isStarred", .boolean).notNull().defaults(to: false)
+      }
     }
 
     // 新增 Tags 相关表结构迁移
     migrator.registerMigration("create-tags-tables") { db in
       // 1. 创建标签表
-      try #sql(
-        """
-        CREATE TABLE "tags" (
-          "id" TEXT NOT NULL PRIMARY KEY,
-          "name" TEXT NOT NULL UNIQUE,
-          "color" TEXT,
-          "createdAt" TEXT NOT NULL
-        ) STRICT
-        """
-      )
-      .execute(db)
+      try db.create(table: "tags") { t in
+        t.primaryKey("id", .text)
+        t.column("name", .text).notNull().unique()
+        t.column("color", .text)
+        t.column("createdAt", .text).notNull()
+      }
 
       // 2. 创建日记-标签关联表 (多对多)
-      try #sql(
-        """
-        CREATE TABLE "diary_tags" (
-          "diaryId" TEXT NOT NULL,
-          "tagId" TEXT NOT NULL,
-          PRIMARY KEY ("diaryId", "tagId"),
-          FOREIGN KEY ("diaryId") REFERENCES "diaries"("id") ON DELETE CASCADE,
-          FOREIGN KEY ("tagId") REFERENCES "tags"("id") ON DELETE CASCADE
-        ) STRICT
-        """
-      )
-      .execute(db)
+      try db.create(table: "diary_tags") { t in
+        t.column("diaryId", .text).notNull()
+        t.column("tagId", .text).notNull()
+        t.primaryKey(["diaryId", "tagId"])
+        t.foreignKey(["diaryId"], references: "diaries", columns: ["id"], onDelete: .cascade)
+        t.foreignKey(["tagId"], references: "tags", columns: ["id"], onDelete: .cascade)
+      }
 
       // 3. 创建索引以加速标签查询
-      try #sql(
-        """
-        CREATE INDEX "idx_diary_tags_tagId" ON "diary_tags" ("tagId")
-        """
-      )
-      .execute(db)
+      try db.create(index: "idx_diary_tags_tagId", on: "diary_tags", columns: ["tagId"])
     }
 
     return migrator
