@@ -26,7 +26,9 @@ enum AppDatabaseMigrator {
         t.column("text", .text).notNull()
         t.column("createdAt", .text).notNull().defaults(sql: "CURRENT_TIMESTAMP")
         t.column("updatedAt", .text)
+        t.column("deletedAt", .text)  // 软删除时间戳
         t.column("isStarred", .boolean).notNull().defaults(to: false)
+        t.column("metadata", .text).notNull().defaults(to: "{}")  // JSON 扩展字段
       }
 
       // 2. 标签表

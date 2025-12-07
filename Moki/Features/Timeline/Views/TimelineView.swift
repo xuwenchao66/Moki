@@ -12,11 +12,16 @@ struct TimelineView: View {
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
   private var dbEntries: [MokiDiary]
 
+  // 过滤掉已删除的日记
+  private var activeEntries: [MokiDiary] {
+    dbEntries.filter { $0.deletedAt == nil }
+  }
+
   // 2. 数据源切换 (Data Source Switch)
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-    return mockEntries  // 🟢 Mock Data
-    // return dbEntries  // 🔵 Real Data
+    // return mockEntries  // 🟢 Mock Data
+    return activeEntries  // 🔵 Real Data
   }
 
   // 3. Mock 数据适配 (Mock Adapter)

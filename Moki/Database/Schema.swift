@@ -17,8 +17,17 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
   /// 修改时间
   var updatedAt: Date?
 
+  /// 软删除时间戳
+  /// nil = 未删除，有值 = 已删除（可恢复）
+  var deletedAt: Date?
+
   /// 是否标星
   var isStarred: Bool = false
+
+  /// JSON 扩展字段
+  /// 用于存储额外数据，不需要频繁修改表结构
+  /// 示例: {"mood": "happy", "weather": "sunny", "location": "home"}
+  var metadata: String = "{}"
 
   // MARK: - Init
 
@@ -26,13 +35,17 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
     id: UUID = UUID(),
     text: String,
     createdAt: Date = Date(),
-    isStarred: Bool = false
+    deletedAt: Date? = nil,
+    isStarred: Bool = false,
+    metadata: String = "{}"
   ) {
     self.id = id
     self.text = text
     self.createdAt = createdAt
     self.updatedAt = nil
+    self.deletedAt = deletedAt
     self.isStarred = isStarred
+    self.metadata = metadata
   }
 }
 

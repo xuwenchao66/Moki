@@ -37,9 +37,45 @@ struct DiaryService {
     }
   }
 
-  /// 删除日记
+  /// 软删除日记（可恢复）
   func delete(_ entry: MokiDiary) {
-    AppLogger.database.info("请求删除日记", metadata: ["id": "\(entry.id)"])
+    AppLogger.database.info("软删除日记", metadata: ["id": "\(entry.id)"])
+    do {
+      try database.write { db in
+        try MokiDiary
+          .update {
+            $0.deletedAt = Date()
+            $0.updatedAt = Date()
+          }
+          .where { $0.id.eq(entry.id) }
+          .execute(db)
+      }
+    } catch {
+      AppToast.show("删除失败：\(error.localizedDescription)")
+    }
+  }
+
+  /// 恢复已删除的日记
+  func restore(_ entry: MokiDiary) {
+    AppLogger.database.info("恢复日记", metadata: ["id": "\(entry.id)"])
+    do {
+      try database.write { db in
+        try MokiDiary
+          .update {
+            $0.deletedAt = nil
+            $0.updatedAt = Date()
+          }
+          .where { $0.id.eq(entry.id) }
+          .execute(db)
+      }
+    } catch {
+      AppToast.show("恢复失败：\(error.localizedDescription)")
+    }
+  }
+
+  /// 永久删除日记（不可恢复）
+  func deletePermanently(_ entry: MokiDiary) {
+    AppLogger.database.info("永久删除日记", metadata: ["id": "\(entry.id)"])
     do {
       try database.write { db in
         try MokiDiary
