@@ -50,7 +50,9 @@ enum AppDatabaseMigrator {
       }
 
       // 4. 创建索引优化查询性能
+      // 索引1：按标签筛选日记（点击标签 → 查看所有相关日记）
       try db.create(index: "idx_diary_tags_tagId", on: "diary_tags", columns: ["tagId"])
+      // 索引2：显示日记的标签列表并排序（打开日记 → 显示其所有标签）
       try db.create(
         index: "idx_diary_tags_diaryId_order",
         on: "diary_tags",
