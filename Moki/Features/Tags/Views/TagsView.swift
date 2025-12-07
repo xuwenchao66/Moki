@@ -38,9 +38,8 @@ struct TagsView: View {
         }
     }
     .alert(editorTitle, isPresented: $isEditorPresented) {
-      TextField("例如：灵感、阅读、健身...", text: $editorName)
+      TextField("", text: $editorName)
         .textInputAutocapitalization(.never)
-        .disableAutocorrection(true)
 
       Button(editorActionTitle) {
         commit()
@@ -50,6 +49,8 @@ struct TagsView: View {
       Button("取消", role: .cancel) {
         isEditorPresented = false
       }
+    } message: {
+      Text("例如：灵感、阅读、健身...")
     }
   }
 
