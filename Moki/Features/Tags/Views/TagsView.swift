@@ -2,7 +2,7 @@ import SQLiteData
 import SwiftUI
 
 struct TagsView: View {
-  @FetchAll(MokiTag.order { $0.order.asc() })
+  @FetchAll(MokiTag.order { $0.createdAt.desc() })
   private var tags: [MokiTag]
 
   private let tagService = TagService()
