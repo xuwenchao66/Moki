@@ -66,47 +66,56 @@ struct TimelineView: View {
   var body: some View {
     NavigationStack {
       ZStack(alignment: .bottomTrailing) {
-        ScrollView {
-          // pinnedViews: [.sectionHeaders] 实现月份吸顶
-          LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-            ForEach(groupedEntries, id: \.month) { monthGroup in
-              Section(header: MonthHeaderView(title: monthGroup.month)) {
+        if entries.isEmpty {
+          EmptyStateView(
+            title: "开始你的记录",
+            message: "每一个微小的想法，都值得被珍藏。\n点击右下角的按钮，写下第一篇日记吧。",
+          ) {
+            showAddEntry = true
+          }
+        } else {
+          ScrollView {
+            // pinnedViews: [.sectionHeaders] 实现月份吸顶
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+              ForEach(groupedEntries, id: \.month) { monthGroup in
+                Section(header: MonthHeaderView(title: monthGroup.month)) {
 
-                // 月份内的日期列表
-                ForEach(monthGroup.days, id: \.date) { dayGroup in
-                  HStack(alignment: .top, spacing: Theme.spacing.md) {
-                    // 左侧：日期 (整个分组共用一个日期显示)
-                    JournalDateView(date: dayGroup.date)
-                      .padding(.top, Theme.spacing.md)  // 微调顶部对齐，与卡片内容对齐
+                  // 月份内的日期列表
+                  ForEach(monthGroup.days, id: \.date) { dayGroup in
+                    HStack(alignment: .top, spacing: Theme.spacing.md) {
+                      // 左侧：日期 (整个分组共用一个日期显示)
+                      JournalDateView(date: dayGroup.date)
+                        .padding(.top, Theme.spacing.md)  // 微调顶部对齐，与卡片内容对齐
 
-                    // 右侧：日记卡片列表
-                    VStack(spacing: Theme.spacing.sm) {
-                      ForEach(dayGroup.entries) { entry in
-                        JournalCardView(
-                          content: entry.text,
-                          date: entry.createdAt,
-                          tags: [],  // TODO: Tags support
-                          images: [],  // TODO: Images support
-                          onEditTapped: {
-                            // TODO: Edit Action
-                          },
-                          onDeleteTapped: {
-                            delete(entry: entry)
-                          }
-                        )
+                      // 右侧：日记卡片列表
+                      VStack(spacing: Theme.spacing.sm) {
+                        ForEach(dayGroup.entries) { entry in
+                          JournalCardView(
+                            content: entry.text,
+                            date: entry.createdAt,
+                            tags: [],  // TODO: Tags support
+                            images: [],  // TODO: Images support
+                            onEditTapped: {
+                              // TODO: Edit Action
+                            },
+                            onDeleteTapped: {
+                              delete(entry: entry)
+                            }
+                          )
+                        }
                       }
                     }
+                    .padding(.horizontal, Theme.spacing.md)
+                    .padding(.bottom, Theme.spacing.md2)  // 不同日期之间的间距
                   }
-                  .padding(.horizontal, Theme.spacing.md)
-                  .padding(.bottom, Theme.spacing.md2)  // 不同日期之间的间距
                 }
               }
-            }
 
-            Spacer(minLength: 80)  // 底部留白，避免被 FAB 遮挡
+              Spacer(minLength: 80)  // 底部留白，避免被 FAB 遮挡
+            }
           }
+          .background(Theme.color.background)
         }
-        .background(Theme.color.background)
 
         // 3. 悬浮按钮 (FAB)
         Button(action: {
