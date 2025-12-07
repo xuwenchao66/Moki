@@ -73,7 +73,7 @@ struct ContentView: View {
           }
         }
     )
-    .onChange(of: selectedTab) { _ in
+    .onChange(of: selectedTab) { _, _ in
       setMenu(open: false, animated: true)
     }
   }

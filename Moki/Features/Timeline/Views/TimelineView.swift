@@ -1,29 +1,55 @@
+import Dependencies
 import SQLiteData
 import SwiftUI
 
 struct TimelineView: View {
   @Binding var isSideMenuPresented: Bool
 
-  // MARK: - Data
-
   @State private var showAddEntry = false
+  private let diaryService = DiaryService()
 
-  // 从数据库自动拉取所有日记，并按创建时间倒序排列
+  // 1. 真实数据源 (Database)
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
-  private var entries: [MokiDiary]
+  private var dbEntries: [MokiDiary]
 
-  // 硬编码的演示数据
-  private var mockEntries: [MockEntry] {
-    return MockEntry.examples
+  // 2. 数据源切换 (Data Source Switch)
+  // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
+  private var entries: [MokiDiary] {
+    return mockEntries  // 🟢 Mock Data
+    // return dbEntries  // 🔵 Real Data
   }
 
+  // 3. Mock 数据适配 (Mock Adapter)
+  private var mockEntries: [MokiDiary] {
+    MockEntry.examples.map { mock in
+      MokiDiary(
+        id: mock.id,
+        text: mock.content,
+        createdAt: mock.date
+      )
+    }
+  }
+
+  // MARK: - Formatters
+
+  // 缓存 Formatter 以避免在循环中频繁创建，极大提升分组性能
+  private static let monthFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy.MM"
+    return formatter
+  }()
+
+  private static let dayFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter
+  }()
+
   // 按月份和日期分组的数据
-  private var groupedEntries: [(month: String, days: [(date: Date, entries: [MockEntry])])] {
+  private var groupedEntries: [(month: String, days: [(date: Date, entries: [MokiDiary])])] {
     // 1. 按月份分组
-    let byMonth = Dictionary(grouping: mockEntries) { entry -> String in
-      let formatter = DateFormatter()
-      formatter.dateFormat = "yyyy.MM"
-      return formatter.string(from: entry.date)
+    let byMonth = Dictionary(grouping: entries) { entry -> String in
+      return Self.monthFormatter.string(from: entry.createdAt)
     }
 
     // 2. 月份倒序
@@ -32,17 +58,15 @@ struct TimelineView: View {
 
       // 3.按日期分组
       let byDay = Dictionary(grouping: monthEntries) { entry -> String in
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: entry.date)
+        return Self.dayFormatter.string(from: entry.createdAt)
       }
 
       // 4. 日期倒序
       let sortedDays = byDay.keys.sorted(by: >).map {
-        dayKey -> (date: Date, entries: [MockEntry]) in
-        let dayEntries = byDay[dayKey]!.sorted { $0.date > $1.date }
+        dayKey -> (date: Date, entries: [MokiDiary]) in
+        let dayEntries = byDay[dayKey]!.sorted { $0.createdAt > $1.createdAt }
         // 使用当天的第一条数据的时间作为该组的 Date Key
-        return (date: dayEntries.first!.date, entries: dayEntries)
+        return (date: dayEntries.first!.createdAt, entries: dayEntries)
       }
 
       return (month: monthKey, days: sortedDays)
@@ -52,46 +76,59 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
+    let _ = debugPrint("TimelineView body render, entries count: \(entries.count)")
     NavigationStack {
       ZStack(alignment: .bottomTrailing) {
-        ScrollView {
-          // pinnedViews: [.sectionHeaders] 实现月份吸顶
-          LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
-            ForEach(groupedEntries, id: \.month) { monthGroup in
-              Section(header: MonthHeaderView(title: monthGroup.month)) {
+        if entries.isEmpty {
+          EmptyStateView(
+            title: "还没有记录",
+            message: "点击 + 创建你的独家记忆",
+          ) {
+            showAddEntry = true
+          }
+        } else {
+          ScrollView {
+            // pinnedViews: [.sectionHeaders] 实现月份吸顶
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+              ForEach(groupedEntries, id: \.month) { monthGroup in
+                Section(header: MonthHeaderView(title: monthGroup.month)) {
 
-                // 月份内的日期列表
-                ForEach(monthGroup.days, id: \.date) { dayGroup in
-                  HStack(alignment: .top, spacing: Theme.spacing.md) {
-                    // 左侧：日期 (整个分组共用一个日期显示)
-                    JournalDateView(date: dayGroup.date)
-                      .padding(.top, Theme.spacing.md)  // 微调顶部对齐，与卡片内容对齐
+                  // 月份内的日期列表
+                  ForEach(monthGroup.days, id: \.date) { dayGroup in
+                    HStack(alignment: .top, spacing: Theme.spacing.md) {
+                      // 左侧：日期 (整个分组共用一个日期显示)
+                      JournalDateView(date: dayGroup.date)
+                        .padding(.top, Theme.spacing.sm)
 
-                    // 右侧：日记卡片列表
-                    VStack(spacing: Theme.spacing.sm) {
-                      ForEach(dayGroup.entries) { entry in
-                        JournalCardView(
-                          content: entry.content,
-                          date: entry.date,
-                          tags: entry.tags,
-                          images: entry.images,
-                          onMoreTapped: {
-                            // TODO: More Action
-                          }
-                        )
+                      // 右侧：日记卡片列表
+                      VStack(spacing: Theme.spacing.sm) {
+                        ForEach(dayGroup.entries) { entry in
+                          JournalCardView(
+                            content: entry.text,
+                            date: entry.createdAt,
+                            tags: [],  // TODO: Tags support
+                            images: [],  // TODO: Images support
+                            onEditTapped: {
+                              // TODO: Edit Action
+                            },
+                            onDeleteTapped: {
+                              diaryService.delete(entry)
+                            }
+                          )
+                        }
                       }
                     }
+                    .padding(.horizontal, Theme.spacing.md)
+                    .padding(.bottom, Theme.spacing.md2)  // 不同日期之间的间距
                   }
-                  .padding(.horizontal, Theme.spacing.md)
-                  .padding(.bottom, Theme.spacing.md2)  // 不同日期之间的间距
                 }
               }
-            }
 
-            Spacer(minLength: 80)  // 底部留白，避免被 FAB 遮挡
+              Spacer(minLength: 80)  // 底部留白，避免被 FAB 遮挡
+            }
           }
+          .background(Theme.color.background)
         }
-        .background(Theme.color.background)
 
         // 3. 悬浮按钮 (FAB)
         Button(action: {

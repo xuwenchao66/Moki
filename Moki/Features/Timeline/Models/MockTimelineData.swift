@@ -64,7 +64,7 @@ extension MockEntry {
         tags: []
       ),
       MockEntry(
-        content: "早安 Moki。新的一天，保持专注。",
+        content: "早安 Moki",
         date: time(0, 0, 08, 00),
         images: [],
         tags: ["早安"]

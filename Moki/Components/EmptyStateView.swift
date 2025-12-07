@@ -12,18 +12,15 @@ import SwiftUI
 struct EmptyStateView: View {
   let title: String
   let message: String
-  var actionTitle: String?
   var action: (() -> Void)?
 
   init(
     title: String,
     message: String,
-    actionTitle: String? = nil,
     action: (() -> Void)? = nil
   ) {
     self.title = title
     self.message = message
-    self.actionTitle = actionTitle
     self.action = action
   }
 
@@ -64,7 +61,6 @@ struct EmptyStateView: View {
     EmptyStateView(
       title: "还没有日记",
       message: "开始记录你的第一条想法吧\n每一个当下都值得被记住",
-      actionTitle: "创建第一条日记"
     ) {
       print("创建日记")
     }
