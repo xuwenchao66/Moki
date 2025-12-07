@@ -8,15 +8,19 @@ struct TimelineView: View {
   @State private var showAddEntry = false
   private let diaryService = DiaryService()
 
-  // 1. 真实数据源 (Database)
-  @FetchAll(MokiDiary.order { $0.createdAt.desc() })
+  // 1. 真实数据源 (Database) - 数据库层面过滤未删除的日记
+  @FetchAll(
+    MokiDiary
+      .where { $0.deletedAt == nil }
+      .order { $0.createdAt.desc() }
+  )
   private var dbEntries: [MokiDiary]
 
   // 2. 数据源切换 (Data Source Switch)
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-    return mockEntries  // 🟢 Mock Data
-    // return dbEntries  // 🔵 Real Data
+    // return mockEntries  // 🟢 Mock Data
+    return dbEntries  // 🔵 Real Data
   }
 
   // 3. Mock 数据适配 (Mock Adapter)
@@ -76,7 +80,6 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
-    let _ = debugPrint("TimelineView body render, entries count: \(entries.count)")
     NavigationStack {
       ZStack(alignment: .bottomTrailing) {
         if entries.isEmpty {

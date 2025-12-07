@@ -13,6 +13,7 @@ import UIKit
 @main
 struct MokiApp: App {
   init() {
+    AppLogger.configure()
     configureAppDependencies()
     configureAppearance()
   }

@@ -1,4 +1,3 @@
-import Dependencies
 import SQLiteData
 import SwiftUI
 
@@ -6,7 +5,7 @@ struct TagsView: View {
   @FetchAll(MokiTag.order { $0.createdAt.desc() })
   private var tags: [MokiTag]
 
-  @Dependency(\.defaultDatabase) private var database
+  private let tagService = TagService()
 
   var onMenuButtonTapped: (() -> Void)? = nil
   @State private var editorMode: TagEditorMode = .create
@@ -39,9 +38,8 @@ struct TagsView: View {
         }
     }
     .alert(editorTitle, isPresented: $isEditorPresented) {
-      TextField("例如：灵感、阅读、健身...", text: $editorName)
+      TextField("", text: $editorName)
         .textInputAutocapitalization(.never)
-        .disableAutocorrection(true)
 
       Button(editorActionTitle) {
         commit()
@@ -51,6 +49,8 @@ struct TagsView: View {
       Button("取消", role: .cancel) {
         isEditorPresented = false
       }
+    } message: {
+      Text("例如：灵感、阅读、健身...")
     }
   }
 
@@ -100,67 +100,22 @@ struct TagsView: View {
 
   // MARK: - Actions
 
-  private func handleCreate(name: String) -> Bool {
-    do {
-      try insertTag(named: name)
-      return true
-    } catch {
-      AppToast.show(errorMessage(for: error))
-      return false
+  private func handleCreate(name: String) {
+    if tagService.create(name: name) {
+      isEditorPresented = false
+      editorName = ""
     }
   }
 
-  private func handleRename(tag: MokiTag, newName: String) -> Bool {
-    do {
-      try rename(tag: tag, to: newName)
-      return true
-    } catch {
-      AppToast.show(errorMessage(for: error))
-      return false
+  private func handleRename(tag: MokiTag, newName: String) {
+    if tagService.rename(tag, to: newName) {
+      isEditorPresented = false
+      editorName = ""
     }
   }
 
   private func delete(tag: MokiTag) {
-    do {
-      try database.write { db in
-        try MokiTag
-          .delete(tag)
-          .execute(db)
-      }
-    } catch {
-      AppToast.show(errorMessage(for: error))
-    }
-  }
-
-  private func insertTag(named name: String) throws {
-    let sanitized = name.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard sanitized.isEmpty == false else { return }
-
-    let tag = MokiTag(name: sanitized)
-    try database.write { db in
-      try MokiTag.insert { tag }
-        .execute(db)
-    }
-  }
-
-  private func rename(tag: MokiTag, to newName: String) throws {
-    let sanitized = newName.trimmingCharacters(in: .whitespacesAndNewlines)
-    guard sanitized.isEmpty == false else { return }
-
-    try database.write { db in
-      try MokiTag
-        .update { $0.name = sanitized }
-        .where { $0.id.eq(tag.id) }
-        .execute(db)
-    }
-  }
-
-  private func errorMessage(for error: Error) -> String {
-    let message = error.localizedDescription
-    if message.contains("UNIQUE") {
-      return "标签名称已存在，换一个试试。"
-    }
-    return "发生错误：\(message)"
+    tagService.delete(tag)
   }
 
   @ViewBuilder
@@ -189,17 +144,11 @@ struct TagsView: View {
     let trimmed = trimmedEditorName
     guard isEditorNameInvalid == false else { return }
 
-    let isSuccess: Bool
     switch mode {
     case .create:
-      isSuccess = handleCreate(name: trimmed)
+      handleCreate(name: trimmed)
     case let .edit(tag):
-      isSuccess = handleRename(tag: tag, newName: trimmed)
-    }
-
-    if isSuccess {
-      isEditorPresented = false
-      editorName = ""
+      handleRename(tag: tag, newName: trimmed)
     }
   }
 

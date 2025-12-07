@@ -6,6 +6,7 @@
 //  提供统一的按钮样式和交互
 //
 
+import Logging
 import SwiftUI
 
 /// 按钮样式枚举
@@ -74,11 +75,11 @@ extension View {
         .captionStyle()
 
       AppButton("创建日记", icon: "plus.circle.fill", style: .primary) {
-        print("创建日记")
+        AppLogger.preview.debug("👆 点击创建日记")
       }
 
       AppButton("保存", style: .primary) {
-        print("保存")
+        AppLogger.preview.debug("👆 点击保存")
       }
     }
 
@@ -88,11 +89,11 @@ extension View {
         .captionStyle()
 
       AppButton("取消", icon: "xmark", style: .secondary) {
-        print("取消")
+        AppLogger.preview.debug("👆 点击取消")
       }
 
       AppButton("查看更多", style: .secondary) {
-        print("查看更多")
+        AppLogger.preview.debug("👆 点击查看更多")
       }
     }
 
@@ -102,11 +103,11 @@ extension View {
         .captionStyle()
 
       AppButton("编辑", icon: "pencil", style: .text) {
-        print("编辑")
+        AppLogger.preview.debug("👆 点击编辑")
       }
 
       AppButton("了解更多", style: .text) {
-        print("了解更多")
+        AppLogger.preview.debug("👆 点击了解更多")
       }
     }
   }
@@ -114,5 +115,3 @@ extension View {
   .frame(maxWidth: .infinity, maxHeight: .infinity)
   .background(Theme.color.background)
 }
-
-

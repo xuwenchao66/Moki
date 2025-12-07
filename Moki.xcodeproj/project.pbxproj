@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		D402B5222ED343B20075A0D7 /* SQLiteData in Frameworks */ = {isa = PBXBuildFile; productRef = D402B5212ED343B20075A0D7 /* SQLiteData */; };
 		D43C696C2EDF515300479620 /* Toast in Frameworks */ = {isa = PBXBuildFile; productRef = D43C696B2EDF515300479620 /* Toast */; };
+		D4B5D19D2EE5C75F005ACA9B /* InMemoryLogging in Frameworks */ = {isa = PBXBuildFile; productRef = D4B5D19C2EE5C75F005ACA9B /* InMemoryLogging */; };
+		D4B5D19F2EE5C75F005ACA9B /* Logging in Frameworks */ = {isa = PBXBuildFile; productRef = D4B5D19E2EE5C75F005ACA9B /* Logging */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,6 +44,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D43C696C2EDF515300479620 /* Toast in Frameworks */,
+				D4B5D19D2EE5C75F005ACA9B /* InMemoryLogging in Frameworks */,
+				D4B5D19F2EE5C75F005ACA9B /* Logging in Frameworks */,
 				D402B5222ED343B20075A0D7 /* SQLiteData in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -87,6 +91,8 @@
 			packageProductDependencies = (
 				D402B5212ED343B20075A0D7 /* SQLiteData */,
 				D43C696B2EDF515300479620 /* Toast */,
+				D4B5D19C2EE5C75F005ACA9B /* InMemoryLogging */,
+				D4B5D19E2EE5C75F005ACA9B /* Logging */,
 			);
 			productName = Moki;
 			productReference = D42ECC642ED33574001E34F5 /* Moki.app */;
@@ -120,6 +126,7 @@
 			packageReferences = (
 				D402B5202ED343B20075A0D7 /* XCRemoteSwiftPackageReference "sqlite-data" */,
 				D43C696A2EDF515300479620 /* XCRemoteSwiftPackageReference "Toast-Swift" */,
+				D4B5D19B2EE5C75F005ACA9B /* XCRemoteSwiftPackageReference "swift-log" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D42ECC652ED33574001E34F5 /* Products */;
@@ -391,6 +398,14 @@
 				minimumVersion = 5.1.1;
 			};
 		};
+		D4B5D19B2EE5C75F005ACA9B /* XCRemoteSwiftPackageReference "swift-log" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-log";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -403,6 +418,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = D43C696A2EDF515300479620 /* XCRemoteSwiftPackageReference "Toast-Swift" */;
 			productName = Toast;
+		};
+		D4B5D19C2EE5C75F005ACA9B /* InMemoryLogging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4B5D19B2EE5C75F005ACA9B /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = InMemoryLogging;
+		};
+		D4B5D19E2EE5C75F005ACA9B /* Logging */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = D4B5D19B2EE5C75F005ACA9B /* XCRemoteSwiftPackageReference "swift-log" */;
+			productName = Logging;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
