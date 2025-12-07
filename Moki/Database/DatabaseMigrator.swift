@@ -31,26 +31,6 @@ enum AppDatabaseMigrator {
       .execute(db)
     }
 
-    migrator.registerMigration("seed-welcome-entry") { db in
-      let entryCount = try MokiDiary.count().fetchOne(db) ?? 0
-      guard entryCount == 0 else { return }
-
-      let welcomeEntry = MokiDiary.welcomeEntry
-      try #sql(
-        """
-        INSERT INTO "diaries" ("id", "text", "createdAt", "modifiedAt", "isStarred")
-        VALUES (
-          \(welcomeEntry.id.uuidString),
-          \(welcomeEntry.text),
-          \(welcomeEntry.createdAt),
-          \(welcomeEntry.modifiedAt),
-          \(welcomeEntry.isStarred)
-        )
-        """
-      )
-      .execute(db)
-    }
-
     // 新增 Tags 相关表结构迁移
     migrator.registerMigration("create-tags-tables") { db in
       // 1. 创建标签表
