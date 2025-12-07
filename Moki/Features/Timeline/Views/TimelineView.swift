@@ -5,9 +5,8 @@ import SwiftUI
 struct TimelineView: View {
   @Binding var isSideMenuPresented: Bool
 
-  @Dependency(\.defaultDatabase) private var database
-
   @State private var showAddEntry = false
+  private let diaryService = DiaryService()
 
   // 从数据库自动拉取所有日记，并按创建时间倒序排列
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
@@ -99,7 +98,7 @@ struct TimelineView: View {
                               // TODO: Edit Action
                             },
                             onDeleteTapped: {
-                              delete(entry: entry)
+                              diaryService.delete(entry)
                             }
                           )
                         }
@@ -161,22 +160,6 @@ struct TimelineView: View {
       NavigationStack {
         EditView()
       }
-    }
-  }
-
-  // MARK: - Actions
-
-  private func delete(entry: MokiDiary) {
-    print("Request delete for entry: \(entry.id)")
-    do {
-      try database.write { db in
-        try MokiDiary
-          .delete(entry)
-          .execute(db)
-      }
-    } catch {
-      print("Delete error: \(error)")  // Add debug print
-      AppToast.show("删除失败：\(error.localizedDescription)")
     }
   }
 }
