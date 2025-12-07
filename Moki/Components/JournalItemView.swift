@@ -37,7 +37,10 @@ struct JournalCardView: View {
   let date: Date
   let tags: [String]
   var images: [String] = []
-  var onMoreTapped: (() -> Void)? = nil
+
+  // Callbacks
+  var onEditTapped: (() -> Void)? = nil
+  var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
     VStack(alignment: .leading, spacing: Theme.spacing.sm) {
@@ -48,15 +51,17 @@ struct JournalCardView: View {
           .lineSpacing(Theme.spacing.textLineSpacing)
           .fixedSize(horizontal: false, vertical: true)
 
-        if onMoreTapped != nil {
-          Spacer()
-          Button(action: { onMoreTapped?() }) {
-            Image(systemName: "ellipsis")
-              .rotationEffect(.degrees(90))
-              .foregroundColor(Theme.color.foregroundTertiary)
-              .frame(width: 24, height: 24)
-              .padding(.leading, 8)
-          }
+        Spacer()
+
+        Menu {
+          menuItems
+        } label: {
+          Image(systemName: "ellipsis")
+            .rotationEffect(.degrees(90))
+            .foregroundColor(Theme.color.foregroundTertiary)
+            .frame(width: 24, height: 24)
+            .padding(.leading, 8)
+            .contentShape(Rectangle())  // 增大点击区域
         }
       }
 
@@ -101,7 +106,26 @@ struct JournalCardView: View {
     .cornerRadius(Theme.radius.md)
     .shadow(
       color: Theme.shadow.sm.color, radius: Theme.shadow.sm.radius, x: Theme.shadow.sm.x,
-      y: Theme.shadow.sm.y)
+      y: Theme.shadow.sm.y
+    )
+    .contextMenu {
+      menuItems
+    }
+  }
+
+  @ViewBuilder
+  private var menuItems: some View {
+    if let onEditTapped {
+      Button(action: onEditTapped) {
+        Label("编辑", systemImage: "pencil")
+      }
+    }
+
+    if let onDeleteTapped {
+      Button(role: .destructive, action: onDeleteTapped) {
+        Label("删除", systemImage: "trash")
+      }
+    }
   }
 
   private var timeString: String {

@@ -1,10 +1,11 @@
+import Dependencies
 import SQLiteData
 import SwiftUI
 
 struct TimelineView: View {
   @Binding var isSideMenuPresented: Bool
 
-  // MARK: - Data
+  @Dependency(\.defaultDatabase) private var database
 
   @State private var showAddEntry = false
 
@@ -86,8 +87,11 @@ struct TimelineView: View {
                           date: entry.createdAt,
                           tags: [],  // TODO: Tags support
                           images: [],  // TODO: Images support
-                          onMoreTapped: {
-                            // TODO: More Action
+                          onEditTapped: {
+                            // TODO: Edit Action
+                          },
+                          onDeleteTapped: {
+                            delete(entry: entry)
                           }
                         )
                       }
@@ -148,6 +152,22 @@ struct TimelineView: View {
       NavigationStack {
         EditView()
       }
+    }
+  }
+
+  // MARK: - Actions
+
+  private func delete(entry: MokiDiary) {
+    print("Request delete for entry: \(entry.id)")
+    do {
+      try database.write { db in
+        try MokiDiary
+          .delete(entry)
+          .execute(db)
+      }
+    } catch {
+      print("Delete error: \(error)")  // Add debug print
+      AppToast.show("删除失败：\(error.localizedDescription)")
     }
   }
 }
