@@ -41,7 +41,6 @@ struct TimelineView: View {
         ScrollView {
           LazyVStack(spacing: 0) {
             ForEach(groupedEntries, id: \.month) { group in
-              // 直接作为普通 View 渲染，不吸顶
               monthHeader(group.month)
 
               ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
@@ -61,9 +60,8 @@ struct TimelineView: View {
               }
             }
 
-            Spacer(minLength: 100)  // 底部留白
+            Spacer(minLength: 40)  // 底部留白
           }
-          .padding(.top, Theme.spacing.md)
         }
         .background(Theme.color.background)
 
