@@ -43,7 +43,7 @@ struct JournalCardView: View {
   var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
+    VStack(alignment: .leading, spacing: Theme.spacing.sm) {
       // 1. 内容区域
       Text(content)
         .font(Theme.font.journalBody)
