@@ -22,7 +22,7 @@ enum AppDatabaseMigrator {
         t.primaryKey("id", .text)
         t.column("text", .text).notNull()
         t.column("createdAt", .text).notNull().defaults(sql: "CURRENT_TIMESTAMP")
-        t.column("modifiedAt", .text)
+        t.column("updatedAt", .text)
         t.column("isStarred", .boolean).notNull().defaults(to: false)
       }
     }
@@ -35,6 +35,7 @@ enum AppDatabaseMigrator {
         t.column("name", .text).notNull().unique()
         t.column("color", .text)
         t.column("createdAt", .text).notNull()
+        t.column("updatedAt", .text)
       }
 
       // 2. 创建日记-标签关联表 (多对多)

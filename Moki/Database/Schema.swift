@@ -15,7 +15,7 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
   var createdAt: Date
 
   /// 修改时间
-  var modifiedAt: Date?
+  var updatedAt: Date?
 
   /// 是否标星
   var isStarred: Bool = false
@@ -31,7 +31,7 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
     self.id = id
     self.text = text
     self.createdAt = createdAt
-    self.modifiedAt = nil
+    self.updatedAt = nil
     self.isStarred = isStarred
   }
 }
@@ -54,11 +54,15 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
   /// 创建时间
   var createdAt: Date
 
+  /// 修改时间
+  var updatedAt: Date?
+
   init(id: UUID = UUID(), name: String, color: String? = nil, createdAt: Date = Date()) {
     self.id = id
     self.name = name
     self.color = color
     self.createdAt = createdAt
+    self.updatedAt = nil
   }
 }
 

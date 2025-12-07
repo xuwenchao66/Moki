@@ -25,7 +25,7 @@ struct DiaryService {
         try MokiDiary
           .update {
             $0.text = entry.text
-            $0.modifiedAt = Date()
+            $0.updatedAt = Date()
             $0.isStarred = entry.isStarred
           }
           .where { $0.id.eq(entry.id) }

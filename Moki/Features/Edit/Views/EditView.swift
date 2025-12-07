@@ -7,6 +7,8 @@ struct EditView: View {
   @State private var content: String = ""
   @State private var isFocused: Bool = false
 
+  private let diaryService = DiaryService()
+
   // 保持当前时间用于显示
   private let entryDate = Date()
 
@@ -101,8 +103,11 @@ struct EditView: View {
   }
 
   private func saveEntry() {
-    // TODO: 保存到数据库
-    print("Saving entry: \(content)")
+    let entry = MokiDiary(
+      text: content,
+      createdAt: entryDate
+    )
+    diaryService.create(entry)
     dismiss()
   }
 
