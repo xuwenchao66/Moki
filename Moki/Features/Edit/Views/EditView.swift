@@ -81,10 +81,10 @@ struct EditView: View {
             }
           }) {
             Image(systemName: "checkmark")
-              .font(.system(size: 14, weight: .bold))  // 图标更精致
-              .foregroundColor(Theme.color.background)  // 图标颜色与页面背景一致 (反色)
-              .frame(width: 56, height: 32)  // 尺寸调小 (64x36 -> 56x32)
-              .background(Theme.color.foreground)  // 按钮背景使用主前景色 (黑/白)
+              .font(.system(size: 14, weight: .bold))
+              .foregroundColor(Theme.color.background)
+              .frame(width: 56, height: 32)
+              .background(Theme.color.foreground)
               .clipShape(Capsule())
           }
         }
@@ -95,8 +95,8 @@ struct EditView: View {
     }
     .background(Theme.color.background)
     .navigationBarTitleDisplayMode(.inline)
-    .navigationTitle("")  // 隐藏导航栏标题
-    .toolbar(.hidden, for: .navigationBar)  // 彻底隐藏导航栏 (可选，或者保留空标题)
+    .navigationTitle("")
+    .toolbar(.hidden, for: .navigationBar)
     .onAppear {
       isFocused = true
     }
