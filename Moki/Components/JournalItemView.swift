@@ -52,17 +52,6 @@ struct JournalCardView: View {
           .fixedSize(horizontal: false, vertical: true)
 
         Spacer()
-
-        Menu {
-          menuItems
-        } label: {
-          Image(systemName: "ellipsis")
-            .rotationEffect(.degrees(90))
-            .foregroundColor(Theme.color.foregroundTertiary)
-            .frame(width: 24, height: 24)
-            .padding(.leading, 8)
-            .contentShape(Rectangle())  // 增大点击区域
-        }
       }
 
       // 图片区域
@@ -97,6 +86,18 @@ struct JournalCardView: View {
               .font(Theme.font.caption)
               .foregroundColor(Theme.color.foregroundSecondary)
           }
+        }
+
+        Spacer()
+
+        Menu {
+          menuItems
+        } label: {
+          Image(systemName: "ellipsis")
+            .font(.system(size: 12, weight: .medium))
+            .foregroundColor(Theme.color.foregroundTertiary)
+            .frame(width: 24, height: 24)
+            .contentShape(Rectangle())
         }
       }
       .padding(.top, 4)
