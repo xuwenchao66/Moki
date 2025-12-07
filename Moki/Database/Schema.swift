@@ -50,6 +50,10 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
   /// 存储格式: "#FF5733"
   var color: String?
 
+  /// 排序
+  /// 用于标签列表排序，值越小越靠前
+  var order: Int
+
   /// 创建时间
   var createdAt: Date
 
@@ -60,11 +64,13 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
     id: UUID = UUID(),
     name: String,
     color: String? = nil,
+    order: Int = 0,
     createdAt: Date = Date()
   ) {
     self.id = id
     self.name = name
     self.color = color
+    self.order = order
     self.createdAt = createdAt
     self.updatedAt = nil
   }

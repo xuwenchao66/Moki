@@ -34,6 +34,7 @@ enum AppDatabaseMigrator {
         t.primaryKey("id", .text)
         t.column("name", .text).notNull().unique()  // 名称唯一
         t.column("color", .text)
+        t.column("order", .integer).notNull().defaults(to: 0)  // 排序
         t.column("createdAt", .text).notNull()
         t.column("updatedAt", .text)
       }
