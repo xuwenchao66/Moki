@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct EditView: View {
   @Environment(\.dismiss) private var dismiss
@@ -6,57 +7,98 @@ struct EditView: View {
   @State private var content: String = ""
   @State private var isFocused: Bool = false
 
+  // 保持当前时间用于显示
+  private let entryDate = Date()
+
   var body: some View {
     VStack(spacing: 0) {
-      // 1. 输入区域
-      ZStack(alignment: .topLeading) {
-        PlainTextEditor(
-          text: $content,
-          isFocused: $isFocused,
-          placeholder: "记录当下的想法..."
-        )
-        .frame(maxHeight: .infinity)
-      }
-      .padding(.horizontal, Theme.spacing.md)  // 缩小水平边距 (24 -> 16)
+      // 1. 顶部 Header (日期 + 元数据)
+      VStack(alignment: .leading, spacing: 8) {
+        // 大标题日期
+        Text(formattedDateMain())
+          .font(Theme.font.dateTitle)
+          .foregroundColor(Theme.color.foreground)
 
-      // 2. 底部工具栏
+        // 元数据：星期 · 时间 · 天气/心情
+        HStack(spacing: 6) {
+          Text(formattedDateSub())
+          Text("·")
+          Text(formattedTime())
+          Text("·")
+          Label("多云", systemImage: "cloud.sun.fill")  // TODO: 自动获取天气
+            .font(.system(size: 13))
+        }
+        .font(.system(size: 14))
+        .foregroundColor(Theme.color.foregroundSecondary)
+      }
+      .frame(maxWidth: .infinity, alignment: .leading)
+      .padding(.horizontal, Theme.spacing.md)
+      .padding(.top, Theme.spacing.md)
+      .padding(.bottom, Theme.spacing.sm)
+
+      // 2. 输入区域
+      PlainTextEditor(
+        text: $content,
+        isFocused: $isFocused,
+        placeholder: "在这里记录你的想法..."
+      )
+      .frame(maxHeight: .infinity)
+      .padding(.horizontal, Theme.spacing.md)
+
+      // 3. 底部工具栏
       VStack(spacing: 0) {
         Divider()
           .overlay(Theme.color.divider)
 
-        HStack(spacing: 20) {
-          // 功能图标
-          Button(action: { /* TODO: Tag */  }) {
-            Image(systemName: "number")
-          }
+        HStack {
+          // 功能图标组
+          HStack(spacing: 20) {
+            Button(action: { /* TODO: Tag */  }) {
+              Image(systemName: "number")
+            }
 
-          Button(action: { /* TODO: Photo */  }) {
-            Image(systemName: "photo")
+            Button(action: { /* TODO: Photo */  }) {
+              Image(systemName: "photo")
+            }
+
+            Button(action: { /* TODO: Location */  }) {
+              Image(systemName: "mappin.and.ellipse")
+            }
+
+            Button(action: { /* TODO: Mood */  }) {
+              Image(systemName: "face.smiling")
+            }
           }
+          .font(.system(size: 18, weight: .regular))
+          .foregroundColor(Theme.color.foreground)  // 加深颜色：secondary -> foreground
 
           Spacer()
-        }
-        .font(.system(size: 20, weight: .light))
-        .foregroundColor(Theme.color.foregroundSecondary)
-        .padding(.horizontal, Theme.spacing.md)
-        .padding(.vertical, Theme.spacing.sm)
-        .background(Theme.color.cardBackground)
-      }
-    }
-    .background(Theme.color.background)  // 统一使用背景色
-    .navigationTitle(formattedDate())
-    .navigationBarTitleDisplayMode(.inline)
-    .toolbar {
-      ToolbarItem(placement: .confirmationAction) {
-        Button("完成") {
-          if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            dismiss()
-          } else {
-            saveEntry()
+
+          // 完成按钮
+          Button(action: {
+            if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+              dismiss()
+            } else {
+              saveEntry()
+            }
+          }) {
+            Image(systemName: "checkmark")
+              .font(.system(size: 14, weight: .bold))  // 图标更精致
+              .foregroundColor(Theme.color.background)  // 图标颜色与页面背景一致 (反色)
+              .frame(width: 56, height: 32)  // 尺寸调小 (64x36 -> 56x32)
+              .background(Theme.color.foreground)  // 按钮背景使用主前景色 (黑/白)
+              .clipShape(Capsule())
           }
         }
+        .padding(.horizontal, Theme.spacing.md)
+        .padding(.vertical, Theme.spacing.sm)
+        .background(Theme.color.cardBackground.opacity(0.95))
       }
     }
+    .background(Theme.color.background)
+    .navigationBarTitleDisplayMode(.inline)
+    .navigationTitle("")  // 隐藏导航栏标题
+    .toolbar(.hidden, for: .navigationBar)  // 彻底隐藏导航栏 (可选，或者保留空标题)
     .onAppear {
       isFocused = true
     }
@@ -68,14 +110,32 @@ struct EditView: View {
     dismiss()
   }
 
-  private func formattedDate() -> String {
+  // MARK: - Date Formatters
+
+  private func formattedDateMain() -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "M月d日 EEEE HH:mm"  // 11月30日 星期日 20:30
-    return formatter.string(from: Date())
+    formatter.dateFormat = "yyyy年M月d日"
+    return formatter.string(from: entryDate)
+  }
+
+  private func formattedDateSub() -> String {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.dateFormat = "EEEE"
+    return formatter.string(from: entryDate)
+  }
+
+  private func formattedTime() -> String {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.dateFormat = "HH:mm"
+    return formatter.string(from: entryDate)
   }
 }
 
 #Preview {
-  EditView()
+  NavigationView {
+    EditView()
+  }
 }

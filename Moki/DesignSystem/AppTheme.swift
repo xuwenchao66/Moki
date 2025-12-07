@@ -47,6 +47,9 @@ struct Spacing {
   /// 默认间距 - 16pt
   static let md: CGFloat = 16
 
+  /// 中等间距 - 20pt
+  static let md2: CGFloat = 20
+
   /// 大间距 - 24pt
   static let lg: CGFloat = 24
 
@@ -55,9 +58,9 @@ struct Spacing {
 
   /// 超大间距 - 48pt
   static let xxl: CGFloat = 48
-  
+
   // MARK: - Semantic Spacing
-  
+
   /// 文本行间距 - 优化阅读体验 (8pt)
   static let textLineSpacing: CGFloat = 8
 }
@@ -74,17 +77,17 @@ struct Radius {
   /// 很小圆角 - 4pt
   static let xs: CGFloat = 4
 
-  /// 小圆角 - 8pt
-  static let sm: CGFloat = 8
+  /// 小圆角 - 6pt
+  static let sm: CGFloat = 6
 
-  /// 默认圆角 - 12pt (卡片)
-  static let md: CGFloat = 12
+  /// 默认圆角 - 8pt (卡片 - Unfold 风格)
+  static let md: CGFloat = 8
 
-  /// 大圆角 - 16pt
-  static let lg: CGFloat = 16
+  /// 大圆角 - 12pt
+  static let lg: CGFloat = 12
 
-  /// 很大圆角 - 24pt
-  static let xl: CGFloat = 24
+  /// 很大圆角 - 16pt
+  static let xl: CGFloat = 16
 
   /// 圆形 - 9999pt
   static let full: CGFloat = 9999

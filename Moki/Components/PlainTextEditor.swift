@@ -43,9 +43,10 @@ struct PlainTextEditor: UIViewRepresentable {
   private enum Constants {
     static let fontSize: CGFloat = 17
     static let placeholderTag = 999
-    static let horizontalInset: CGFloat = 5
-    static let verticalInset: CGFloat = 8
-    static let placeholderLeadingOffset: CGFloat = 6
+    // 移除内部内边距，完全由外部 SwiftUI padding 控制
+    static let horizontalInset: CGFloat = 0
+    static let verticalInset: CGFloat = 0
+    static let placeholderLeadingOffset: CGFloat = 0
   }
 
   // MARK: - UIViewRepresentable
@@ -66,12 +67,10 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.autocorrectionType = .yes
     textView.isScrollEnabled = true
     textView.alwaysBounceVertical = true
-    textView.textContainerInset = UIEdgeInsets(
-      top: Constants.verticalInset,
-      left: Constants.horizontalInset,
-      bottom: Constants.verticalInset,
-      right: Constants.horizontalInset
-    )
+
+    // 移除所有内部边距，以便外部精准控制对齐
+    textView.textContainerInset = .zero
+    textView.textContainer.lineFragmentPadding = 0
 
     // 占位符
     setupPlaceholder(in: textView)
