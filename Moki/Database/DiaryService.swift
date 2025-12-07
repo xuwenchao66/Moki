@@ -1,12 +1,13 @@
 import Dependencies
 import Foundation
+import Logging
 import SQLiteData
 
 struct DiaryService {
   @Dependency(\.defaultDatabase) private var database
 
   func create(_ entry: MokiDiary) {
-    debugPrint("Request create diary")
+    AppLogger.database.info("请求创建日记")
     do {
       try database.write { db in
         try MokiDiary
@@ -19,7 +20,7 @@ struct DiaryService {
   }
 
   func update(_ entry: MokiDiary) {
-    debugPrint("Request update diary: \(entry.id)")
+    AppLogger.database.info("请求更新日记", metadata: ["id": "\(entry.id)"])
     do {
       try database.write { db in
         try MokiDiary
@@ -38,7 +39,7 @@ struct DiaryService {
 
   /// 删除日记
   func delete(_ entry: MokiDiary) {
-    debugPrint("Request delete for entry: \(entry.id)")
+    AppLogger.database.info("请求删除日记", metadata: ["id": "\(entry.id)"])
     do {
       try database.write { db in
         try MokiDiary

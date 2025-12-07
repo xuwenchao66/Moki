@@ -43,9 +43,9 @@ enum AppDatabase {
     let databaseURL = directory.appendingPathComponent("moki.sqlite")
 
     // TD: 移除此逻辑。当前为了便于调试，每次初始化都删除旧数据库文件。
-    // if fileManager.fileExists(atPath: databaseURL.path) {
-    //   try fileManager.removeItem(at: databaseURL)
-    // }
+    if fileManager.fileExists(atPath: databaseURL.path) {
+      try fileManager.removeItem(at: databaseURL)
+    }
 
     return databaseURL
   }

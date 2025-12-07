@@ -6,6 +6,7 @@
 //  提供友好的空状态提示
 //
 
+import Logging
 import SwiftUI
 
 /// 空状态视图
@@ -62,7 +63,7 @@ struct EmptyStateView: View {
       title: "还没有日记",
       message: "开始记录你的第一条想法吧\n每一个当下都值得被记住",
     ) {
-      print("创建日记")
+      AppLogger.preview.debug("👆 点击创建日记")
     }
     .frame(height: 400)
     .background(Theme.color.background)

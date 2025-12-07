@@ -76,7 +76,6 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
-    let _ = debugPrint("TimelineView body render, entries count: \(entries.count)")
     NavigationStack {
       ZStack(alignment: .bottomTrailing) {
         if entries.isEmpty {

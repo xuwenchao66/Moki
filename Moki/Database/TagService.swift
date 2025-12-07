@@ -7,6 +7,7 @@
 
 import Dependencies
 import Foundation
+import Logging
 import SQLiteData
 
 struct TagService {
@@ -22,8 +23,9 @@ struct TagService {
           .insert { tag }
           .execute(db)
       }
+      AppLogger.database.info("✅ 创建标签成功: \(tag.name)")
     } catch {
-      print("❌ 创建标签失败: \(error)")
+      AppLogger.database.error("❌ 创建标签失败", metadata: ["error": "\(error)"])
     }
   }
 
@@ -42,8 +44,9 @@ struct TagService {
           .where { $0.id.eq(tag.id) }
           .execute(db)
       }
+      AppLogger.database.info("✅ 更新标签成功: \(name)")
     } catch {
-      print("❌ 更新标签失败: \(error)")
+      AppLogger.database.error("❌ 更新标签失败", metadata: ["error": "\(error)"])
     }
   }
 
@@ -57,8 +60,9 @@ struct TagService {
           .delete(tag)
           .execute(db)
       }
+      AppLogger.database.info("✅ 删除标签成功: \(tag.name)")
     } catch {
-      print("❌ 删除标签失败: \(error)")
+      AppLogger.database.error("❌ 删除标签失败", metadata: ["error": "\(error)"])
     }
   }
 
@@ -77,8 +81,9 @@ struct TagService {
           .insert { association }
           .execute(db)
       }
+      AppLogger.database.info("✅ 添加标签关联: \(tag.name)")
     } catch {
-      print("❌ 添加标签关联失败: \(error)")
+      AppLogger.database.error("❌ 添加标签关联失败", metadata: ["error": "\(error)"])
     }
   }
 
@@ -92,8 +97,9 @@ struct TagService {
           arguments: [diaryId.uuidString, tag.id.uuidString]
         )
       }
+      AppLogger.database.info("✅ 移除标签关联: \(tag.name)")
     } catch {
-      print("❌ 移除标签关联失败: \(error)")
+      AppLogger.database.error("❌ 移除标签关联失败", metadata: ["error": "\(error)"])
     }
   }
 
@@ -119,8 +125,9 @@ struct TagService {
             .execute(db)
         }
       }
+      AppLogger.database.info("✅ 更新日记标签: \(tags.count) 个")
     } catch {
-      print("❌ 更新日记标签失败: \(error)")
+      AppLogger.database.error("❌ 更新日记标签失败", metadata: ["error": "\(error)"])
     }
   }
 }
