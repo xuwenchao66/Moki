@@ -18,12 +18,12 @@ struct TimelineView: View {
   }
 
   // 按月份和日期分组的数据
-  private var groupedEntries: [(month: String, days: [(date: Date, entries: [MockEntry])])] {
+  private var groupedEntries: [(month: String, days: [(date: Date, entries: [MokiDiary])])] {
     // 1. 按月份分组
-    let byMonth = Dictionary(grouping: mockEntries) { entry -> String in
+    let byMonth = Dictionary(grouping: entries) { entry -> String in
       let formatter = DateFormatter()
       formatter.dateFormat = "yyyy.MM"
-      return formatter.string(from: entry.date)
+      return formatter.string(from: entry.createdAt)
     }
 
     // 2. 月份倒序
@@ -34,15 +34,15 @@ struct TimelineView: View {
       let byDay = Dictionary(grouping: monthEntries) { entry -> String in
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: entry.date)
+        return formatter.string(from: entry.createdAt)
       }
 
       // 4. 日期倒序
       let sortedDays = byDay.keys.sorted(by: >).map {
-        dayKey -> (date: Date, entries: [MockEntry]) in
-        let dayEntries = byDay[dayKey]!.sorted { $0.date > $1.date }
+        dayKey -> (date: Date, entries: [MokiDiary]) in
+        let dayEntries = byDay[dayKey]!.sorted { $0.createdAt > $1.createdAt }
         // 使用当天的第一条数据的时间作为该组的 Date Key
-        return (date: dayEntries.first!.date, entries: dayEntries)
+        return (date: dayEntries.first!.createdAt, entries: dayEntries)
       }
 
       return (month: monthKey, days: sortedDays)
@@ -71,10 +71,10 @@ struct TimelineView: View {
                     VStack(spacing: Theme.spacing.sm) {
                       ForEach(dayGroup.entries) { entry in
                         JournalCardView(
-                          content: entry.content,
-                          date: entry.date,
-                          tags: entry.tags,
-                          images: entry.images,
+                          content: entry.text,
+                          date: entry.createdAt,
+                          tags: [],  // TODO: Tags support
+                          images: [],  // TODO: Images support
                           onMoreTapped: {
                             // TODO: More Action
                           }
