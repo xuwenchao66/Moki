@@ -8,13 +8,26 @@ struct TimelineView: View {
   @State private var showAddEntry = false
   private let diaryService = DiaryService()
 
-  // 从数据库自动拉取所有日记，并按创建时间倒序排列
+  // 1. 真实数据源 (Database)
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
-  private var entries: [MokiDiary]
+  private var dbEntries: [MokiDiary]
 
-  // 硬编码的演示数据
-  private var mockEntries: [MockEntry] {
-    return MockEntry.examples
+  // 2. 数据源切换 (Data Source Switch)
+  // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
+  private var entries: [MokiDiary] {
+    return mockEntries  // 🟢 Mock Data
+    // return dbEntries  // 🔵 Real Data
+  }
+
+  // 3. Mock 数据适配 (Mock Adapter)
+  private var mockEntries: [MokiDiary] {
+    MockEntry.examples.map { mock in
+      MokiDiary(
+        id: mock.id,
+        text: mock.content,
+        createdAt: mock.date
+      )
+    }
   }
 
   // MARK: - Formatters
@@ -85,7 +98,7 @@ struct TimelineView: View {
                     HStack(alignment: .top, spacing: Theme.spacing.md) {
                       // 左侧：日期 (整个分组共用一个日期显示)
                       JournalDateView(date: dayGroup.date)
-                        .padding(.top, Theme.spacing.md)  // 与卡片内部 Padding (16pt) 保持一致，实现视觉对齐
+                        .padding(.top, Theme.spacing.sm)
 
                       // 右侧：日记卡片列表
                       VStack(spacing: Theme.spacing.sm) {
