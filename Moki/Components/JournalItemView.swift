@@ -43,18 +43,15 @@ struct JournalCardView: View {
   var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Theme.spacing.sm) {
-      HStack(alignment: .top) {
-        Text(content)
-          .font(Theme.font.journalBody)
-          .foregroundColor(Theme.color.foreground)
-          .lineSpacing(Theme.spacing.textLineSpacing)
-          .fixedSize(horizontal: false, vertical: true)
+    VStack(alignment: .leading, spacing: 12) {
+      // 1. 内容区域
+      Text(content)
+        .font(Theme.font.journalBody)
+        .foregroundColor(Theme.color.foreground)
+        .lineSpacing(Theme.spacing.textLineSpacing)
+        .fixedSize(horizontal: false, vertical: true)
 
-        Spacer()
-      }
-
-      // 图片区域
+      // 2. 图片区域
       if !images.isEmpty {
         HStack(spacing: Theme.spacing.sm) {
           ForEach(0..<images.count, id: \.self) { _ in
@@ -69,10 +66,9 @@ struct JournalCardView: View {
               .clipped()
           }
         }
-        .padding(.vertical, 4)
       }
 
-      // 底部元数据: 时间 + 标签
+      // 3. 底部元数据: 时间 + 标签 + 更多操作
       HStack(alignment: .center, spacing: Theme.spacing.sm) {
         // 时间
         Text(timeString)
@@ -100,9 +96,9 @@ struct JournalCardView: View {
             .contentShape(Rectangle())
         }
       }
-      .padding(.top, 4)
+      .padding(.top, 4)  // 与上方内容拉开一点距离
     }
-    .padding(Theme.spacing.md)
+    .padding(Theme.spacing.md)  // 统一内边距
     .background(Theme.color.cardBackground)
     .cornerRadius(Theme.radius.md)
     .shadow(

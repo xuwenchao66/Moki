@@ -85,7 +85,7 @@ struct TimelineView: View {
                     HStack(alignment: .top, spacing: Theme.spacing.md) {
                       // 左侧：日期 (整个分组共用一个日期显示)
                       JournalDateView(date: dayGroup.date)
-                        .padding(.top, Theme.spacing.md)  // 微调顶部对齐，与卡片内容对齐
+                        .padding(.top, Theme.spacing.md)  // 与卡片内部 Padding (16pt) 保持一致，实现视觉对齐
 
                       // 右侧：日记卡片列表
                       VStack(spacing: Theme.spacing.sm) {
