@@ -41,14 +41,13 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
 @Table("tags")
 struct MokiTag: Identifiable, Codable, Equatable, Hashable {
   /// 唯一标识符
-  /// 建议使用 UUID 以保持与 Diaries 的一致性，方便 SwiftData/CoreData 迁移及离线生成 ID
   let id: UUID
 
-  /// 标签名称 (Unique)
+  /// 标签名称 (Unique - 在数据库层面保证唯一性)
   var name: String
 
   /// 标签颜色 (Hex, 可选)
-  /// 对应截图中的 TEXT 类型，存储 "#FF5733" 格式
+  /// 存储格式: "#FF5733"
   var color: String?
 
   /// 创建时间
@@ -57,29 +56,51 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
   /// 修改时间
   var updatedAt: Date?
 
-  init(id: UUID = UUID(), name: String, color: String? = nil, createdAt: Date = Date()) {
+  /// 软删除标记
+  /// 删除标签时不从数据库删除，只标记为已删除，保留历史数据完整性
+  var isDeleted: Bool = false
+
+  init(
+    id: UUID = UUID(),
+    name: String,
+    color: String? = nil,
+    createdAt: Date = Date(),
+    isDeleted: Bool = false
+  ) {
     self.id = id
     self.name = name
     self.color = color
     self.createdAt = createdAt
     self.updatedAt = nil
+    self.isDeleted = isDeleted
   }
 }
 
 // MARK: - Relations
 
 /// 日记与标签的多对多关联表
-/// 使用中间表是处理 Tag 系统的最佳实践，比在 Diary 中存 String 更灵活（便于重命名、统计、筛选）
+/// 复合主键 (diaryId, tagId) 防止重复关联
+/// 外键约束保证数据完整性，级联删除避免孤儿记录
 @Table("diary_tags")
 struct MokiDiaryTag: Codable, Equatable, Hashable {
-  /// 关联的日记 ID
+  /// 关联的日记 ID (带索引)
   let diaryId: UUID
 
-  /// 关联的标签 ID
+  /// 关联的标签 ID (带索引)
   let tagId: UUID
 
-  init(diaryId: UUID, tagId: UUID) {
+  /// 标签显示顺序
+  /// 用于用户自定义排序，值越小越靠前，默认按创建时间排序
+  var order: Int
+
+  /// 关联创建时间
+  /// 记录"何时给日记添加了这个标签"
+  var createdAt: Date
+
+  init(diaryId: UUID, tagId: UUID, order: Int = 0, createdAt: Date = Date()) {
     self.diaryId = diaryId
     self.tagId = tagId
+    self.order = order
+    self.createdAt = createdAt
   }
 }

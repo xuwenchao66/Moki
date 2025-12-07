@@ -2,7 +2,8 @@
 //  DatabaseMigrator.swift
 //  Moki
 //
-//  维护所有数据库迁移及种子数据
+//  数据库迁移（MVP 简化版本）
+//  开发阶段：修改 Schema 后删除 App 重装即可
 //
 
 import Foundation
@@ -16,8 +17,10 @@ enum AppDatabaseMigrator {
   static func migrator() -> SQLiteData.DatabaseMigrator {
     var migrator = DatabaseMigrator()
 
-    // 使用 Query Interface (推荐的 GRDB 方式)
-    migrator.registerMigration("Create initial tables") { db in
+    // MVP 阶段：所有表结构在一个迁移中定义
+    // 修改 Schema 时直接改这里，然后删除 App 重装测试
+    migrator.registerMigration("v1") { db in
+      // 1. 日记表
       try db.create(table: "diaries") { t in
         t.primaryKey("id", .text)
         t.column("text", .text).notNull()
@@ -25,32 +28,58 @@ enum AppDatabaseMigrator {
         t.column("updatedAt", .text)
         t.column("isStarred", .boolean).notNull().defaults(to: false)
       }
-    }
 
-    // 新增 Tags 相关表结构迁移
-    migrator.registerMigration("create-tags-tables") { db in
-      // 1. 创建标签表
+      // 2. 标签表
       try db.create(table: "tags") { t in
         t.primaryKey("id", .text)
-        t.column("name", .text).notNull().unique()
+        t.column("name", .text).notNull().unique()  // 名称唯一
         t.column("color", .text)
         t.column("createdAt", .text).notNull()
         t.column("updatedAt", .text)
+        t.column("isDeleted", .boolean).notNull().defaults(to: false)  // 软删除
       }
 
-      // 2. 创建日记-标签关联表 (多对多)
+      // 3. 日记-标签关联表（多对多）
       try db.create(table: "diary_tags") { t in
         t.column("diaryId", .text).notNull()
         t.column("tagId", .text).notNull()
-        t.primaryKey(["diaryId", "tagId"])
+        t.column("order", .integer).notNull().defaults(to: 0)  // 排序
+        t.column("createdAt", .text).notNull().defaults(sql: "CURRENT_TIMESTAMP")
+        t.primaryKey(["diaryId", "tagId"])  // 复合主键，防止重复关联
         t.foreignKey(["diaryId"], references: "diaries", columns: ["id"], onDelete: .cascade)
         t.foreignKey(["tagId"], references: "tags", columns: ["id"], onDelete: .cascade)
       }
 
-      // 3. 创建索引以加速标签查询
+      // 4. 创建索引优化查询性能
+      try db.create(index: "idx_tags_isDeleted", on: "tags", columns: ["isDeleted"])
       try db.create(index: "idx_diary_tags_tagId", on: "diary_tags", columns: ["tagId"])
+      try db.create(
+        index: "idx_diary_tags_diaryId_order",
+        on: "diary_tags",
+        columns: ["diaryId", "order"]
+      )
     }
 
     return migrator
   }
 }
+
+// MARK: - 开发提示
+
+/*
+ 📝 MVP 阶段数据库修改流程：
+
+ 1. 修改 Schema.swift 中的数据模型
+ 2. 修改上面 v1 迁移中的表结构
+ 3. 删除 App（或清除模拟器数据）
+ 4. 重新运行，数据库会自动重建
+
+ ⚠️ 注意：这种方式会丢失所有数据，仅适合开发阶段
+
+ 🎯 什么时候需要增量迁移？
+ - 有了真实用户数据（100+ 条日记）
+ - Schema 基本稳定
+ - 准备正式发布时
+
+ 到那时再添加 v2, v3... 等增量迁移即可
+ */
