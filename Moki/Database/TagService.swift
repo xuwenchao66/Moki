@@ -1,10 +1,3 @@
-//
-//  TagService.swift
-//  Moki
-//
-//  标签相关的数据库操作
-//
-
 import Dependencies
 import Foundation
 import Logging
@@ -26,6 +19,32 @@ struct TagService {
       AppLogger.database.info("✅ 创建标签成功: \(tag.name)")
     } catch {
       AppLogger.database.error("❌ 创建标签失败", metadata: ["error": "\(error)"])
+      AppToast.show(errorMessage(for: error))
+    }
+  }
+
+  /// 通过名称创建新标签（便捷方法）
+  /// - Returns: 是否创建成功
+  func create(name: String) -> Bool {
+    let sanitized = name.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !sanitized.isEmpty else {
+      AppToast.show("标签名称不能为空")
+      return false
+    }
+
+    do {
+      let tag = MokiTag(name: sanitized)
+      try database.write { db in
+        try MokiTag
+          .insert { tag }
+          .execute(db)
+      }
+      AppLogger.database.info("✅ 创建标签成功: \(sanitized)")
+      return true
+    } catch {
+      AppLogger.database.error("❌ 创建标签失败", metadata: ["error": "\(error)"])
+      AppToast.show(errorMessage(for: error))
+      return false
     }
   }
 
@@ -47,6 +66,35 @@ struct TagService {
       AppLogger.database.info("✅ 更新标签成功: \(name)")
     } catch {
       AppLogger.database.error("❌ 更新标签失败", metadata: ["error": "\(error)"])
+      AppToast.show(errorMessage(for: error))
+    }
+  }
+
+  /// 重命名标签（便捷方法）
+  /// - Returns: 是否重命名成功
+  func rename(_ tag: MokiTag, to newName: String) -> Bool {
+    let sanitized = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+    guard !sanitized.isEmpty else {
+      AppToast.show("标签名称不能为空")
+      return false
+    }
+
+    do {
+      try database.write { db in
+        try MokiTag
+          .update {
+            $0.name = sanitized
+            $0.updatedAt = Date()
+          }
+          .where { $0.id.eq(tag.id) }
+          .execute(db)
+      }
+      AppLogger.database.info("✅ 重命名标签成功: \(tag.name) → \(sanitized)")
+      return true
+    } catch {
+      AppLogger.database.error("❌ 重命名标签失败", metadata: ["error": "\(error)"])
+      AppToast.show(errorMessage(for: error))
+      return false
     }
   }
 
@@ -63,6 +111,7 @@ struct TagService {
       AppLogger.database.info("✅ 删除标签成功: \(tag.name)")
     } catch {
       AppLogger.database.error("❌ 删除标签失败", metadata: ["error": "\(error)"])
+      AppToast.show(errorMessage(for: error))
     }
   }
 
@@ -84,6 +133,7 @@ struct TagService {
       AppLogger.database.info("✅ 添加标签关联: \(tag.name)")
     } catch {
       AppLogger.database.error("❌ 添加标签关联失败", metadata: ["error": "\(error)"])
+      AppToast.show("添加标签失败：\(error.localizedDescription)")
     }
   }
 
@@ -100,6 +150,7 @@ struct TagService {
       AppLogger.database.info("✅ 移除标签关联: \(tag.name)")
     } catch {
       AppLogger.database.error("❌ 移除标签关联失败", metadata: ["error": "\(error)"])
+      AppToast.show("移除标签失败：\(error.localizedDescription)")
     }
   }
 
@@ -128,6 +179,17 @@ struct TagService {
       AppLogger.database.info("✅ 更新日记标签: \(tags.count) 个")
     } catch {
       AppLogger.database.error("❌ 更新日记标签失败", metadata: ["error": "\(error)"])
+      AppToast.show("更新标签失败：\(error.localizedDescription)")
     }
+  }
+
+  // MARK: - Private Helpers
+
+  private func errorMessage(for error: Error) -> String {
+    let message = error.localizedDescription
+    if message.contains("UNIQUE") {
+      return "标签名称已存在，换一个试试"
+    }
+    return "操作失败：\(message)"
   }
 }
