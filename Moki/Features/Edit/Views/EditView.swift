@@ -52,7 +52,7 @@ struct EditView: View {
 
         HStack {
           // 功能图标组
-          HStack(spacing: 24) {
+          HStack(spacing: 20) {
             Button(action: { /* TODO: Tag */  }) {
               Image(systemName: "number")
             }
@@ -69,8 +69,8 @@ struct EditView: View {
               Image(systemName: "face.smiling")
             }
           }
-          .font(.system(size: 20, weight: .light))
-          .foregroundColor(Theme.color.foregroundSecondary)
+          .font(.system(size: 18, weight: .regular))
+          .foregroundColor(Theme.color.foreground)  // 加深颜色：secondary -> foreground
 
           Spacer()
 
@@ -83,9 +83,9 @@ struct EditView: View {
             }
           }) {
             Image(systemName: "checkmark")
-              .font(.system(size: 16, weight: .bold))
+              .font(.system(size: 14, weight: .bold))  // 图标更精致
               .foregroundColor(Theme.color.background)  // 图标颜色与页面背景一致 (反色)
-              .frame(width: 64, height: 36)
+              .frame(width: 56, height: 32)  // 尺寸调小 (64x36 -> 56x32)
               .background(Theme.color.foreground)  // 按钮背景使用主前景色 (黑/白)
               .clipShape(Capsule())
           }
