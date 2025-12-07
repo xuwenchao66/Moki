@@ -68,8 +68,8 @@ struct TimelineView: View {
       ZStack(alignment: .bottomTrailing) {
         if entries.isEmpty {
           EmptyStateView(
-            title: "开始你的记录",
-            message: "每一个微小的想法，都值得被珍藏。\n点击右下角的按钮，写下第一篇日记吧。",
+            title: "还没有记录",
+            message: "点击 + 创建你的独家记忆",
           ) {
             showAddEntry = true
           }
