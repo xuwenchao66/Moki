@@ -41,7 +41,7 @@ struct EditView: View {
         PlainTextEditor(
           text: $content,
           isFocused: $isFocused,
-          placeholder: "在这里记录你的想法...",
+          placeholder: "在这里记录你的想法..."
         )
         .frame(maxHeight: .infinity)
       }
@@ -53,65 +53,54 @@ struct EditView: View {
           .overlay(Theme.color.divider)
 
         HStack {
-          // Tag
-          Button(action: { /* TODO: Tag */  }) {
-            Image(systemName: "number")
+          // 功能图标组
+          HStack(spacing: 24) {
+            Button(action: { /* TODO: Tag */  }) {
+              Image(systemName: "number")
+            }
+
+            Button(action: { /* TODO: Photo */  }) {
+              Image(systemName: "photo")
+            }
+
+            Button(action: { /* TODO: Location */  }) {
+              Image(systemName: "mappin.and.ellipse")
+            }
+
+            Button(action: { /* TODO: Mood */  }) {
+              Image(systemName: "face.smiling")
+            }
           }
+          .font(.system(size: 20, weight: .light))
+          .foregroundColor(Theme.color.foregroundSecondary)
 
           Spacer()
 
-          // Photo
-          Button(action: { /* TODO: Photo */  }) {
-            Image(systemName: "photo")
-          }
-
-          Spacer()
-
-          // Location
-          Button(action: { /* TODO: Location */  }) {
-            Image(systemName: "mappin.and.ellipse")
-          }
-
-          Spacer()
-
-          // Mood
-          Button(action: { /* TODO: Mood */  }) {
-            Image(systemName: "face.smiling")
-          }
-
-          Spacer()
-
-          // 收起键盘
+          // 完成按钮
           Button(action: {
-            UIApplication.shared.sendAction(
-              #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+            if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+              dismiss()
+            } else {
+              saveEntry()
+            }
           }) {
-            Image(systemName: "keyboard.chevron.compact.down")
+            Image(systemName: "checkmark")
+              .font(.system(size: 16, weight: .bold))
+              .foregroundColor(Theme.color.background)  // 图标颜色与页面背景一致 (反色)
+              .frame(width: 64, height: 36)
+              .background(Theme.color.foreground)  // 按钮背景使用主前景色 (黑/白)
+              .clipShape(Capsule())
           }
         }
-        .font(.system(size: 20, weight: .light))
-        .foregroundColor(Theme.color.foregroundSecondary)
-        .padding(.horizontal, 32)
-        .padding(.vertical, Theme.spacing.md)
+        .padding(.horizontal, Theme.spacing.md)
+        .padding(.vertical, Theme.spacing.sm)
         .background(Theme.color.cardBackground.opacity(0.95))
       }
     }
     .background(Theme.color.background)
     .navigationBarTitleDisplayMode(.inline)
     .navigationTitle("")  // 隐藏导航栏标题
-    .toolbar {
-      ToolbarItem(placement: .confirmationAction) {
-        Button("完成") {
-          if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            dismiss()
-          } else {
-            saveEntry()
-          }
-        }
-        .font(.headline)  // 加粗
-        .foregroundColor(Theme.color.foreground)  // 使用主色调 (黑色)
-      }
-    }
+    .toolbar(.hidden, for: .navigationBar)  // 彻底隐藏导航栏 (可选，或者保留空标题)
     .onAppear {
       isFocused = true
     }
