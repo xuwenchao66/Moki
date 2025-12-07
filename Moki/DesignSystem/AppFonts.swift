@@ -3,7 +3,7 @@
 //  Moki
 //
 //  设计系统 - 字体定义
-//  Claude 风格 (Serif 标题 + 衬线/非衬线混排)
+//  简约风格 (统一无衬线字体)
 //
 
 import SwiftUI
@@ -12,24 +12,24 @@ struct AppFonts {
 
   // MARK: - 标题字体 (Headings)
 
-  /// 特大标题 - Claude 风格 (Serif Bold)
-  static let largeTitle = Font.system(size: 36, weight: .bold, design: .serif)
+  /// 特大标题 - 简约风格
+  static let largeTitle = Font.system(size: 36, weight: .bold, design: .rounded)
 
-  /// 日期标题 - (Serif)
-  static let dateTitle = Font.system(size: 22, weight: .semibold, design: .serif)
+  /// 日期标题
+  static let dateTitle = Font.system(size: 22, weight: .semibold, design: .default)
 
-  /// 一级标题 - 页面标题 (Serif - Claude 标题多用衬线)
-  static let title1 = Font.system(size: 30, weight: .bold, design: .serif)
+  /// 一级标题 - 页面标题
+  static let title1 = Font.system(size: 30, weight: .bold, design: .default)
 
   /// 二级标题 - 章节标题
-  static let title2 = Font.system(size: 24, weight: .semibold, design: .serif)
+  static let title2 = Font.system(size: 24, weight: .semibold, design: .default)
 
-  /// 三级标题 - 卡片标题 (Default - 保持清晰)
+  /// 三级标题 - 卡片标题
   static let title3 = Font.system(size: 20, weight: .medium, design: .default)
 
   // MARK: - 正文字体 (Body)
 
-  /// 正文 - Claude 内容通常使用高可读性的非衬线体或衬线体
+  /// 正文
   static let body = Font.system(size: 17, weight: .regular, design: .default)
 
   /// 日记正文
@@ -56,7 +56,7 @@ struct AppFonts {
   // MARK: - 特殊字体 (Special)
 
   /// 时间戳字体
-  static let timeStamp = Font.system(size: 14, weight: .medium, design: .serif)
+  static let timeStamp = Font.system(size: 14, weight: .medium, design: .default)
 
   /// 标签字体
   static let tag = Font.system(size: 14, weight: .regular, design: .default)
@@ -76,7 +76,7 @@ struct AppFonts {
 
   /// 自适应标题
   static var titleAdaptive: Font {
-    .system(.title2, design: .serif, weight: .semibold)
+    .system(.title2, design: .default, weight: .semibold)
   }
 }
 
