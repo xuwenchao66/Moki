@@ -150,13 +150,13 @@ struct MonthHeaderView: View {
   var body: some View {
     HStack {
       Text(title)
-        .font(Theme.font.dateTitle)  // 使用新的 Serif 字体
+        .font(Theme.font.dateTitle)
         .foregroundColor(Theme.color.foreground)
         .padding(.horizontal, Theme.spacing.md2)
         .padding(.vertical, Theme.spacing.sm)
       Spacer()
     }
-    .background(Theme.color.background.opacity(0.95))  // 背景半透明以支持吸顶效果
+    .background(Theme.color.background.opacity(0.95))
     .overlay(
       Rectangle()
         .frame(height: 0.5)
