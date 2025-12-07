@@ -12,24 +12,40 @@ struct TimelineView: View {
   @FetchAll(MokiDiary.order { $0.createdAt.desc() })
   private var entries: [MokiDiary]
 
-  // 临时 Mock 数据模型
-  // MockEntry is now defined in Moki/Features/Timeline/Models/MockTimelineData.swift
-
   // 硬编码的演示数据
   private var mockEntries: [MockEntry] {
     return MockEntry.examples
   }
 
-  // 按月份分组的数据
-  private var groupedEntries: [(month: String, entries: [MockEntry])] {
-    let grouped = Dictionary(grouping: mockEntries) { entry -> String in
+  // 按月份和日期分组的数据
+  private var groupedEntries: [(month: String, days: [(date: Date, entries: [MockEntry])])] {
+    // 1. 按月份分组
+    let byMonth = Dictionary(grouping: mockEntries) { entry -> String in
       let formatter = DateFormatter()
       formatter.dateFormat = "yyyy.MM"
       return formatter.string(from: entry.date)
     }
 
-    return grouped.keys.sorted(by: >).map { key in
-      (month: key, entries: grouped[key]!.sorted { $0.date > $1.date })
+    // 2. 月份倒序
+    return byMonth.keys.sorted(by: >).map { monthKey in
+      let monthEntries = byMonth[monthKey]!
+
+      // 3.按日期分组
+      let byDay = Dictionary(grouping: monthEntries) { entry -> String in
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: entry.date)
+      }
+
+      // 4. 日期倒序
+      let sortedDays = byDay.keys.sorted(by: >).map {
+        dayKey -> (date: Date, entries: [MockEntry]) in
+        let dayEntries = byDay[dayKey]!.sorted { $0.date > $1.date }
+        // 使用当天的第一条数据的时间作为该组的 Date Key
+        return (date: dayEntries.first!.date, entries: dayEntries)
+      }
+
+      return (month: monthKey, days: sortedDays)
     }
   }
 
@@ -39,29 +55,40 @@ struct TimelineView: View {
     NavigationStack {
       ZStack(alignment: .bottomTrailing) {
         ScrollView {
-          LazyVStack(spacing: 0) {
-            ForEach(Array(groupedEntries.enumerated()), id: \.element.month) { groupIndex, group in
-              monthHeader(group.month)
-                .padding(.top, groupIndex == 0 ? Theme.spacing.compact : Theme.spacing.md2)
+          // pinnedViews: [.sectionHeaders] 实现月份吸顶
+          LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+            ForEach(groupedEntries, id: \.month) { monthGroup in
+              Section(header: MonthHeaderView(title: monthGroup.month)) {
 
-              ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
-                // 判断是否显示日期：如果是第一条，或者跟上一条不是同一天，则显示
-                let showDate = shouldShowDate(entries: group.entries, currentIndex: index)
+                // 月份内的日期列表
+                ForEach(monthGroup.days, id: \.date) { dayGroup in
+                  HStack(alignment: .top, spacing: Theme.spacing.md) {
+                    // 左侧：日期 (整个分组共用一个日期显示)
+                    JournalDateView(date: dayGroup.date)
+                      .padding(.top, Theme.spacing.md)  // 微调顶部对齐，与卡片内容对齐
 
-                JournalItemView(
-                  content: entry.content,
-                  date: entry.date,
-                  tags: entry.tags,
-                  images: entry.images,
-                  showDate: showDate,
-                  onMoreTapped: {
-                    // TODO: More Action
+                    // 右侧：日记卡片列表
+                    VStack(spacing: Theme.spacing.sm) {
+                      ForEach(dayGroup.entries) { entry in
+                        JournalCardView(
+                          content: entry.content,
+                          date: entry.date,
+                          tags: entry.tags,
+                          images: entry.images,
+                          onMoreTapped: {
+                            // TODO: More Action
+                          }
+                        )
+                      }
+                    }
                   }
-                )
+                  .padding(.horizontal, Theme.spacing.md)
+                  .padding(.bottom, Theme.spacing.md2)  // 不同日期之间的间距
+                }
               }
             }
 
-            Spacer(minLength: 40)  // 底部留白
+            Spacer(minLength: 80)  // 底部留白，避免被 FAB 遮挡
           }
         }
         .background(Theme.color.background)
@@ -112,34 +139,34 @@ struct TimelineView: View {
       }
     }
   }
+}
 
-  // MARK: - Helpers
+// MARK: - Components
 
-  private func monthHeader(_ month: String) -> some View {
+/// 吸顶的月份标题
+struct MonthHeaderView: View {
+  let title: String
+
+  var body: some View {
     HStack {
-      Text(month)
-        .font(Theme.font.title3.weight(.semibold))
+      Text(title)
+        .font(Theme.font.dateTitle)  // 使用新的 Serif 字体
         .foregroundColor(Theme.color.foreground)
         .padding(.horizontal, Theme.spacing.md2)
         .padding(.vertical, Theme.spacing.sm)
       Spacer()
     }
-    .background(Theme.color.background)
-  }
-
-  /// 判断当前条目是否需要显示日期
-  private func shouldShowDate(entries: [MockEntry], currentIndex: Int) -> Bool {
-    if currentIndex == 0 { return true }
-
-    let currentEntry = entries[currentIndex]
-    let previousEntry = entries[currentIndex - 1]
-
-    let calendar = Calendar.current
-    return !calendar.isDate(currentEntry.date, inSameDayAs: previousEntry.date)
+    .background(Theme.color.background.opacity(0.95))  // 背景半透明以支持吸顶效果
+    .overlay(
+      Rectangle()
+        .frame(height: 0.5)
+        .foregroundColor(Theme.color.border.opacity(0.3))
+        .padding(.horizontal, Theme.spacing.md2),
+      alignment: .bottom
+    )
   }
 }
 
 #Preview {
-  // configureAppDependencies() // Preview might not have this
   return TimelineView(isSideMenuPresented: .constant(false))
 }
