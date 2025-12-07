@@ -40,8 +40,9 @@ struct TimelineView: View {
       ZStack(alignment: .bottomTrailing) {
         ScrollView {
           LazyVStack(spacing: 0) {
-            ForEach(groupedEntries, id: \.month) { group in
+            ForEach(Array(groupedEntries.enumerated()), id: \.element.month) { groupIndex, group in
               monthHeader(group.month)
+                .padding(.top, groupIndex == 0 ? Theme.spacing.compact : Theme.spacing.md2)
 
               ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
                 // 判断是否显示日期：如果是第一条，或者跟上一条不是同一天，则显示
@@ -117,7 +118,7 @@ struct TimelineView: View {
   private func monthHeader(_ month: String) -> some View {
     HStack {
       Text(month)
-        .font(Theme.font.title2)
+        .font(Theme.font.title3.weight(.semibold))
         .foregroundColor(Theme.color.foreground)
         .padding(.horizontal, Theme.spacing.md2)
         .padding(.vertical, Theme.spacing.sm)

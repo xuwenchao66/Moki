@@ -22,7 +22,7 @@ struct JournalItemView: View {
       VStack(alignment: .center, spacing: 6) {
         if showDate {
           Text(dayString)
-            .font(Theme.font.title3)
+            .font(Theme.font.bodyBold)
             .foregroundColor(Theme.color.foreground)
 
           Text(weekdayString)
@@ -30,7 +30,7 @@ struct JournalItemView: View {
             .foregroundColor(Theme.color.foregroundSecondary)
         }
       }
-      .frame(width: 32)
+      .frame(width: 30)
       .padding(.top, 4)
 
       // 2. 右侧卡片区域
