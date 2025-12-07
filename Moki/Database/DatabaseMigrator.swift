@@ -36,7 +36,6 @@ enum AppDatabaseMigrator {
         t.column("color", .text)
         t.column("createdAt", .text).notNull()
         t.column("updatedAt", .text)
-        t.column("isDeleted", .boolean).notNull().defaults(to: false)  // 软删除
       }
 
       // 3. 日记-标签关联表（多对多）
@@ -51,7 +50,6 @@ enum AppDatabaseMigrator {
       }
 
       // 4. 创建索引优化查询性能
-      try db.create(index: "idx_tags_isDeleted", on: "tags", columns: ["isDeleted"])
       try db.create(index: "idx_diary_tags_tagId", on: "diary_tags", columns: ["tagId"])
       try db.create(
         index: "idx_diary_tags_diaryId_order",

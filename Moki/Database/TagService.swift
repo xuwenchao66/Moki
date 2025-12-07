@@ -18,12 +18,11 @@ final class TagService {
 
   // MARK: - 查询
 
-  /// 获取所有未删除的标签（按名称排序）
+  /// 获取所有标签（按名称排序）
   func fetchAllTags() -> [MokiTag] {
     do {
       return try database.read {
         try MokiTag
-          .filter { $0.isDeleted == false }
           .order { $0.name.asc() }
           .fetchAll($0)
       }
@@ -47,10 +46,10 @@ final class TagService {
         // 2. 获取标签 ID 列表
         let tagIds = associations.map(\.tagId)
 
-        // 3. 查询标签详情（未删除的）
+        // 3. 查询标签详情
         return
           try MokiTag
-          .filter { $0.id.in(tagIds) && $0.isDeleted == false }
+          .filter { $0.id.in(tagIds) }
           .fetchAll(db)
       }
     } catch {
@@ -66,7 +65,7 @@ final class TagService {
     do {
       return try database.read {
         try MokiTag
-          .filter { $0.isDeleted == false && $0.name.like("%\(query)%") }
+          .filter { $0.name.like("%\(query)%") }
           .order { $0.name.asc() }
           .fetchAll($0)
       }
@@ -89,26 +88,15 @@ final class TagService {
 
     do {
       return try database.write { db in
-        // 检查是否已存在（包括已删除的）
+        // 检查是否已存在
         if let existing =
           try MokiTag
-          .filter
+          .filter { $0.name == trimmedName }
+          .fetchOne(db)
         {
-          $0.name == trimmedName
-        }
-        .fetchOne(db) {
-          if existing.isDeleted {
-            // 恢复已删除的标签
-            var restored = existing
-            restored.isDeleted = false
-            restored.updatedAt = Date()
-            try restored.update(db)
-            return restored
-          } else {
-            // 标签已存在
-            print("⚠️ 标签已存在: \(trimmedName)")
-            return existing
-          }
+          // 标签已存在，直接返回
+          print("ℹ️ 标签已存在: \(trimmedName)")
+          return existing
         }
 
         // 创建新标签
@@ -149,13 +137,11 @@ final class TagService {
     do {
       return try database.write { db in
         // 检查新名称是否已被使用
-        if let existing =
+        if let _ =
           try MokiTag
-          .filter
+          .filter { $0.name == trimmedName && $0.id != tag.id }
+          .fetchOne(db)
         {
-          $0.name == trimmedName && $0.id != tag.id && $0.isDeleted == false
-        }
-        .fetchOne(db) {
           print("⚠️ 标签名称已存在: \(trimmedName)")
           return false
         }
@@ -175,14 +161,11 @@ final class TagService {
 
   // MARK: - 删除
 
-  /// 软删除标签（保留历史数据）
+  /// 删除标签（级联删除所有关联）
   func deleteTag(_ tag: MokiTag) {
     do {
       try database.write { db in
-        var deleted = tag
-        deleted.isDeleted = true
-        deleted.updatedAt = Date()
-        try deleted.update(db)
+        try tag.delete(db)  // 外键 CASCADE 会自动删除 diary_tags 关联
       }
     } catch {
       print("❌ 删除标签失败: \(error)")
@@ -285,7 +268,6 @@ final class TagService {
         // 2. 获取标签详情
         let tags =
           try MokiTag
-          .filter { $0.isDeleted == false }
           .fetchAll(db)
 
         // 3. 组合数据并排序

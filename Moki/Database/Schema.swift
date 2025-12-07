@@ -56,23 +56,17 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
   /// 修改时间
   var updatedAt: Date?
 
-  /// 软删除标记
-  /// 删除标签时不从数据库删除，只标记为已删除，保留历史数据完整性
-  var isDeleted: Bool = false
-
   init(
     id: UUID = UUID(),
     name: String,
     color: String? = nil,
-    createdAt: Date = Date(),
-    isDeleted: Bool = false
+    createdAt: Date = Date()
   ) {
     self.id = id
     self.name = name
     self.color = color
     self.createdAt = createdAt
     self.updatedAt = nil
-    self.isDeleted = isDeleted
   }
 }
 
