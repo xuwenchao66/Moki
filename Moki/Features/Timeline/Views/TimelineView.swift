@@ -17,13 +17,26 @@ struct TimelineView: View {
     return MockEntry.examples
   }
 
+  // MARK: - Formatters
+
+  // 缓存 Formatter 以避免在循环中频繁创建，极大提升分组性能
+  private static let monthFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy.MM"
+    return formatter
+  }()
+
+  private static let dayFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter
+  }()
+
   // 按月份和日期分组的数据
   private var groupedEntries: [(month: String, days: [(date: Date, entries: [MokiDiary])])] {
     // 1. 按月份分组
     let byMonth = Dictionary(grouping: entries) { entry -> String in
-      let formatter = DateFormatter()
-      formatter.dateFormat = "yyyy.MM"
-      return formatter.string(from: entry.createdAt)
+      return Self.monthFormatter.string(from: entry.createdAt)
     }
 
     // 2. 月份倒序
@@ -32,9 +45,7 @@ struct TimelineView: View {
 
       // 3.按日期分组
       let byDay = Dictionary(grouping: monthEntries) { entry -> String in
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd"
-        return formatter.string(from: entry.createdAt)
+        return Self.dayFormatter.string(from: entry.createdAt)
       }
 
       // 4. 日期倒序
