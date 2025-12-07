@@ -96,9 +96,8 @@ struct JournalCardView: View {
             .contentShape(Rectangle())
         }
       }
-      .padding(.top, 4)  // 与上方内容拉开一点距离
     }
-    .padding(Theme.spacing.md)  // 统一内边距
+    .padding(Theme.spacing.md)
     .background(Theme.color.cardBackground)
     .cornerRadius(Theme.radius.md)
     .shadow(
