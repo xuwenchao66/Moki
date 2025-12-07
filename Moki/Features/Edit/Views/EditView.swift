@@ -61,12 +61,8 @@ struct EditView: View {
               Image(systemName: "photo")
             }
 
-            Button(action: { /* TODO: Location */  }) {
-              Image(systemName: "mappin.and.ellipse")
-            }
-
-            Button(action: { /* TODO: Mood */  }) {
-              Image(systemName: "face.smiling")
+            Button(action: { /* TODO: Camera */  }) {
+              Image(systemName: "camera")
             }
           }
           .font(.system(size: 18, weight: .regular))
