@@ -16,7 +16,7 @@ struct AppFonts {
   static let largeTitle = Font.system(size: 36, weight: .bold, design: .rounded)
 
   /// 日期标题 (月份分组) - 杂志感衬线体
-  static let dateTitle = Font.system(size: 28, weight: .bold, design: .serif)
+  static let dateTitle = Font.system(size: 26, weight: .bold, design: .serif)
 
   /// 一级标题 - 页面标题
   static let title1 = Font.system(size: 30, weight: .bold, design: .default)

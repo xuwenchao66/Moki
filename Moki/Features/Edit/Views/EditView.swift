@@ -16,7 +16,7 @@ struct EditView: View {
       VStack(alignment: .leading, spacing: 8) {
         // 大标题日期
         Text(formattedDateMain())
-          .font(.system(size: 28, weight: .semibold, design: .serif))
+          .font(Theme.font.dateTitle)
           .foregroundColor(Theme.color.foreground)
 
         // 元数据：星期 · 时间 · 天气/心情

@@ -7,7 +7,7 @@ struct JournalDateView: View {
   var body: some View {
     VStack(alignment: .center, spacing: 0) {
       Text(dayString)
-        .font(Theme.font.title2.weight(.bold))  // 加粗，更大一点
+        .font(Theme.font.title3.weight(.bold))  // 加粗，更大一点
         .foregroundColor(Theme.color.foreground)
 
       Text(weekdayString)
