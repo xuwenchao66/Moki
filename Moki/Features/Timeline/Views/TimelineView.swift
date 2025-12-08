@@ -172,9 +172,7 @@ struct TimelineView: View {
           .toolbarIconStyle()
         }
       }
-    }
-    .sheet(isPresented: $showAddEntry) {
-      NavigationStack {
+      .navigationDestination(isPresented: $showAddEntry) {
         EditView()
       }
     }
