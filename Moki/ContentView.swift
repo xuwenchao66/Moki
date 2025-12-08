@@ -33,6 +33,7 @@ struct ContentView: View {
             setMenu(open: false, animated: true)
           }
           .zIndex(1)
+          .allowsHitTesting(menuOffset > -menuWidth + 10)  // 优化点击响应
       }
 
       // 3. 侧边栏 - 始终存在，通过 offset 控制
@@ -46,34 +47,35 @@ struct ContentView: View {
     .gesture(
       // 只在首页时响应侧边栏手势，避免与子页面的返回手势冲突
       isAtRootLevel
-        ? DragGesture()
+        ? DragGesture(minimumDistance: 0)  // 移除最小距离限制，提升响应速度
           .onChanged { value in
-            let translation = value.translation.width
-            let base = isMenuOpen ? 0 : -menuWidth
-            let newOffset = base + translation
+            // 使用 withAnimation 包裹，让拖动过程更流畅
+            withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0)) {
+              let translation = value.translation.width
+              let base = isMenuOpen ? 0 : -menuWidth
+              let newOffset = base + translation
 
-            // 跟手拖动，限制在 [-menuWidth, 0]
-            menuOffset = Swift.max(-menuWidth, Swift.min(0, newOffset))
+              // 跟手拖动，限制在 [-menuWidth, 0]
+              menuOffset = Swift.max(-menuWidth, Swift.min(0, newOffset))
+            }
           }
           .onEnded { value in
             let translation = value.translation.width
+            let velocity = value.velocity.width  // 考虑速度因素
+
             // 降低开合阈值，让轻扫也能触发。约为菜单宽度的 1/4
             let threshold = menuWidth / 4
+            // 速度阈值：快速滑动时即使位移不够也能触发
+            let velocityThreshold: CGFloat = 300
 
             if isMenuOpen {
-              // 已打开：向左拖超过阈值则关闭，否则回到打开
-              if translation < -threshold {
-                setMenu(open: false, animated: true)
-              } else {
-                setMenu(open: true, animated: true)
-              }
+              // 已打开：向左拖超过阈值或快速向左滑动则关闭
+              let shouldClose = translation < -threshold || velocity < -velocityThreshold
+              setMenu(open: !shouldClose, animated: true)
             } else {
-              // 已关闭：向右拖超过一半则打开，否则回到关闭
-              if translation > threshold {
-                setMenu(open: true, animated: true)
-              } else {
-                setMenu(open: false, animated: true)
-              }
+              // 已关闭：向右拖超过阈值或快速向右滑动则打开
+              let shouldOpen = translation > threshold || velocity > velocityThreshold
+              setMenu(open: shouldOpen, animated: true)
             }
           }
         : nil
@@ -165,7 +167,9 @@ struct ContentView: View {
       menuOffset = open ? 0 : -menuWidth
     }
     if animated {
-      withAnimation(.easeOut(duration: 0.2), action)
+      // 使用交互式弹簧动画，更自然流畅
+      withAnimation(
+        .interactiveSpring(response: 0.3, dampingFraction: 0.86, blendDuration: 0.25), action)
     } else {
       action()
     }
@@ -269,8 +273,9 @@ private struct NavigationLevelObserver: UIViewRepresentable {
     }
 
     func startObserving() {
-      // 每 0.1 秒检查一次导航层级
-      timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+      // 使用 CADisplayLink 获得更流畅的检测（每帧检查）
+      // 但为了性能，我们还是用 Timer，但提高频率到 0.05 秒
+      timer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] _ in
         guard let self = self else { return }
 
         // 获取当前的 NavigationController
@@ -289,10 +294,14 @@ private struct NavigationLevelObserver: UIViewRepresentable {
         let newValue = viewControllersCount <= 1
 
         if self.isAtRootLevel.wrappedValue != newValue {
-          DispatchQueue.main.async {
-            self.isAtRootLevel.wrappedValue = newValue
-          }
+          // 直接更新，不需要 async（已经在主线程）
+          self.isAtRootLevel.wrappedValue = newValue
         }
+      }
+
+      // 确保 Timer 在主线程的 RunLoop 中运行
+      if let timer = timer {
+        RunLoop.main.add(timer, forMode: .common)
       }
     }
 
