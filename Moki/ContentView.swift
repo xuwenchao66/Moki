@@ -12,11 +12,15 @@ struct ContentView: View {
   @State private var isMenuOpen = false
   @State private var selectedTab: SideMenu.Tab = .timeline
   @State private var isAtRootLevel = true  // 是否在首页（根级别）
+  @State private var hasTriggeredFeedback = false  // 是否已触发震动反馈
 
   /// 当前菜单偏移量（-menuWidth ~ 0），默认隐藏在左侧
   @State private var menuOffset: CGFloat = -280
 
   private let menuWidth: CGFloat = 280
+
+  // 触觉反馈生成器
+  private let impactFeedback = UIImpactFeedbackGenerator(style: .light)
 
   var body: some View {
     ZStack(alignment: .leading) {
@@ -49,9 +53,16 @@ struct ContentView: View {
       isAtRootLevel
         ? DragGesture(minimumDistance: 0)  // 移除最小距离限制，提升响应速度
           .onChanged { value in
+            let translation = value.translation.width
+
+            // 在滑动开始时触发轻微震动反馈（只触发一次）
+            if !hasTriggeredFeedback && abs(translation) > 5 {
+              impactFeedback.impactOccurred(intensity: 0.6)
+              hasTriggeredFeedback = true
+            }
+
             // 使用 withAnimation 包裹，让拖动过程更流畅
             withAnimation(.interactiveSpring(response: 0.25, dampingFraction: 1.0)) {
-              let translation = value.translation.width
               let base = isMenuOpen ? 0 : -menuWidth
               let newOffset = base + translation
 
@@ -60,6 +71,9 @@ struct ContentView: View {
             }
           }
           .onEnded { value in
+            // 重置震动反馈标记
+            hasTriggeredFeedback = false
+
             let translation = value.translation.width
             let velocity = value.velocity.width  // 考虑速度因素
 
