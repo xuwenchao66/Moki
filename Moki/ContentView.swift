@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ContentView: View {
   @State private var isMenuOpen = false
   @State private var selectedTab: SideMenu.Tab = .timeline
+  @State private var isAtRootLevel = true  // 是否在首页（根级别）
 
   /// 当前菜单偏移量（-menuWidth ~ 0），默认隐藏在左侧
   @State private var menuOffset: CGFloat = -280
@@ -42,36 +44,43 @@ struct ContentView: View {
       .zIndex(2)
     }
     .gesture(
-      DragGesture()
-        .onChanged { value in
-          let translation = value.translation.width
-          let base = isMenuOpen ? 0 : -menuWidth
-          let newOffset = base + translation
+      // 只在首页时响应侧边栏手势，避免与子页面的返回手势冲突
+      isAtRootLevel
+        ? DragGesture()
+          .onChanged { value in
+            let translation = value.translation.width
+            let base = isMenuOpen ? 0 : -menuWidth
+            let newOffset = base + translation
 
-          // 跟手拖动，限制在 [-menuWidth, 0]
-          menuOffset = Swift.max(-menuWidth, Swift.min(0, newOffset))
-        }
-        .onEnded { value in
-          let translation = value.translation.width
-          // 降低开合阈值，让轻扫也能触发。约为菜单宽度的 1/4
-          let threshold = menuWidth / 4
+            // 跟手拖动，限制在 [-menuWidth, 0]
+            menuOffset = Swift.max(-menuWidth, Swift.min(0, newOffset))
+          }
+          .onEnded { value in
+            let translation = value.translation.width
+            // 降低开合阈值，让轻扫也能触发。约为菜单宽度的 1/4
+            let threshold = menuWidth / 4
 
-          if isMenuOpen {
-            // 已打开：向左拖超过阈值则关闭，否则回到打开
-            if translation < -threshold {
-              setMenu(open: false, animated: true)
+            if isMenuOpen {
+              // 已打开：向左拖超过阈值则关闭，否则回到打开
+              if translation < -threshold {
+                setMenu(open: false, animated: true)
+              } else {
+                setMenu(open: true, animated: true)
+              }
             } else {
-              setMenu(open: true, animated: true)
-            }
-          } else {
-            // 已关闭：向右拖超过一半则打开，否则回到关闭
-            if translation > threshold {
-              setMenu(open: true, animated: true)
-            } else {
-              setMenu(open: false, animated: true)
+              // 已关闭：向右拖超过一半则打开，否则回到关闭
+              if translation > threshold {
+                setMenu(open: true, animated: true)
+              } else {
+                setMenu(open: false, animated: true)
+              }
             }
           }
-        }
+        : nil
+    )
+    .background(
+      // 用隐藏的 View 来监听导航层级变化
+      NavigationLevelObserver(isAtRootLevel: $isAtRootLevel)
     )
     .onChange(of: selectedTab) { _, _ in
       setMenu(open: false, animated: true)
@@ -223,6 +232,92 @@ private struct FeaturePlaceholderView: View {
           .toolbarIconStyle()
         }
       }
+    }
+  }
+}
+
+// MARK: - Navigation Level Observer
+
+/// 监听导航栏层级变化，判断是否在首页
+private struct NavigationLevelObserver: UIViewRepresentable {
+  @Binding var isAtRootLevel: Bool
+
+  func makeUIView(context: Context) -> UIView {
+    let view = UIView()
+    view.isHidden = true
+
+    // 使用定时器定期检查导航层级
+    context.coordinator.startObserving()
+
+    return view
+  }
+
+  func updateUIView(_ uiView: UIView, context: Context) {
+    context.coordinator.isAtRootLevel = $isAtRootLevel
+  }
+
+  func makeCoordinator() -> Coordinator {
+    Coordinator(isAtRootLevel: $isAtRootLevel)
+  }
+
+  class Coordinator {
+    var isAtRootLevel: Binding<Bool>
+    private var timer: Timer?
+
+    init(isAtRootLevel: Binding<Bool>) {
+      self.isAtRootLevel = isAtRootLevel
+    }
+
+    func startObserving() {
+      // 每 0.1 秒检查一次导航层级
+      timer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] _ in
+        guard let self = self else { return }
+
+        // 获取当前的 NavigationController
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+          let window = windowScene.windows.first,
+          let rootViewController = window.rootViewController
+        else {
+          return
+        }
+
+        // 查找 UINavigationController
+        let navController = self.findNavigationController(in: rootViewController)
+        let viewControllersCount = navController?.viewControllers.count ?? 1
+
+        // 只有在首页（层级 == 1）时才启用侧边栏手势
+        let newValue = viewControllersCount <= 1
+
+        if self.isAtRootLevel.wrappedValue != newValue {
+          DispatchQueue.main.async {
+            self.isAtRootLevel.wrappedValue = newValue
+          }
+        }
+      }
+    }
+
+    private func findNavigationController(in viewController: UIViewController)
+      -> UINavigationController?
+    {
+      if let navController = viewController as? UINavigationController {
+        return navController
+      }
+
+      for child in viewController.children {
+        if let found = findNavigationController(in: child) {
+          return found
+        }
+      }
+
+      if let presented = viewController.presentedViewController {
+        return findNavigationController(in: presented)
+      }
+
+      return nil
+    }
+
+    deinit {
+      timer?.invalidate()
     }
   }
 }
