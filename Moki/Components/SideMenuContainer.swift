@@ -1,10 +1,9 @@
 //
 //  SideMenuContainer.swift
 //  Moki
-//
+//  参考 https://github.com/muhammadabbas001/SideMenuSwiftUI
 //  侧边栏容器组件
 //  负责遮罩层、动画、显示/隐藏逻辑、手势处理
-//
 
 import SwiftUI
 
