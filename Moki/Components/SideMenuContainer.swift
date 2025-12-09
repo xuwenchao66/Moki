@@ -43,19 +43,18 @@ struct SideMenuContainer<Content: View>: View {
             .zIndex(0)
         }
 
-        // 2. 遮罩层
-        if menuOffset > -menuWidth {
-          Color.black
-            .opacity(dimmingOpacity)
-            .ignoresSafeArea()
-            .onTapGesture {
-              setMenu(open: false, animated: true)
-            }
-            .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
-            .zIndex(1)
-        }
+        // 2. 遮罩层 - 始终存在，通过透明度控制显示/隐藏
+        Color.black
+          .opacity(dimmingOpacity)
+          .ignoresSafeArea()
+          .allowsHitTesting(menuOffset > -menuWidth)  // 只在显示时允许交互
+          .onTapGesture {
+            setMenu(open: false)
+          }
+          .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
+          .zIndex(1)
 
-        // 3. 侧边栏内容
+        // 3. 侧边栏内容 - 瞬间切换
         content
           .frame(width: menuWidth)
           .offset(x: menuOffset)
@@ -64,7 +63,7 @@ struct SideMenuContainer<Content: View>: View {
       }
       .onChange(of: isShowing) { newValue in
         // 外部状态变化时，同步offset
-        setMenu(open: newValue, animated: true)
+        setMenu(open: newValue)
       }
     }
   }
@@ -90,9 +89,9 @@ struct SideMenuContainer<Content: View>: View {
 
         // 向右拖超过阈值则打开，否则回到关闭
         if translation > threshold {
-          setMenu(open: true, animated: true)
+          setMenu(open: true)
         } else {
-          setMenu(open: false, animated: true)
+          setMenu(open: false)
         }
       }
   }
@@ -115,16 +114,16 @@ struct SideMenuContainer<Content: View>: View {
         if isShowing {
           // 已打开：向左拖超过阈值则关闭，否则回到打开
           if translation < -threshold {
-            setMenu(open: false, animated: true)
+            setMenu(open: false)
           } else {
-            setMenu(open: true, animated: true)
+            setMenu(open: true)
           }
         } else {
           // 已关闭：向右拖超过阈值则打开，否则回到关闭
           if translation > threshold {
-            setMenu(open: true, animated: true)
+            setMenu(open: true)
           } else {
-            setMenu(open: false, animated: true)
+            setMenu(open: false)
           }
         }
       }
@@ -132,19 +131,9 @@ struct SideMenuContainer<Content: View>: View {
 
   // MARK: - Helpers
 
-  private func setMenu(open: Bool, animated: Bool) {
-    let action = {
-      isShowing = open
-      menuOffset = open ? 0 : -menuWidth
-    }
-
-    if animated {
-      withAnimation(.easeOut(duration: 0.2)) {
-        action()
-      }
-    } else {
-      action()
-    }
+  private func setMenu(open: Bool) {
+    isShowing = open
+    menuOffset = open ? 0 : -menuWidth
   }
 
   // MARK: - Computed Properties
