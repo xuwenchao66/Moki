@@ -55,10 +55,11 @@ struct SideMenuContainer<Content: View>: View {
           .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
           .zIndex(1)
 
-        // 3. 侧边栏内容 - 瞬间切换
+        // 3. 侧边栏内容 - 平滑动画
         content
           .frame(width: menuWidth)
           .offset(x: menuOffset)
+          .animation(.easeOut(duration: 0.2), value: menuOffset)  // 侧边栏动画稍快一点
           .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
           .zIndex(2)
       }
