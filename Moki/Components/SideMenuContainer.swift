@@ -46,7 +46,7 @@ struct SideMenuContainer<Content: View>: View {
         // 2. 遮罩层 - 始终存在，通过透明度控制显示/隐藏，带平滑动画
         Color.black
           .opacity(dimmingOpacity)
-          .animation(.easeOut(duration: 0.4), value: dimmingOpacity)  // 只给遮罩层透明度添加动画
+          .animation(.easeInOut(duration: 0.5), value: dimmingOpacity)  // 只给遮罩层透明度添加动画
           .ignoresSafeArea()
           .allowsHitTesting(menuOffset > -menuWidth)  // 只在显示时允许交互
           .onTapGesture {
@@ -59,7 +59,7 @@ struct SideMenuContainer<Content: View>: View {
         content
           .frame(width: menuWidth)
           .offset(x: menuOffset)
-          .animation(.easeOut(duration: 0.2), value: menuOffset)  // 侧边栏动画稍快一点
+          .animation(.easeInOut(duration: 0.2), value: menuOffset)  // 侧边栏动画稍快一点
           .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
           .zIndex(2)
       }
@@ -145,7 +145,7 @@ struct SideMenuContainer<Content: View>: View {
     // menuOffset: [-menuWidth, 0] → progress: [0, 1]
     let rawProgress = (menuOffset + menuWidth) / menuWidth
     let clamped = max(0, min(1, rawProgress))
-    return Double(clamped) * 0.4
+    return Double(clamped) * 0.3
   }
 }
 
