@@ -43,9 +43,10 @@ struct SideMenuContainer<Content: View>: View {
             .zIndex(0)
         }
 
-        // 2. 遮罩层 - 始终存在，通过透明度控制显示/隐藏
+        // 2. 遮罩层 - 始终存在，通过透明度控制显示/隐藏，带平滑动画
         Color.black
           .opacity(dimmingOpacity)
+          .animation(.easeOut(duration: 0.4), value: dimmingOpacity)  // 只给遮罩层透明度添加动画
           .ignoresSafeArea()
           .allowsHitTesting(menuOffset > -menuWidth)  // 只在显示时允许交互
           .onTapGesture {
