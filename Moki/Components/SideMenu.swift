@@ -17,12 +17,39 @@ struct SideMenu: View {
     self.onSelect = onSelect
   }
 
-  enum Tab {
+  // MARK: - Tab Definition
+
+  enum Tab: CaseIterable {
     case timeline
     case calendar
     case tags
     case stats
     case settings
+
+    var icon: String {
+      switch self {
+      case .timeline: return "dock.rectangle"
+      case .calendar: return "calendar"
+      case .tags: return "number"
+      case .stats: return "chart.bar"
+      case .settings: return "gearshape"
+      }
+    }
+
+    var title: String {
+      switch self {
+      case .timeline: return "时间轴"
+      case .calendar: return "日历"
+      case .tags: return "标签"
+      case .stats: return "统计"
+      case .settings: return "设置"
+      }
+    }
+
+    /// 是否在底部显示（设置项）
+    var isBottomItem: Bool {
+      self == .settings
+    }
   }
 
   var body: some View {
@@ -34,49 +61,32 @@ struct SideMenu: View {
           Spacer()
             .frame(height: 100)
 
-          // Menu Items
-          VStack(spacing: 20) {  // 将 spacing 调整为 20，配合较小的 padding，更紧凑精致
-            MenuButton(
-              icon: "dock.rectangle",
-              title: "时间轴",
-              isSelected: selectedTab == .timeline,
-              action: { select(.timeline) }
-            )
-
-            MenuButton(
-              icon: "calendar",
-              title: "日历",
-              isSelected: selectedTab == .calendar,
-              action: { select(.calendar) }
-            )
-
-            MenuButton(
-              icon: "number",
-              title: "标签",
-              isSelected: selectedTab == .tags,
-              action: { select(.tags) }
-            )
-
-            MenuButton(
-              icon: "chart.bar",
-              title: "统计",
-              isSelected: selectedTab == .stats,
-              action: { select(.stats) }
-            )
+          // 主菜单项
+          VStack(spacing: 20) {
+            ForEach(Tab.allCases.filter { !$0.isBottomItem }, id: \.self) { tab in
+              MenuButton(
+                icon: tab.icon,
+                title: tab.title,
+                isSelected: selectedTab == tab,
+                action: { select(tab) }
+              )
+            }
           }
-          .padding(.horizontal, Theme.spacing.xl)  // 水平间距 32
+          .padding(.horizontal, Theme.spacing.xl)
 
           Spacer()
 
-          // Settings Bottom
-          MenuButton(
-            icon: "gearshape",
-            title: "设置",
-            isSelected: selectedTab == .settings,
-            action: { select(.settings) }
-          )
+          // 底部菜单项（设置）
+          ForEach(Tab.allCases.filter { $0.isBottomItem }, id: \.self) { tab in
+            MenuButton(
+              icon: tab.icon,
+              title: tab.title,
+              isSelected: selectedTab == tab,
+              action: { select(tab) }
+            )
+          }
           .padding(.horizontal, Theme.spacing.xl)
-          .padding(.bottom, Theme.spacing.xxl)  // 底部留出较多空白，显得沉稳
+          .padding(.bottom, Theme.spacing.xxl)
         }
         .frame(width: 280)
         .background(Theme.color.background)
