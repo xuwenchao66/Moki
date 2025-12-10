@@ -180,7 +180,7 @@ struct TimelineView: View {
         }
       }
       .navigationDestination(isPresented: $showAddEntry) {
-        EditView()
+        EditView().sideMenuGesture(enabled: false)
       }
     }
   }

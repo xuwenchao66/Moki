@@ -12,20 +12,23 @@ struct ContentView: View {
   @State private var selectedTab: SideMenu.Tab = .timeline
 
   var body: some View {
-    ZStack(alignment: .leading) {
-      // 1. 主内容区域 - 根据选项切换
-      featureHost
-        .disabled(isMenuOpen)
+    // 使用同步视图：子视图的 .sideMenuGesture() 会自动向上传递并应用到环境值
+    SideMenuGestureSyncView {
+      ZStack(alignment: .leading) {
+        // 1. 主内容区域 - 根据选项切换
+        featureHost
+          .disabled(isMenuOpen)
 
-      // 2. 侧边栏容器（包含遮罩、动画、手势处理）
-      SideMenuContainer(isShowing: $isMenuOpen) {
-        SideMenu(selectedTab: $selectedTab) {
-          isMenuOpen = false
+        // 2. 侧边栏容器（包含遮罩、动画、手势处理）
+        SideMenuContainer(isShowing: $isMenuOpen) {
+          SideMenu(selectedTab: $selectedTab) {
+            isMenuOpen = false
+          }
         }
       }
-    }
-    .onChange(of: selectedTab) { _ in
-      isMenuOpen = false
+      .onChange(of: selectedTab) { _ in
+        isMenuOpen = false
+      }
     }
   }
 

@@ -16,6 +16,9 @@ struct SideMenuContainer<Content: View>: View {
   /// 当前菜单偏移量（-menuWidth ~ 0），默认隐藏在左侧
   @State private var menuOffset: CGFloat
 
+  /// 读取环境值：侧边栏手势是否启用
+  @Environment(\.sideMenuGestureEnabled) private var gestureEnabled
+
   init(
     isShowing: Binding<Bool>,
     menuWidth: CGFloat = 280,
@@ -33,7 +36,7 @@ struct SideMenuContainer<Content: View>: View {
     GeometryReader { geometry in
       ZStack(alignment: .leading) {
         // 1. 左侧边缘触发区域（不可见，仅用于手势检测）
-        if !isShowing {
+        if !isShowing && gestureEnabled {
           Color.clear
             .frame(width: edgeWidth)
             .frame(maxHeight: .infinity)
@@ -51,7 +54,7 @@ struct SideMenuContainer<Content: View>: View {
           .onTapGesture {
             setMenu(open: false)
           }
-          .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
+          .gesture(gestureEnabled ? fullScreenDragGesture(screenWidth: geometry.size.width) : nil)
           .zIndex(1)
 
         // 3. 侧边栏内容 - 平滑动画
@@ -59,7 +62,7 @@ struct SideMenuContainer<Content: View>: View {
           .frame(width: menuWidth)
           .offset(x: menuOffset)
           .animation(.easeInOut(duration: 0.2), value: menuOffset)  // 侧边栏动画稍快一点
-          .gesture(fullScreenDragGesture(screenWidth: geometry.size.width))
+          .gesture(gestureEnabled ? fullScreenDragGesture(screenWidth: geometry.size.width) : nil)
           .zIndex(2)
       }
       .onChange(of: isShowing) { newValue in
