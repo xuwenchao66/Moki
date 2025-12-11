@@ -45,7 +45,8 @@ struct TimelineView: View {
   // 缓存 Formatter 以避免在循环中频繁创建，极大提升分组性能
   private static let monthFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy.MM"
+    formatter.dateFormat = "MMM yyyy"  // DEC 2025
+    formatter.locale = Locale(identifier: "en_US")
     return formatter
   }()
 
@@ -63,7 +64,18 @@ struct TimelineView: View {
     }
 
     // 2. 月份倒序
-    return byMonth.keys.sorted(by: >).map { monthKey in
+    return byMonth.keys.sorted(by: {
+      // 简单字符串比较可能不对 (Dec vs Jan)，但如果是 "yyyy.MM" 就行。
+      // 这里转换成 Date 比较更稳妥，或者利用 Key 里的原始 Date。
+      // 为了简单，我们依赖 entries 已经排好序的事实，直接取列表顺序?
+      // 还是保持现状，因为 Format 变了，String 排序会乱 (Aug vs Dec)。
+      // 修正：我们应该用 Date 排序。
+      // 重新实现逻辑：
+      // 找到每个 MonthString 对应的任意一个 Date，然后比较 Date。
+      let date1 = Self.monthFormatter.date(from: $0) ?? Date()
+      let date2 = Self.monthFormatter.date(from: $1) ?? Date()
+      return date1 > date2
+    }).map { monthKey in
       let monthEntries = byMonth[monthKey]!
 
       // 3.按日期分组
@@ -97,8 +109,8 @@ struct TimelineView: View {
           }
         } else {
           ScrollView {
-            // pinnedViews: [.sectionHeaders] 实现月份吸顶
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+            // 移除 pinnedViews，让 header 自然滚动，更轻盈
+            LazyVStack(spacing: 0) {
               ForEach(groupedEntries, id: \.month) { monthGroup in
                 Section(header: MonthHeaderView(title: monthGroup.month)) {
 
@@ -107,10 +119,10 @@ struct TimelineView: View {
                     HStack(alignment: .top, spacing: Theme.spacing.md) {
                       // 左侧：日期 (整个分组共用一个日期显示)
                       JournalDateView(date: dayGroup.date)
-                        .padding(.top, Theme.spacing.sm)
+                        .padding(.top, 4)  // 微调对齐
 
                       // 右侧：日记卡片列表
-                      VStack(spacing: Theme.spacing.sm) {
+                      VStack(spacing: 24) {  // 增加条目间距
                         ForEach(dayGroup.entries) { entry in
                           let extra = parseMetadata(entry.metadata)
                           JournalCardView(
@@ -129,7 +141,7 @@ struct TimelineView: View {
                       }
                     }
                     .padding(.horizontal, Theme.spacing.md)
-                    .padding(.bottom, Theme.spacing.md2)  // 不同日期之间的间距
+                    .padding(.bottom, 32)  // 不同日期组之间的大间距
                   }
                 }
               }
@@ -156,7 +168,8 @@ struct TimelineView: View {
         .padding(.bottom, Theme.spacing.lg)
       }
       .background(Theme.color.background)
-      .navigationTitle("Moki")
+      .navigationTitle("Moki")  // 保持默认标题，或者 hidden
+      // .navigationBarHidden(true) // 如果想要更极致的沉浸感
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
@@ -200,27 +213,22 @@ struct TimelineView: View {
 
 // MARK: - Components
 
-/// 吸顶的月份标题
+/// 极简的月份标题
 struct MonthHeaderView: View {
   let title: String
 
   var body: some View {
     HStack {
-      Text(title)
-        .font(Theme.font.dateTitle)
-        .foregroundColor(Theme.color.foreground)
-        .padding(.horizontal, Theme.spacing.md2)
-        .padding(.vertical, Theme.spacing.sm)
+      Text(title.uppercased())
+        .font(.system(size: 13, weight: .bold, design: .default))
+        .tracking(1.5)
+        .foregroundColor(Theme.color.foregroundSecondary)
+        .padding(.horizontal, Theme.spacing.md)
+        .padding(.top, Theme.spacing.lg)
+        .padding(.bottom, Theme.spacing.md)
       Spacer()
     }
-    .background(Theme.color.background.opacity(0.95))
-    .overlay(
-      Rectangle()
-        .frame(height: 0.5)
-        .foregroundColor(Theme.color.border.opacity(0.3))
-        .padding(.horizontal, Theme.spacing.md2),
-      alignment: .bottom
-    )
+    .background(Theme.color.background)  // 纯色背景防止穿透
   }
 }
 
