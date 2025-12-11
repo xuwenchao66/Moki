@@ -19,17 +19,23 @@ struct TimelineView: View {
   // 2. 数据源切换 (Data Source Switch)
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-    // return mockEntries  // 🟢 Mock Data
-    return dbEntries  // 🔵 Real Data
+    return mockEntries  // 🟢 Mock Data
+    // return dbEntries  // 🔵 Real Data
   }
 
   // 3. Mock 数据适配 (Mock Adapter)
   private var mockEntries: [MokiDiary] {
     MockEntry.examples.map { mock in
-      MokiDiary(
+      // 简单的 JSON 构造
+      let tagsJson = mock.tags.map { "\"\($0)\"" }.joined(separator: ",")
+      let imagesJson = mock.images.map { "\"\($0)\"" }.joined(separator: ",")
+      let metadata = "{\"tags\":[\(tagsJson)], \"images\":[\(imagesJson)]}"
+
+      return MokiDiary(
         id: mock.id,
         text: mock.content,
-        createdAt: mock.date
+        createdAt: mock.date,
+        metadata: metadata
       )
     }
   }
@@ -106,11 +112,12 @@ struct TimelineView: View {
                       // 右侧：日记卡片列表
                       VStack(spacing: Theme.spacing.sm) {
                         ForEach(dayGroup.entries) { entry in
+                          let extra = parseMetadata(entry.metadata)
                           JournalCardView(
                             content: entry.text,
                             date: entry.createdAt,
-                            tags: [],  // TODO: Tags support
-                            images: [],  // TODO: Images support
+                            tags: extra.tags,
+                            images: extra.images,
                             onEditTapped: {
                               // TODO: Edit Action
                             },
@@ -172,12 +179,22 @@ struct TimelineView: View {
           .toolbarIconStyle()
         }
       }
-    }
-    .sheet(isPresented: $showAddEntry) {
-      NavigationStack {
-        EditView()
+      .navigationDestination(isPresented: $showAddEntry) {
+        EditView().sideMenuGesture(enabled: false)
       }
     }
+  }
+  // MARK: - Helpers
+
+  private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
+    guard let data = json.data(using: .utf8),
+      let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
+    else {
+      return ([], [])
+    }
+    let tags = dict["tags"] as? [String] ?? []
+    let images = dict["images"] as? [String] ?? []
+    return (tags, images)
   }
 }
 

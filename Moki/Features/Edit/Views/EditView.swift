@@ -94,8 +94,6 @@ struct EditView: View {
       }
     }
     .background(Theme.color.background)
-    .navigationBarTitleDisplayMode(.inline)
-    .navigationTitle("")
     .toolbar(.hidden, for: .navigationBar)
     .onAppear {
       isFocused = true
