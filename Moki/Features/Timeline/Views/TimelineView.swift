@@ -46,7 +46,7 @@ struct TimelineView: View {
   private static let monthFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "MMM yyyy"  // DEC 2025
-    formatter.locale = Locale(identifier: "en_US")
+    formatter.locale = Locale(identifier: "zh_CN")
     return formatter
   }()
 

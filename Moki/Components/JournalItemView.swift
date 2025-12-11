@@ -26,7 +26,7 @@ struct JournalDateView: View {
 
   private var weekdayString: String {
     let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "en_US") // 使用英文星期更显高级感
+    formatter.locale = Locale(identifier: "zh_CN")  // 使用英文星期更显高级感
     formatter.dateFormat = "EEE"
     return formatter.string(from: date)
   }
@@ -45,42 +45,14 @@ struct JournalCardView: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 6) {
-      // 1. 顶部信息行：时间
-      HStack(alignment: .center, spacing: 6) {
-        Text(timeString)
-          .font(.system(size: 12, weight: .medium))
-          .foregroundColor(Theme.color.foregroundTertiary)
-        
-        if !tags.isEmpty {
-            ForEach(tags, id: \.self) { tag in
-                Text("#\(tag)")
-                    .font(.system(size: 11))
-                    .foregroundColor(Theme.color.tagText)
-            }
-        }
-        
-        Spacer()
-        
-        // 操作菜单 (更隐蔽)
-        Menu {
-          menuItems
-        } label: {
-          Image(systemName: "ellipsis")
-            .font(.system(size: 12))
-            .foregroundColor(Theme.color.border) // 非常淡的颜色，降低视觉干扰
-            .frame(width: 20, height: 20)
-            .contentShape(Rectangle())
-        }
-      }
-
-      // 2. 内容区域
+      // 1. 内容区域
       Text(content)
         .font(Theme.font.journalBody)
         .foregroundColor(Theme.color.foreground)
-        .lineSpacing(6) // 优化行间距
+        .lineSpacing(6)  // 优化行间距
         .fixedSize(horizontal: false, vertical: true)
 
-      // 3. 图片区域
+      // 2. 图片区域
       if !images.isEmpty {
         LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 8)], spacing: 8) {
           ForEach(0..<images.count, id: \.self) { _ in
@@ -96,6 +68,35 @@ struct JournalCardView: View {
         }
         .padding(.top, 4)
       }
+
+      // 3. 底部信息行：时间 + 标签 + 菜单
+      HStack(alignment: .center, spacing: 6) {
+        Text(timeString)
+          .font(.system(size: 12, weight: .medium))
+          .foregroundColor(Theme.color.foregroundTertiary)
+
+        if !tags.isEmpty {
+          ForEach(tags, id: \.self) { tag in
+            Text("#\(tag)")
+              .font(.system(size: 11))
+              .foregroundColor(Theme.color.tagText)
+          }
+        }
+
+        Spacer()
+
+        // 操作菜单 (更隐蔽)
+        Menu {
+          menuItems
+        } label: {
+          Image(systemName: "ellipsis")
+            .font(.system(size: 12))
+            .foregroundColor(Theme.color.border)  // 非常淡的颜色，降低视觉干扰
+            .frame(width: 20, height: 20)
+            .contentShape(Rectangle())
+        }
+      }
+      .padding(.top, 2) // 内容和元数据之间稍微拉开一点点
     }
     .padding(.vertical, 4)
     // 移除原有的卡片背景和阴影，回归纯粹的内容
