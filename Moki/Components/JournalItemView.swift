@@ -7,14 +7,15 @@ struct JournalDateView: View {
   var body: some View {
     VStack(alignment: .center, spacing: 0) {
       Text(dayString)
-        .font(Theme.font.title3.weight(.bold))  // 加粗，更大一点
+        .font(.system(size: 20, weight: .semibold, design: .default))
         .foregroundColor(Theme.color.foreground)
 
       Text(weekdayString)
-        .font(Theme.font.caption)
-        .foregroundColor(Theme.color.foregroundSecondary)  // 浅灰色
+        .font(.system(size: 10, weight: .regular))
+        .foregroundColor(Theme.color.foregroundSecondary)
+        .textCase(.uppercase)
     }
-    .frame(width: 40)  // 稍微加宽一点以适应加粗字体
+    .frame(width: 44)
   }
 
   private var dayString: String {
@@ -25,13 +26,13 @@ struct JournalDateView: View {
 
   private var weekdayString: String {
     let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.locale = Locale(identifier: "en_US") // 使用英文星期更显高级感
     formatter.dateFormat = "EEE"
     return formatter.string(from: date)
   }
 }
 
-/// 右侧卡片组件
+/// 右侧内容组件 (去卡片化，更轻量)
 struct JournalCardView: View {
   let content: String
   let date: Date
@@ -43,67 +44,62 @@ struct JournalCardView: View {
   var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Theme.spacing.sm) {
-      // 1. 内容区域
-      Text(content)
-        .font(Theme.font.journalBody)
-        .foregroundColor(Theme.color.foreground)
-        .lineSpacing(Theme.spacing.textLineSpacing)
-        .fixedSize(horizontal: false, vertical: true)
-
-      // 2. 图片区域
-      if !images.isEmpty {
-        HStack(spacing: Theme.spacing.sm) {
-          ForEach(0..<images.count, id: \.self) { _ in
-            RoundedRectangle(cornerRadius: Theme.radius.sm)
-              .fill(Theme.color.border)
-              .overlay(
-                Image(systemName: "photo")
-                  .foregroundColor(Theme.color.foregroundSecondary)
-              )
-              .frame(height: 100)
-              .frame(maxWidth: .infinity)
-              .clipped()
-          }
-        }
-      }
-
-      // 3. 底部元数据: 时间 + 标签 + 更多操作
-      HStack(alignment: .center, spacing: Theme.spacing.sm) {
-        // 时间
+    VStack(alignment: .leading, spacing: 6) {
+      // 1. 顶部信息行：时间
+      HStack(alignment: .center, spacing: 6) {
         Text(timeString)
-          .font(Theme.font.caption)
+          .font(.system(size: 12, weight: .medium))
           .foregroundColor(Theme.color.foregroundTertiary)
-
-        // 标签
+        
         if !tags.isEmpty {
-          ForEach(tags, id: \.self) { tag in
-            Text("#\(tag)")
-              .font(Theme.font.caption)
-              .foregroundColor(Theme.color.foregroundSecondary)
-          }
+            ForEach(tags, id: \.self) { tag in
+                Text("#\(tag)")
+                    .font(.system(size: 11))
+                    .foregroundColor(Theme.color.tagText)
+            }
         }
-
+        
         Spacer()
-
+        
+        // 操作菜单 (更隐蔽)
         Menu {
           menuItems
         } label: {
           Image(systemName: "ellipsis")
-            .font(.system(size: 12, weight: .medium))
-            .foregroundColor(Theme.color.foregroundTertiary)
-            .frame(width: 24, height: 24)
+            .font(.system(size: 12))
+            .foregroundColor(Theme.color.border) // 非常淡的颜色，降低视觉干扰
+            .frame(width: 20, height: 20)
             .contentShape(Rectangle())
         }
       }
+
+      // 2. 内容区域
+      Text(content)
+        .font(Theme.font.journalBody)
+        .foregroundColor(Theme.color.foreground)
+        .lineSpacing(6) // 优化行间距
+        .fixedSize(horizontal: false, vertical: true)
+
+      // 3. 图片区域
+      if !images.isEmpty {
+        LazyVGrid(columns: [GridItem(.adaptive(minimum: 80), spacing: 8)], spacing: 8) {
+          ForEach(0..<images.count, id: \.self) { _ in
+            RoundedRectangle(cornerRadius: 6)
+              .fill(Theme.color.cardBackground)
+              .overlay(
+                Image(systemName: "photo")
+                  .foregroundColor(Theme.color.foregroundTertiary)
+              )
+              .aspectRatio(1, contentMode: .fit)
+              .clipped()
+          }
+        }
+        .padding(.top, 4)
+      }
     }
-    .padding(Theme.spacing.md)
-    .background(Theme.color.cardBackground)
-    .cornerRadius(Theme.radius.md)
-    .shadow(
-      color: Theme.shadow.sm.color, radius: Theme.shadow.sm.radius, x: Theme.shadow.sm.x,
-      y: Theme.shadow.sm.y
-    )
+    .padding(.vertical, 4)
+    // 移除原有的卡片背景和阴影，回归纯粹的内容
+    .contentShape(Rectangle())
     .contextMenu {
       menuItems
     }
