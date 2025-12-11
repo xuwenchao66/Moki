@@ -128,6 +128,14 @@ struct Shadow {
     y: 4
   )
 
+  /// 柔和阴影 - 平静的卡片
+  static let soft = ShadowStyle(
+    color: Color.black.opacity(0.04),
+    radius: 6,
+    x: 0,
+    y: 2
+  )
+
   /// 大阴影 - 弹出层
   static let lg = ShadowStyle(
     color: Color.black.opacity(0.10),

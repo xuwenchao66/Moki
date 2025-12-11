@@ -53,6 +53,9 @@ struct AppFonts {
   /// 极小文字
   static let caption2 = Font.system(size: 11, weight: .regular, design: .default)
 
+  /// 微型文字
+  static let micro = Font.system(size: 10, weight: .regular, design: .default)
+
   // MARK: - 特殊字体 (Special)
 
   /// 时间戳字体
