@@ -107,11 +107,11 @@ struct JournalCardView: View {
     }
     .padding(Theme.spacing.md)  // 舒适的内边距
     .background(Theme.color.cardBackground)
-    .cornerRadius(Theme.radius.xs)  // 适度的圆角，平衡锐利与柔和
+    .cornerRadius(Theme.radius.sm)  // 适度的圆角，平衡锐利与柔和
     // 增加极淡的阴影，营造悬浮感
     .shadow(
-      color: Theme.shadow.soft.color, radius: Theme.shadow.soft.radius, x: Theme.shadow.soft.x,
-      y: Theme.shadow.soft.y
+      color: Theme.shadow.sm.color, radius: Theme.shadow.sm.radius, x: Theme.shadow.sm.x,
+      y: Theme.shadow.sm.y
     )
     .contextMenu {
       menuItems
