@@ -8,7 +8,7 @@ struct TimelineView: View {
   @State private var showAddEntry = false
   private let diaryService = DiaryService()
 
-  // 1. 真实数据源 (Database) - 数据库层面过滤未删除的日记
+  // 1. 真实数据源
   @FetchAll(
     MokiDiary
       .where { $0.deletedAt == nil }
@@ -16,17 +16,16 @@ struct TimelineView: View {
   )
   private var dbEntries: [MokiDiary]
 
-  // 2. 数据源切换 (Data Source Switch)
+  // 2. 数据源切换
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-    return mockEntries  // 🟢 Mock Data
+     return mockEntries  // 🟢 Mock Data
     // return dbEntries  // 🔵 Real Data
   }
 
-  // 3. Mock 数据适配 (Mock Adapter)
+  // 3. Mock 数据适配
   private var mockEntries: [MokiDiary] {
     MockEntry.examples.map { mock in
-      // 简单的 JSON 构造
       let tagsJson = mock.tags.map { "\"\($0)\"" }.joined(separator: ",")
       let imagesJson = mock.images.map { "\"\($0)\"" }.joined(separator: ",")
       let metadata = "{\"tags\":[\(tagsJson)], \"images\":[\(imagesJson)]}"
@@ -42,56 +41,31 @@ struct TimelineView: View {
 
   // MARK: - Formatters
 
-  // 缓存 Formatter 以避免在循环中频繁创建，极大提升分组性能
-  private static let monthFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "MMM yyyy"  // DEC 2025
-    formatter.locale = Locale(identifier: "zh_CN")
-    return formatter
-  }()
-
   private static let dayFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.dateFormat = "yyyy-MM-dd"
     return formatter
   }()
+  
+  // 用于显示的日期格式
+  private static let headerDateFormatter: DateFormatter = {
+      let formatter = DateFormatter()
+      formatter.dateFormat = "yyyy-MM-dd"
+      return formatter
+  }()
 
-  // 按月份和日期分组的数据
-  private var groupedEntries: [(month: String, days: [(date: Date, entries: [MokiDiary])])] {
-    // 1. 按月份分组
-    let byMonth = Dictionary(grouping: entries) { entry -> String in
-      return Self.monthFormatter.string(from: entry.createdAt)
+  // 按日期分组的数据 (Flat List of Days)
+  private var groupedEntries: [(date: Date, entries: [MokiDiary])] {
+    // 1. 按日期分组
+    let byDay = Dictionary(grouping: entries) { entry -> String in
+      return Self.dayFormatter.string(from: entry.createdAt)
     }
 
-    // 2. 月份倒序
-    return byMonth.keys.sorted(by: {
-      // 简单字符串比较可能不对 (Dec vs Jan)，但如果是 "yyyy.MM" 就行。
-      // 这里转换成 Date 比较更稳妥，或者利用 Key 里的原始 Date。
-      // 为了简单，我们依赖 entries 已经排好序的事实，直接取列表顺序?
-      // 还是保持现状，因为 Format 变了，String 排序会乱 (Aug vs Dec)。
-      // 修正：我们应该用 Date 排序。
-      // 重新实现逻辑：
-      // 找到每个 MonthString 对应的任意一个 Date，然后比较 Date。
-      let date1 = Self.monthFormatter.date(from: $0) ?? Date()
-      let date2 = Self.monthFormatter.date(from: $1) ?? Date()
-      return date1 > date2
-    }).map { monthKey in
-      let monthEntries = byMonth[monthKey]!
-
-      // 3.按日期分组
-      let byDay = Dictionary(grouping: monthEntries) { entry -> String in
-        return Self.dayFormatter.string(from: entry.createdAt)
-      }
-
-      // 4. 日期倒序
-      let sortedDays = byDay.keys.sorted(by: >).map {
-        dayKey -> (date: Date, entries: [MokiDiary]) in
+    // 2. 日期倒序排序
+    return byDay.keys.sorted(by: >).map { dayKey -> (date: Date, entries: [MokiDiary]) in
         let dayEntries = byDay[dayKey]!.sorted { $0.createdAt > $1.createdAt }
-        // 使用当天的第一条数据的时间作为该组的 Date Key
-        return (date: dayEntries.first!.createdAt, entries: dayEntries)
-      }
-
-      return (month: monthKey, days: sortedDays)
+        // 使用该组第一条的时间作为 Key
+        return (date: dayEntries.first?.createdAt ?? Date(), entries: dayEntries)
     }
   }
 
@@ -104,92 +78,81 @@ struct TimelineView: View {
           EmptyStateView(
             title: "还没有记录",
             message: "点击 + 创建你的独家记忆",
-          ) {
-            showAddEntry = true
-          }
+            action: { showAddEntry = true }
+          )
         } else {
           ScrollView {
-            // 移除 pinnedViews，让 header 自然滚动，更轻盈
-            LazyVStack(spacing: 0) {
-              ForEach(groupedEntries, id: \.month) { monthGroup in
-                Section(header: MonthHeaderView(title: monthGroup.month)) {
-
-                  // 月份内的日期列表
-                  ForEach(monthGroup.days, id: \.date) { dayGroup in
-                    HStack(alignment: .top, spacing: Theme.spacing.md) {
-                      // 左侧：日期 (整个分组共用一个日期显示)
-                      JournalDateView(date: dayGroup.date)
-                        .padding(.top, 4)  // 微调对齐
-
-                      // 右侧：日记卡片列表
-                      VStack(spacing: 24) {  // 增加条目间距
-                        ForEach(dayGroup.entries) { entry in
-                          let extra = parseMetadata(entry.metadata)
-                          JournalCardView(
-                            content: entry.text,
-                            date: entry.createdAt,
-                            tags: extra.tags,
-                            images: extra.images,
-                            onEditTapped: {
-                              // TODO: Edit Action
-                            },
-                            onDeleteTapped: {
-                              diaryService.delete(entry)
-                            }
-                          )
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+              // 顶部留白
+              Color.clear.frame(height: Theme.spacing.md)
+              
+              ForEach(groupedEntries, id: \.date) { dayGroup in
+                Section(header: DayHeaderView(date: dayGroup.date)) {
+                  VStack(spacing: Theme.spacing.lg) { // 条目间距
+                    ForEach(dayGroup.entries) { entry in
+                      let extra = parseMetadata(entry.metadata)
+                      JournalItemView(
+                        content: entry.text,
+                        date: entry.createdAt,
+                        tags: extra.tags,
+                        images: extra.images,
+                        onEditTapped: {
+                          // TODO: Edit Action
+                        },
+                        onDeleteTapped: {
+                          diaryService.delete(entry)
                         }
+                      )
+                      
+                      // 分割线 (可选，或者只用间距)
+                      if entry.id != dayGroup.entries.last?.id {
+                          Divider()
+                              .padding(.leading, Theme.spacing.md)
+                              .opacity(0.5)
                       }
                     }
-                    .padding(.horizontal, Theme.spacing.md)
-                    .padding(.bottom, 32)  // 不同日期组之间的大间距
                   }
+                  .padding(.bottom, Theme.spacing.xl) // 不同日期组之间的大间距
                 }
               }
 
-              Spacer(minLength: 80)  // 底部留白，避免被 FAB 遮挡
+              Spacer(minLength: 80)
             }
           }
           .background(Theme.color.background)
         }
 
-        // 3. 悬浮按钮 (FAB)
-        Button(action: {
-          showAddEntry = true
-        }) {
+        // FAB
+        Button(action: { showAddEntry = true }) {
           Image(systemName: "plus")
-            .font(.system(size: 22, weight: .light))
-            .foregroundColor(Theme.color.primaryActionForeground)
-            .frame(width: 48, height: 48)
-            .background(Theme.color.primaryAction)
+            .font(.system(size: 24, weight: .light))
+            .foregroundColor(.white) // 纯白图标
+            .frame(width: 56, height: 56)
+            .background(Color(white: 0.2)) // 深灰黑色背景，更高级
             .clipShape(Circle())
-            .shadow(color: Color.black.opacity(0.15), radius: 10, x: 0, y: 5)
+            .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
         }
         .padding(.trailing, Theme.spacing.lg)
         .padding(.bottom, Theme.spacing.lg)
       }
       .background(Theme.color.background)
-      .navigationTitle("Moki")  // 保持默认标题，或者 hidden
-      // .navigationBarHidden(true) // 如果想要更极致的沉浸感
+      .navigationTitle("Moki")
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
-            withAnimation {
-              isSideMenuPresented.toggle()
-            }
+            withAnimation { isSideMenuPresented.toggle() }
           } label: {
             Image(systemName: "line.3.horizontal")
+                .foregroundColor(Theme.color.foreground)
           }
-          .toolbarIconStyle()
         }
-
+        
         ToolbarItem(placement: .primaryAction) {
-          Button {
-            // TODO: 搜索逻辑
-          } label: {
-            Image(systemName: "magnifyingglass")
-          }
-          .toolbarIconStyle()
+             Button {} label: {
+                 Image(systemName: "magnifyingglass")
+                     .foregroundColor(Theme.color.foreground)
+             }
         }
       }
       .navigationDestination(isPresented: $showAddEntry) {
@@ -197,6 +160,7 @@ struct TimelineView: View {
       }
     }
   }
+
   // MARK: - Helpers
 
   private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
@@ -213,25 +177,37 @@ struct TimelineView: View {
 
 // MARK: - Components
 
-/// 极简的月份标题
-struct MonthHeaderView: View {
-  let title: String
+/// 日期 Sticky Header
+struct DayHeaderView: View {
+  let date: Date
 
   var body: some View {
     HStack {
-      Text(title.uppercased())
-        .font(.system(size: 13, weight: .bold, design: .default))
-        .tracking(1.5)
-        .foregroundColor(Theme.color.foregroundSecondary)
-        .padding(.horizontal, Theme.spacing.md)
-        .padding(.top, Theme.spacing.lg)
-        .padding(.bottom, Theme.spacing.md)
+      Text(dateString)
+        .font(.system(size: 14, weight: .bold, design: .rounded)) // Sans-serif for Date
+        .foregroundColor(Color(red: 0.6, green: 0.4, blue: 0.3)) // 暖棕色文字
+        .padding(.horizontal, 12)
+        .padding(.vertical, 6)
+        .background(
+            Capsule()
+                .fill(Color(red: 0.96, green: 0.93, blue: 0.90)) // 浅米色胶囊背景
+        )
+        .padding(.leading, Theme.spacing.md)
+        .padding(.top, Theme.spacing.sm)
+        .padding(.bottom, Theme.spacing.sm)
+      
       Spacer()
     }
-    .background(Theme.color.background)  // 纯色背景防止穿透
+    .background(Theme.color.background.opacity(0.95)) // 半透明背景，防止穿透
+  }
+
+  private var dateString: String {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter.string(from: date)
   }
 }
 
 #Preview {
-  return TimelineView(isSideMenuPresented: .constant(false))
+  TimelineView(isSideMenuPresented: .constant(false))
 }
