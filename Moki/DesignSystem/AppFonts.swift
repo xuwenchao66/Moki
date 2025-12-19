@@ -33,7 +33,7 @@ struct AppFonts {
   static let body = Font.system(size: 17, weight: .regular, design: .default)
 
   /// 日记正文
-  static let journalBody = Font.system(size: 18, weight: .regular, design: .serif)
+  static let journalBody = Font.system(size: 17, weight: .regular, design: .default)
 
   /// 正文强调
   static let bodyBold = Font.system(size: 17, weight: .semibold, design: .default)

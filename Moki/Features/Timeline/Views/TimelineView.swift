@@ -19,7 +19,7 @@ struct TimelineView: View {
   // 2. 数据源切换
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-     return mockEntries  // 🟢 Mock Data
+    return mockEntries  // 🟢 Mock Data
     // return dbEntries  // 🔵 Real Data
   }
 
@@ -46,12 +46,12 @@ struct TimelineView: View {
     formatter.dateFormat = "yyyy-MM-dd"
     return formatter
   }()
-  
+
   // 用于显示的日期格式
   private static let headerDateFormatter: DateFormatter = {
-      let formatter = DateFormatter()
-      formatter.dateFormat = "yyyy-MM-dd"
-      return formatter
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy-MM-dd"
+    return formatter
   }()
 
   // 按日期分组的数据 (Flat List of Days)
@@ -63,9 +63,9 @@ struct TimelineView: View {
 
     // 2. 日期倒序排序
     return byDay.keys.sorted(by: >).map { dayKey -> (date: Date, entries: [MokiDiary]) in
-        let dayEntries = byDay[dayKey]!.sorted { $0.createdAt > $1.createdAt }
-        // 使用该组第一条的时间作为 Key
-        return (date: dayEntries.first?.createdAt ?? Date(), entries: dayEntries)
+      let dayEntries = byDay[dayKey]!.sorted { $0.createdAt > $1.createdAt }
+      // 使用该组第一条的时间作为 Key
+      return (date: dayEntries.first?.createdAt ?? Date(), entries: dayEntries)
     }
   }
 
@@ -85,10 +85,10 @@ struct TimelineView: View {
             LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
               // 顶部留白
               Color.clear.frame(height: Theme.spacing.md)
-              
+
               ForEach(groupedEntries, id: \.date) { dayGroup in
                 Section(header: DayHeaderView(date: dayGroup.date)) {
-                  VStack(spacing: Theme.spacing.lg) { // 条目间距
+                  VStack(spacing: 0) {
                     ForEach(dayGroup.entries) { entry in
                       let extra = parseMetadata(entry.metadata)
                       JournalItemView(
@@ -103,16 +103,19 @@ struct TimelineView: View {
                           diaryService.delete(entry)
                         }
                       )
-                      
-                      // 分割线 (可选，或者只用间距)
+
+                      // X 风格：细分割线 + 连续下刷（不做大间距分隔）
                       if entry.id != dayGroup.entries.last?.id {
-                          Divider()
-                              .padding(.leading, Theme.spacing.md)
-                              .opacity(0.5)
+                        Divider()
+                          .overlay(Color.black.opacity(0.04))
+                          .padding(.leading, Theme.spacing.md)
+                      } else {
+                        // 组内最后一条也给一个很轻的留白，避免贴到下个 Header
+                        Color.clear.frame(height: 6)
                       }
                     }
                   }
-                  .padding(.bottom, Theme.spacing.xl) // 不同日期组之间的大间距
+                  .padding(.bottom, Theme.spacing.xl)  // 不同日期组之间的大间距
                 }
               }
 
@@ -126,9 +129,9 @@ struct TimelineView: View {
         Button(action: { showAddEntry = true }) {
           Image(systemName: "plus")
             .font(.system(size: 24, weight: .light))
-            .foregroundColor(.white) // 纯白图标
+            .foregroundColor(.white)  // 纯白图标
             .frame(width: 56, height: 56)
-            .background(Color(white: 0.2)) // 深灰黑色背景，更高级
+            .background(Color(white: 0.2))  // 深灰黑色背景，更高级
             .clipShape(Circle())
             .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
         }
@@ -144,15 +147,16 @@ struct TimelineView: View {
             withAnimation { isSideMenuPresented.toggle() }
           } label: {
             Image(systemName: "line.3.horizontal")
-                .foregroundColor(Theme.color.foreground)
+              .foregroundColor(Theme.color.foreground)
           }
         }
-        
+
         ToolbarItem(placement: .primaryAction) {
-             Button {} label: {
-                 Image(systemName: "magnifyingglass")
-                     .foregroundColor(Theme.color.foreground)
-             }
+          Button {
+          } label: {
+            Image(systemName: "magnifyingglass")
+              .foregroundColor(Theme.color.foreground)
+          }
         }
       }
       .navigationDestination(isPresented: $showAddEntry) {
@@ -183,22 +187,26 @@ struct DayHeaderView: View {
 
   var body: some View {
     HStack {
+      // 日期胶囊（参考 X 的 Today/Yesterday）
       Text(dateString)
-        .font(.system(size: 14, weight: .bold, design: .rounded)) // Sans-serif for Date
-        .foregroundColor(Color(red: 0.6, green: 0.4, blue: 0.3)) // 暖棕色文字
+        .font(.system(size: 14, weight: .semibold, design: .default))
+        .foregroundColor(Theme.color.foregroundSecondary)
         .padding(.horizontal, 12)
         .padding(.vertical, 6)
         .background(
-            Capsule()
-                .fill(Color(red: 0.96, green: 0.93, blue: 0.90)) // 浅米色胶囊背景
+          Capsule()
+            .fill(Theme.color.border.opacity(0.35))
         )
-        .padding(.leading, Theme.spacing.md)
-        .padding(.top, Theme.spacing.sm)
-        .padding(.bottom, Theme.spacing.sm)
-      
-      Spacer()
+
+      // 右侧延伸线，给“时间线/连续阅读”的感觉
+      Rectangle()
+        .fill(Theme.color.border.opacity(0.6))
+        .frame(height: 1)
     }
-    .background(Theme.color.background.opacity(0.95)) // 半透明背景，防止穿透
+    .padding(.horizontal, Theme.spacing.md)
+    .padding(.top, Theme.spacing.sm)
+    .padding(.bottom, Theme.spacing.sm)
+    .background(Theme.color.background.opacity(0.98))
   }
 
   private var dateString: String {
