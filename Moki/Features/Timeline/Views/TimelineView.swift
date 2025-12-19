@@ -103,15 +103,10 @@ struct TimelineView: View {
                           diaryService.delete(entry)
                         }
                       )
-
-                      // X 风格：细分割线 + 连续下刷（不做大间距分隔）
+                      
+                      // 移除之前的 Divider，使用透明留白
                       if entry.id != dayGroup.entries.last?.id {
-                        Divider()
-                          .overlay(Color.black.opacity(0.04))
-                          .padding(.leading, Theme.spacing.md)
-                      } else {
-                        // 组内最后一条也给一个很轻的留白，避免贴到下个 Header
-                        Color.clear.frame(height: 6)
+                           Color.clear.frame(height: Theme.spacing.md)
                       }
                     }
                   }
@@ -181,37 +176,43 @@ struct TimelineView: View {
 
 // MARK: - Components
 
-/// 日期 Sticky Header
+/// 日期 Sticky Header (极简风格)
 struct DayHeaderView: View {
   let date: Date
 
   var body: some View {
     HStack {
-      // 日期胶囊（参考 X 的 Today/Yesterday）
-      Text(dateString)
-        .font(.system(size: 14, weight: .semibold, design: .default))
-        .foregroundColor(Theme.color.foregroundSecondary)
-        .padding(.horizontal, 12)
-        .padding(.vertical, 6)
-        .background(
-          Capsule()
-            .fill(Theme.color.border.opacity(0.35))
-        )
+      // 纯文本展示，去除胶囊背景
+      // 强调“日”，弱化“年月”
+      HStack(alignment: .firstTextBaseline, spacing: 4) {
+          Text(dayString)
+            .font(.system(size: 20, weight: .bold, design: .default))
+            .foregroundColor(Theme.color.foreground) // 主色黑
 
-      // 右侧延伸线，给“时间线/连续阅读”的感觉
-      Rectangle()
-        .fill(Theme.color.border.opacity(0.6))
-        .frame(height: 1)
+          Text(monthString)
+            .font(.system(size: 14, weight: .regular, design: .default))
+            .foregroundColor(Theme.color.foregroundSecondary) // 次级灰
+      }
+      
+      Spacer()
     }
     .padding(.horizontal, Theme.spacing.md)
-    .padding(.top, Theme.spacing.sm)
-    .padding(.bottom, Theme.spacing.sm)
-    .background(Theme.color.background.opacity(0.98))
+    .padding(.top, Theme.spacing.lg) // 稍微拉开与上一条的距离
+    .padding(.bottom, Theme.spacing.xs) // 紧贴下方第一条内容
+    .background(Theme.color.background.opacity(0.98)) // 半透明背景
   }
 
-  private var dateString: String {
+  private var dayString: String {
+      let formatter = DateFormatter()
+      formatter.dateFormat = "dd"
+      return formatter.string(from: date)
+  }
+    
+  // 中文年月格式：11月 2025
+  private var monthString: String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd"
+    formatter.dateFormat = "M月 yyyy"
+    formatter.locale = Locale(identifier: "zh_CN")
     return formatter.string(from: date)
   }
 }
