@@ -3,33 +3,89 @@
 //  Moki
 //
 //  设计系统 - 颜色定义
-//  基于 X app 的极简黑白灰主题
-//  仅支持浅色模式
+//  基于 Claude 的温暖风格主题
+//  支持浅色和深色模式
 //
 
 import SwiftUI
 
 struct AppColors {
 
+  // MARK: - 基础色 (Foundation)
+
+  /// 主背景色
+  static let background = Color("Background")
+
+  /// 主前景色
+  static let foreground = Color("Foreground")
+
   // MARK: - 主色调 (Primary)
 
-  /// 主背景色 - 纯白
-  static let background = Color.white
+  /// 主要强调色
+  static let primary = Color("Primary")
 
-  /// 主前景色 - 深灰黑 (#0F1419)
-  static let foreground = Color(red: 0x0F / 255.0, green: 0x14 / 255.0, blue: 0x19 / 255.0)
+  /// 主色前景色
+  static let primaryForeground = Color("PrimaryForeground")
 
-  /// 次要前景色 - 中灰
-  static let foregroundSecondary = Color(red: 0x53 / 255.0, green: 0x5F / 255.0, blue: 0x6B / 255.0)
+  // MARK: - 次要色 (Secondary)
 
-  /// 三级前景色 - 浅灰
-  static let foregroundTertiary = Color(red: 0x9B / 255.0, green: 0xA3 / 255.0, blue: 0xAD / 255.0)
+  /// 次要色
+  static let secondary = Color("Secondary")
+
+  /// 次要色前景
+  static let secondaryForeground = Color("SecondaryForeground")
+
+  // MARK: - 柔和色 (Muted)
+
+  /// 柔和背景色
+  static let muted = Color("Muted")
+
+  /// 柔和前景色
+  static let mutedForeground = Color("MutedForeground")
+
+  // MARK: - 强调色 (Accent)
+
+  /// 强调色
+  static let accent = Color("Accent")
+
+  /// 强调色前景
+  static let accentForeground = Color("AccentForeground")
+
+  // MARK: - 卡片 (Card)
+
+  /// 卡片背景色
+  static let card = Color("Card")
+
+  /// 卡片前景色
+  static let cardForeground = Color("CardForeground")
 
   // MARK: - 语义色 (Semantic)
 
-  /// 边框色 - 极浅灰 (#EFF3F4)
-  static let border = Color(red: 0xEF / 255.0, green: 0xF3 / 255.0, blue: 0xF4 / 255.0)
+  /// 边框色
+  static let border = Color("Border")
 
-  /// 分割线 - 同边框色
+  /// 分割线
   static let divider = border
+
+  /// 输入框边框色
+  static let input = Color("Input")
+
+  /// 焦点环颜色
+  static let ring = Color("Ring")
+
+  // MARK: - 警示色 (Destructive)
+
+  /// 危险/删除操作色
+  static let destructive = Color("Destructive")
+
+  /// 危险操作前景色
+  static let destructiveForeground = Color("DestructiveForeground")
+
+  // MARK: - 兼容性别名 (Compatibility Aliases)
+
+  /// 次要前景色 - 兼容旧代码
+  static let foregroundSecondary = mutedForeground
+
+  /// 三级前景色 - 兼容旧代码
+  static let foregroundTertiary = mutedForeground
 }
