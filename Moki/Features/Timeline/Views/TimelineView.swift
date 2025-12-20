@@ -67,24 +67,31 @@ struct TimelineView: View {
           )
         } else {
           ScrollView {
-            LazyVStack(spacing: 0) {
+            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
               // 顶部留白
               Color.clear.frame(height: Theme.spacing.md)
 
-              ForEach(entries) { entry in
-                let extra = parseMetadata(entry.metadata)
-                JournalItemView(
-                  content: entry.text,
-                  date: entry.createdAt,
-                  tags: extra.tags,
-                  images: extra.images,
-                  onEditTapped: {
-                    // TODO: Edit Action
-                  },
-                  onDeleteTapped: {
-                    diaryService.delete(entry)
+              ForEach(groupedEntries) { group in
+                Section(header: groupHeader(date: group.date)) {
+                  ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
+                    let extra = parseMetadata(entry.metadata)
+                    let isLast = index == group.entries.count - 1
+
+                    JournalItemView(
+                      content: entry.text,
+                      date: entry.createdAt,
+                      tags: extra.tags,
+                      images: extra.images,
+                      isLast: isLast,
+                      onEditTapped: {
+                        // TODO: Edit Action
+                      },
+                      onDeleteTapped: {
+                        diaryService.delete(entry)
+                      }
+                    )
                   }
-                )
+                }
               }
 
               Spacer(minLength: 80)
@@ -134,6 +141,51 @@ struct TimelineView: View {
   }
 
   // MARK: - Helpers
+
+  private struct DiaryGroup: Identifiable {
+    let id: String
+    let date: Date
+    let entries: [MokiDiary]
+  }
+
+  private var groupedEntries: [DiaryGroup] {
+    let grouped = Dictionary(grouping: entries) { entry in
+      Self.dayFormatter.string(from: entry.createdAt)
+    }
+    return grouped.sorted { $0.key > $1.key }.compactMap { (key, value) in
+      guard let first = value.first else { return nil }
+      return DiaryGroup(id: key, date: first.createdAt, entries: value)
+    }
+  }
+
+  private func groupHeader(date: Date) -> some View {
+    HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.xs) {
+      Text(date, formatter: Self.monthDayFormatter)
+        .font(.system(size: 20, weight: .bold))
+        .foregroundColor(Theme.color.foreground)
+
+      Text(date, formatter: Self.yearFormatter)
+        .font(.system(size: 14, weight: .regular))
+        .foregroundColor(Theme.color.foregroundSecondary)
+
+      Spacer()
+    }
+    .padding(.horizontal, Theme.spacing.md)
+    .padding(.vertical, Theme.spacing.sm)
+    .background(Theme.color.background)  // 确保 sticky header 不透明
+  }
+
+  private static let monthDayFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "MM/dd"
+    return formatter
+  }()
+
+  private static let yearFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.dateFormat = "yyyy"
+    return formatter
+  }()
 
   private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
     guard let data = json.data(using: .utf8),

@@ -5,90 +5,96 @@ struct JournalItemView: View {
   let date: Date
   let tags: [String]
   var images: [String] = []
+  
+  // 新增控制参数
+  var isLast: Bool = false
 
   // Callbacks
   var onEditTapped: (() -> Void)? = nil
   var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
-    // 使用 ZStack 实现时间线穿插效果
-    ZStack(alignment: .topLeading) {
-      // 1. 左侧时间线 (实线)
-      // 位置：Theme.spacing.lg (24)
-      Rectangle()
-        .fill(Theme.color.border)  // 加深颜色：移除 opacity
-        .frame(width: 1)
-        .padding(.leading, Theme.spacing.lg)
-        .padding(.top, 0)  // 贯穿顶部，由胶囊背景遮挡
-
+    HStack(alignment: .top, spacing: 0) {
+      // 1. 时间线区域
+      ZStack(alignment: .top) {
+        // 连线
+        if !isLast {
+          Rectangle()
+            .fill(Theme.color.border)
+            .frame(width: 1)
+            .padding(.top, 10) // 从圆点下方开始
+            .padding(.bottom, -10) // 延伸到下一个 item
+        }
+        
+        // 圆点
+        Circle()
+          .fill(Theme.color.border)
+          .frame(width: 8, height: 8)
+          .padding(.top, 4) // 视觉微调，与文字首行对齐
+      }
+      .frame(width: 24) // 固定宽度区域
+      .padding(.leading, Theme.spacing.md)
+      
       // 2. 内容区域
-      VStack(alignment: .leading, spacing: Theme.spacing.sm) {  // 统一间距 12
-        // 时间胶囊 (作为时间线上的点)
-        Text(dateTimeString)
-          .font(.system(size: 13, weight: .medium, design: .monospaced))
-          .foregroundColor(Theme.color.foregroundSecondary)
-          .padding(.horizontal, Theme.spacing.sm)  // 12
-          .padding(.vertical, Theme.spacing.xxs)  // 4
-          .background(Theme.color.background)  // 遮挡线
-          .clipShape(Capsule())
-          // 胶囊位置：左边距 0，覆盖在位于 24 的线上
-          .padding(.leading, 0)
+      VStack(alignment: .leading, spacing: Theme.spacing.sm) {
+        Text(content)
+          .font(Theme.font.journalBody)
+          .foregroundColor(Theme.color.foreground)
+          .lineSpacing(4)
+          .fixedSize(horizontal: false, vertical: true)
 
-        // 正文内容
-        VStack(alignment: .leading, spacing: Theme.spacing.sm) {  // 统一间距 12
-          Text(content)
-            .font(Theme.font.journalBody)
-            .foregroundColor(Theme.color.foreground)
-            .lineSpacing(4)
-            .fixedSize(horizontal: false, vertical: true)
+        // 图片区
+        if !images.isEmpty {
+          MediaGridView(images: images)
+            .padding(.top, Theme.spacing.xxs)
+        }
 
-          // 图片区
-          if !images.isEmpty {
-            MediaGridView(images: images)
-              .padding(.top, Theme.spacing.xxs)  // 4
+        // 底部标签与操作栏
+        HStack(spacing: Theme.spacing.xs) {
+          // 时间放在标签前面
+          Text(timeString)
+            .font(.system(size: 12, weight: .medium, design: .monospaced))
+            .foregroundColor(Theme.color.foregroundSecondary)
+            .padding(.trailing, 4)
+            
+          if !tags.isEmpty {
+            ForEach(tags, id: \.self) { tag in
+              Text("#\(tag)")
+                .font(.system(size: 12, weight: .regular))
+                .foregroundColor(Theme.color.foregroundSecondary)
+            }
           }
 
-          // 底部标签与操作栏
-          HStack(spacing: Theme.spacing.xs) {  // 8
-            if !tags.isEmpty {
-              ForEach(tags, id: \.self) { tag in
-                Text("#\(tag)")
-                  .font(.system(size: 12, weight: .regular))
-                  .foregroundColor(Theme.color.foregroundSecondary)
+          Spacer()
+
+          Menu {
+            if let onEditTapped {
+              Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }
+            }
+            if let onDeleteTapped {
+              Button(role: .destructive, action: onDeleteTapped) {
+                Label("删除", systemImage: "trash")
               }
             }
-
-            Spacer()
-
-            Menu {
-              if let onEditTapped {
-                Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }
-              }
-              if let onDeleteTapped {
-                Button(role: .destructive, action: onDeleteTapped) {
-                  Label("删除", systemImage: "trash")
-                }
-              }
-            } label: {
-              Image(systemName: "ellipsis")
-                .font(.system(size: 16))
-                .foregroundColor(Theme.color.foregroundTertiary)
-                .frame(width: 32, height: 18)
-                .contentShape(Rectangle())
-            }
+          } label: {
+            Image(systemName: "ellipsis")
+              .font(.system(size: 16))
+              .foregroundColor(Theme.color.foregroundTertiary)
+              .frame(width: 32, height: 18)
+              .contentShape(Rectangle())
           }
         }
-        .padding(.leading, Theme.spacing.lg + Theme.spacing.md)  // 24 + 16 = 40，保持层次感
-        .padding(.bottom, Theme.spacing.lg)  // 24
       }
+      .padding(.leading, Theme.spacing.sm)
+      .padding(.bottom, Theme.spacing.lg)
+      .padding(.trailing, Theme.spacing.md)
     }
-    .padding(.horizontal, Theme.spacing.md)
   }
 
-  // 格式：12.19 14:20 2025
-  private var dateTimeString: String {
+  // 格式：14:20
+  private var timeString: String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "MM.dd HH:mm yyyy"
+    formatter.dateFormat = "HH:mm"
     return formatter.string(from: date)
   }
 }
