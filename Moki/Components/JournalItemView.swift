@@ -29,8 +29,8 @@ struct JournalItemView: View {
           .frame(width: 8, height: 8)
           .padding(.top, 4)
       }
-      .frame(width: 20)  // 固定宽度区域
-      .padding(.leading, Theme.spacing.md)
+      .frame(width: 12)
+      .padding(.leading, Theme.spacing.lg)
 
       // 2. 内容区域
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
