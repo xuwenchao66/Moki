@@ -103,12 +103,14 @@ struct TimelineView: View {
         // FAB
         Button(action: { showAddEntry = true }) {
           Image(systemName: "plus")
-            .font(.system(size: 24, weight: .light))
-            .foregroundColor(.white)  // 纯白图标
-            .frame(width: 56, height: 56)
-            .background(Color(white: 0.2))  // 深灰黑色背景，更高级
+            .font(.system(size: 22, weight: .light))
+            .foregroundColor(Theme.color.background)
+            .frame(width: 52, height: 52)
+            .background(Theme.color.foreground)
             .clipShape(Circle())
-            .shadow(color: Color.black.opacity(0.2), radius: 8, x: 0, y: 4)
+            .shadow(
+              color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,
+              y: Theme.shadow.md.y)
         }
         .padding(.trailing, Theme.spacing.lg)
         .padding(.bottom, Theme.spacing.lg)

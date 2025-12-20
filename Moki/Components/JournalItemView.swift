@@ -20,16 +20,16 @@ struct JournalItemView: View {
         Rectangle()
           .fill(Theme.color.border)
           .frame(width: 1)
-          .padding(.top, 10)  // 从圆点下方开始
-          .padding(.bottom, -10)  // 延伸到下一个 item
+          .padding(.top, 10)
+          .padding(.bottom, -10)
 
         // 圆点
         Circle()
           .fill(Theme.color.border)
           .frame(width: 8, height: 8)
-          .padding(.top, 4)  // 视觉微调，与文字首行对齐
+          .padding(.top, 4)
       }
-      .frame(width: 24)  // 固定宽度区域
+      .frame(width: 20)  // 固定宽度区域
       .padding(.leading, Theme.spacing.md)
 
       // 2. 内容区域
