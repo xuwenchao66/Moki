@@ -43,7 +43,6 @@ struct JournalItemView: View {
         // 图片区
         if !images.isEmpty {
           MediaGridView(images: images)
-            .background(Color.red)
             .padding(.top, Theme.spacing.xxs)
         }
 
@@ -100,88 +99,72 @@ struct JournalItemView: View {
 struct MediaGridView: View {
   let images: [String]
   private let spacing: CGFloat = 2
-  private let cornerRadius: CGFloat = 16
+  private let cornerRadius: CGFloat = 12
 
   var body: some View {
-    GeometryReader { proxy in
-      let w = proxy.size.width
-      let count = min(images.count, 9)
+    let count = min(images.count, 9)
 
-      Group {
-        switch count {
-        case 1:
+    Group {
+      switch count {
+      case 1:
+        mediaCell()
+          .aspectRatio(16 / 9, contentMode: .fit)
+
+      case 2:
+        HStack(spacing: spacing) {
           mediaCell()
-            .frame(width: w, height: max(180, w * 0.56))  // 16:9-ish
+          mediaCell()
+        }
+        .aspectRatio(16 / 9, contentMode: .fit)
 
-        case 2:
-          HStack(spacing: spacing) {
-            mediaCell()
-            mediaCell()
-          }
-          .frame(width: w, height: max(200, w * 0.56))
-
-        case 3:
-          // 1 大 + 2 叠（X 常见样式）
-          HStack(spacing: spacing) {
-            mediaCell()
-            VStack(spacing: spacing) {
-              mediaCell()
-              mediaCell()
-            }
-          }
-          .frame(width: w, height: max(240, w * 0.70))
-
-        case 4:
-          // 2x2
+      case 3:
+        // 1 大 + 2 叠（X 常见样式）
+        HStack(spacing: spacing) {
+          mediaCell()
           VStack(spacing: spacing) {
-            HStack(spacing: spacing) {
-              mediaCell()
-              mediaCell()
-            }
-            HStack(spacing: spacing) {
-              mediaCell()
-              mediaCell()
-            }
+            mediaCell()
+            mediaCell()
           }
-          .frame(width: w, height: max(240, w * 0.70))
+        }
+        .aspectRatio(3 / 2, contentMode: .fit)
 
-        default:
-          // 5-9：3 列网格（类似 X 的多图）
-          LazyVGrid(
-            columns: [
-              GridItem(.flexible(), spacing: spacing),
-              GridItem(.flexible(), spacing: spacing),
-              GridItem(.flexible(), spacing: spacing),
-            ],
-            spacing: spacing
-          ) {
-            ForEach(0..<count, id: \.self) { _ in
-              mediaCell()
-                .aspectRatio(1, contentMode: .fill)
-            }
+      case 4:
+        // 2x2
+        VStack(spacing: spacing) {
+          HStack(spacing: spacing) {
+            mediaCell()
+            mediaCell()
           }
-          .frame(width: w)
+          HStack(spacing: spacing) {
+            mediaCell()
+            mediaCell()
+          }
+        }
+        .aspectRatio(3 / 2, contentMode: .fit)
+
+      default:
+        // 5-9：3 列网格（类似 X 的多图）
+        LazyVGrid(
+          columns: [
+            GridItem(.flexible(), spacing: spacing),
+            GridItem(.flexible(), spacing: spacing),
+            GridItem(.flexible(), spacing: spacing),
+          ],
+          spacing: spacing
+        ) {
+          ForEach(0..<count, id: \.self) { _ in
+            mediaCell()
+              .aspectRatio(1, contentMode: .fill)
+          }
         }
       }
-      .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
     }
-    .frame(height: mediaHeight(for: min(images.count, 9)))
-    .clipped()
+    .clipShape(RoundedRectangle(cornerRadius: cornerRadius, style: .continuous))
   }
 
   private func mediaCell() -> some View {
     SimpleImageView()
       .clipped()
-  }
-
-  private func mediaHeight(for count: Int) -> CGFloat {
-    switch count {
-    case 1: return 220
-    case 2: return 220
-    case 3: return 280
-    case 4: return 280
-    default: return 280
-    }
   }
 }
 
@@ -194,7 +177,6 @@ struct SimpleImageView: View {
         .foregroundColor(Color.gray.opacity(0.5))
         .font(.title3)
     }
-    .aspectRatio(1, contentMode: .fill)
     .clipped()
   }
 }
