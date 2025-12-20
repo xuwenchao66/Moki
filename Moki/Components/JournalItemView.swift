@@ -11,65 +11,90 @@ struct JournalItemView: View {
   var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 10) {
-      // 1) 正文 (更接近 X 的字号/行距)
-      Text(content)
-        .font(Theme.font.journalBody)
-        .foregroundColor(Theme.color.foreground)
-        .lineSpacing(4)
-        .fixedSize(horizontal: false, vertical: true)
+    // 使用 ZStack 实现时间线穿插效果
+    ZStack(alignment: .topLeading) {
+      // 1. 左侧时间线 (虚线/实线)
+      // 位置：距离左边一定距离 (e.g. 24pt)
+      Rectangle()
+        .fill(Theme.color.border.opacity(0.5))  // 浅浅灰色
+        .frame(width: 1)
+        .padding(.leading, 24)  // 线的位置
+        .padding(.top, 16)  // 从顶部稍微下来一点，避免连接到上面太紧？或者不需要
 
-      // 2) 图片区（参考 X 的媒体布局）
-      if !images.isEmpty {
-        MediaGridView(images: images)
-          .padding(.top, 2)
-      }
+      // 2. 内容区域
+      VStack(alignment: .leading, spacing: 12) {
+        // 时间胶囊 (作为时间线上的点)
+        // 使用 background 遮挡住后面的线
+        Text(dateTimeString)
+          .font(.system(size: 13, weight: .medium, design: .monospaced))
+          .foregroundColor(Theme.color.foregroundSecondary)
+          .padding(.horizontal, 12)
+          .padding(.vertical, 6)
+          .background(Theme.color.background)  // 遮挡线
+          .overlay(
+            Capsule()
+              .stroke(Theme.color.border.opacity(0.3), lineWidth: 1)
+          )
+          .clipShape(Capsule())
+          // 让胶囊的左侧一部分覆盖在线上
+          // 假设线在 x=24。胶囊如果左对齐，padding(.leading, 12)，那胶囊左边缘在 x=12，胶囊内部就在 x=24 处。
+          .padding(.leading, 12)
 
-      // 3) 底部信息栏：时间在最底部（与 X 的“元信息行”一致）
-      HStack(spacing: 8) {
-        Text(timeString)
-          .font(.system(size: 12, weight: .regular, design: .default))
-          .foregroundColor(Theme.color.foregroundTertiary)
+        // 正文内容 (缩进以避开左侧时间线)
+        VStack(alignment: .leading, spacing: 12) {
+          Text(content)
+            .font(Theme.font.journalBody)
+            .foregroundColor(Theme.color.foreground)
+            .lineSpacing(4)
+            .fixedSize(horizontal: false, vertical: true)
 
-        if !tags.isEmpty {
-          Text("·")
-            .font(.system(size: 12, weight: .regular, design: .default))
-            .foregroundColor(Theme.color.foregroundTertiary)
-
-          ForEach(tags, id: \.self) { tag in
-            Text("#\(tag)")
-              .font(.system(size: 12, weight: .regular, design: .default))
-              .foregroundColor(Theme.color.foregroundSecondary)
+          // 图片区
+          if !images.isEmpty {
+            MediaGridView(images: images)
+              .padding(.top, 2)
           }
-        }
 
-        Spacer()
+          // 底部标签与操作栏
+          HStack(spacing: 8) {
+            if !tags.isEmpty {
+              ForEach(tags, id: \.self) { tag in
+                Text("#\(tag)")
+                  .font(.system(size: 12, weight: .regular))
+                  .foregroundColor(Theme.color.accent)
+              }
+            }
 
-        Menu {
-          if let onEditTapped {
-            Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }
-          }
-          if let onDeleteTapped {
-            Button(role: .destructive, action: onDeleteTapped) {
-              Label("删除", systemImage: "trash")
+            Spacer()
+
+            Menu {
+              if let onEditTapped {
+                Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }
+              }
+              if let onDeleteTapped {
+                Button(role: .destructive, action: onDeleteTapped) {
+                  Label("删除", systemImage: "trash")
+                }
+              }
+            } label: {
+              Image(systemName: "ellipsis")
+                .font(.system(size: 16))
+                .foregroundColor(Theme.color.foregroundTertiary)
+                .frame(width: 32, height: 18)
+                .contentShape(Rectangle())
             }
           }
-        } label: {
-          Image(systemName: "ellipsis")
-            .font(.system(size: 16))
-            .foregroundColor(Theme.color.foregroundTertiary)
-            .frame(width: 32, height: 18)
-            .contentShape(Rectangle())
         }
+        .padding(.leading, 44)  // 内容缩进 (24 + 20)
+        .padding(.bottom, 24)  // 底部间距
       }
     }
     .padding(.horizontal, Theme.spacing.md)
-    .padding(.vertical, 12)
   }
 
-  private var timeString: String {
+  // 格式：12.19 14:20 2025
+  private var dateTimeString: String {
     let formatter = DateFormatter()
-    formatter.dateFormat = "HH:mm"
+    formatter.dateFormat = "MM.dd HH:mm yyyy"
     return formatter.string(from: date)
   }
 }

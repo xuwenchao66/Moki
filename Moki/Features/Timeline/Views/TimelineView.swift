@@ -54,21 +54,6 @@ struct TimelineView: View {
     return formatter
   }()
 
-  // 按日期分组的数据 (Flat List of Days)
-  private var groupedEntries: [(date: Date, entries: [MokiDiary])] {
-    // 1. 按日期分组
-    let byDay = Dictionary(grouping: entries) { entry -> String in
-      return Self.dayFormatter.string(from: entry.createdAt)
-    }
-
-    // 2. 日期倒序排序
-    return byDay.keys.sorted(by: >).map { dayKey -> (date: Date, entries: [MokiDiary]) in
-      let dayEntries = byDay[dayKey]!.sorted { $0.createdAt > $1.createdAt }
-      // 使用该组第一条的时间作为 Key
-      return (date: dayEntries.first?.createdAt ?? Date(), entries: dayEntries)
-    }
-  }
-
   // MARK: - View
 
   var body: some View {
@@ -82,36 +67,24 @@ struct TimelineView: View {
           )
         } else {
           ScrollView {
-            LazyVStack(spacing: 0, pinnedViews: [.sectionHeaders]) {
+            LazyVStack(spacing: 0) {
               // 顶部留白
               Color.clear.frame(height: Theme.spacing.md)
 
-              ForEach(groupedEntries, id: \.date) { dayGroup in
-                Section(header: DayHeaderView(date: dayGroup.date)) {
-                  VStack(spacing: 0) {
-                    ForEach(dayGroup.entries) { entry in
-                      let extra = parseMetadata(entry.metadata)
-                      JournalItemView(
-                        content: entry.text,
-                        date: entry.createdAt,
-                        tags: extra.tags,
-                        images: extra.images,
-                        onEditTapped: {
-                          // TODO: Edit Action
-                        },
-                        onDeleteTapped: {
-                          diaryService.delete(entry)
-                        }
-                      )
-                      
-                      // 移除之前的 Divider，使用透明留白
-                      if entry.id != dayGroup.entries.last?.id {
-                           Color.clear.frame(height: Theme.spacing.md)
-                      }
-                    }
+              ForEach(entries) { entry in
+                let extra = parseMetadata(entry.metadata)
+                JournalItemView(
+                  content: entry.text,
+                  date: entry.createdAt,
+                  tags: extra.tags,
+                  images: extra.images,
+                  onEditTapped: {
+                    // TODO: Edit Action
+                  },
+                  onDeleteTapped: {
+                    diaryService.delete(entry)
                   }
-                  .padding(.bottom, Theme.spacing.xl)  // 不同日期组之间的大间距
-                }
+                )
               }
 
               Spacer(minLength: 80)
@@ -171,49 +144,6 @@ struct TimelineView: View {
     let tags = dict["tags"] as? [String] ?? []
     let images = dict["images"] as? [String] ?? []
     return (tags, images)
-  }
-}
-
-// MARK: - Components
-
-/// 日期 Sticky Header (极简风格)
-struct DayHeaderView: View {
-  let date: Date
-
-  var body: some View {
-    HStack {
-      // 纯文本展示，去除胶囊背景
-      // 强调“日”，弱化“年月”
-      HStack(alignment: .firstTextBaseline, spacing: 4) {
-          Text(dayString)
-            .font(.system(size: 20, weight: .bold, design: .default))
-            .foregroundColor(Theme.color.foreground) // 主色黑
-
-          Text(monthString)
-            .font(.system(size: 14, weight: .regular, design: .default))
-            .foregroundColor(Theme.color.foregroundSecondary) // 次级灰
-      }
-      
-      Spacer()
-    }
-    .padding(.horizontal, Theme.spacing.md)
-    .padding(.top, Theme.spacing.lg) // 稍微拉开与上一条的距离
-    .padding(.bottom, Theme.spacing.xs) // 紧贴下方第一条内容
-    .background(Theme.color.background.opacity(0.98)) // 半透明背景
-  }
-
-  private var dayString: String {
-      let formatter = DateFormatter()
-      formatter.dateFormat = "dd"
-      return formatter.string(from: date)
-  }
-    
-  // 中文年月格式：11月 2025
-  private var monthString: String {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "M月 yyyy"
-    formatter.locale = Locale(identifier: "zh_CN")
-    return formatter.string(from: date)
   }
 }
 
