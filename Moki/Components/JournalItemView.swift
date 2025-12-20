@@ -5,7 +5,7 @@ struct JournalItemView: View {
   let date: Date
   let tags: [String]
   var images: [String] = []
-  
+
   // 新增控制参数
   var isLast: Bool = false
 
@@ -22,19 +22,19 @@ struct JournalItemView: View {
           Rectangle()
             .fill(Theme.color.border)
             .frame(width: 1)
-            .padding(.top, 10) // 从圆点下方开始
-            .padding(.bottom, -10) // 延伸到下一个 item
+            .padding(.top, 10)  // 从圆点下方开始
+            .padding(.bottom, -10)  // 延伸到下一个 item
         }
-        
+
         // 圆点
         Circle()
           .fill(Theme.color.border)
           .frame(width: 8, height: 8)
-          .padding(.top, 4) // 视觉微调，与文字首行对齐
+          .padding(.top, 4)  // 视觉微调，与文字首行对齐
       }
-      .frame(width: 24) // 固定宽度区域
+      .frame(width: 24)  // 固定宽度区域
       .padding(.leading, Theme.spacing.md)
-      
+
       // 2. 内容区域
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
         Text(content)
@@ -56,7 +56,7 @@ struct JournalItemView: View {
             .font(.system(size: 12, weight: .medium, design: .monospaced))
             .foregroundColor(Theme.color.foregroundSecondary)
             .padding(.trailing, 4)
-            
+
           if !tags.isEmpty {
             ForEach(tags, id: \.self) { tag in
               Text("#\(tag)")
