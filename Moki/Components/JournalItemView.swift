@@ -18,7 +18,7 @@ struct JournalItemView: View {
       Rectangle()
         .fill(Theme.color.border.opacity(0.3))  // 颜色减淡
         .frame(width: 1)
-        .padding(.leading, 12)  // 线的位置：更靠左 (原 24)
+        .padding(.leading, 24)  // 线的位置：向右移一点，给胶囊“左超出”留空间
         .padding(.top, 14)  // 顶部留一点距离
 
       // 2. 内容区域
@@ -30,12 +30,8 @@ struct JournalItemView: View {
           .padding(.horizontal, 10)
           .padding(.vertical, 4)
           .background(Theme.color.background)  // 遮挡线
-          .clipShape(Capsule())  // 纯净的胶囊背景，去除描边以减少视觉噪音
-          // 让胶囊的中心对齐时间线 (时间线 x=12)
-          // 如果 paddingLeading=0, 胶囊左边贴边。
-          // 我们希望胶囊看起来是挂在时间线上的。
-          // 简单的做法是让胶囊覆盖住线。
-          // 如果线在 12pt，我们让胶囊左对齐即可，只要胶囊的左边距足够小。
+          .clipShape(Capsule())  // 纯净的胶囊背景
+          // 胶囊位置：左边距 0，而线在 24，所以胶囊左边比线靠左 24pt，形成“左超出”效果
           .padding(.leading, 0)
 
         // 正文内容
@@ -82,7 +78,7 @@ struct JournalItemView: View {
             }
           }
         }
-        .padding(.leading, 28)  // 内容缩进：减少缩进 (原 44)，让内容更紧凑
+        .padding(.leading, 40)  // 内容缩进：比线的位置(24)再往右一些，保持层级
         .padding(.bottom, 24)  // 底部间距
       }
     }
