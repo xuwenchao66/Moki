@@ -18,14 +18,14 @@ struct JournalItemView: View {
       // 1. 时间线区域
       ZStack(alignment: .top) {
         Rectangle()
-          .fill(Theme.color.border)
+          .fill(Theme.color.input)
           .frame(width: 1)
           .padding(.top, 10)
           .padding(.bottom, isLast ? Theme.spacing.lg + 3 : -10)
 
         // 圆点
         Circle()
-          .fill(Theme.color.border)
+          .fill(Theme.color.primary)
           .frame(width: 8, height: 8)
           .padding(.top, 4)
       }
@@ -172,9 +172,9 @@ struct MediaGridView: View {
 struct SimpleImageView: View {
   var body: some View {
     ZStack {
-      Color(red: 0.94, green: 0.94, blue: 0.94)  // 浅灰背景
+      Theme.color.muted
       Image(systemName: "photo")
-        .foregroundColor(Color.gray.opacity(0.5))
+        .foregroundColor(Theme.color.mutedForeground)
         .font(.title3)
     }
     .clipped()

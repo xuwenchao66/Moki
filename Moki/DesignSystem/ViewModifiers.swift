@@ -23,7 +23,7 @@ extension View {
   ) -> some View {
     self
       .padding(padding)
-      .background(Theme.color.background)
+      .background(Theme.color.card)
       .cornerRadius(radius)
       .shadow(
         color: shadow.color,
@@ -40,22 +40,22 @@ extension View {
   ) -> some View {
     self
       .padding(padding)
-      .background(Theme.color.background)
+      .background(Theme.color.card)
       .cornerRadius(radius)
   }
 }
 
 // MARK: - Button Styles (按钮样式)
 
-/// 主按钮样式 - 黑色填充
+/// 主按钮样式 - 温暖橙色填充
 struct PrimaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .font(Theme.font.button)
-      .foregroundColor(.white)
+      .foregroundColor(Theme.color.primaryForeground)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.foreground)
+      .background(Theme.color.primary)
       .cornerRadius(Theme.radius.md)
       .opacity(configuration.isPressed ? 0.8 : 1.0)
       .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
@@ -63,7 +63,7 @@ struct PrimaryButtonStyle: ButtonStyle {
   }
 }
 
-/// 次要按钮样式 - 描边
+/// 次要按钮样式 - 柔和描边
 struct SecondaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
@@ -71,7 +71,7 @@ struct SecondaryButtonStyle: ButtonStyle {
       .foregroundColor(Theme.color.foreground)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.background)
+      .background(Theme.color.secondary)
       .overlay(
         RoundedRectangle(cornerRadius: Theme.radius.md)
           .stroke(Theme.color.border, lineWidth: 1.5)

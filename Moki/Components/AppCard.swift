@@ -30,7 +30,7 @@ struct AppCard<Content: View>: View {
   var body: some View {
     content
       .padding(padding)
-      .background(Theme.color.background)
+      .background(Theme.color.card)
       .cornerRadius(radius)
       .shadow(
         color: shadow.color,

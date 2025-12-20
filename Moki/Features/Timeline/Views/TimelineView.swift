@@ -104,9 +104,9 @@ struct TimelineView: View {
         Button(action: { showAddEntry = true }) {
           Image(systemName: "plus")
             .font(.system(size: 22, weight: .light))
-            .foregroundColor(Theme.color.background)
+            .foregroundColor(Theme.color.primaryForeground)
             .frame(width: 52, height: 52)
-            .background(Theme.color.foreground)
+            .background(Theme.color.primary)
             .clipShape(Circle())
             .shadow(
               color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,

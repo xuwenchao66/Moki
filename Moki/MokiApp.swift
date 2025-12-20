@@ -21,16 +21,19 @@ struct MokiApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
-        .preferredColorScheme(.light)  // 强制使用浅色模式
+        // 移除强制浅色模式，支持自动深浅色切换
     }
   }
 }
 
 func configureAppearance() {
-  // https://stackoverflow.com/questions/58442508/swiftui-remove-navigationbar-bottom-border
+  // 配置导航栏外观以适配 Claude 主题
   let appearance = UINavigationBarAppearance()
   appearance.shadowColor = .clear
-  appearance.backgroundColor = .white  // 设置背景色为白色
+  
+  // 使用主题背景色
+  appearance.backgroundColor = UIColor(Theme.color.background)
+  
   UINavigationBar.appearance().standardAppearance = appearance
   UINavigationBar.appearance().scrollEdgeAppearance = appearance
 }

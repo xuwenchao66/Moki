@@ -121,7 +121,7 @@ private struct FeaturePlaceholderView: View {
 
         Image(systemName: systemImage)
           .font(.system(size: 56, weight: .light))
-          .foregroundColor(Theme.color.foregroundTertiary)
+          .foregroundColor(Theme.color.mutedForeground)
 
         VStack(spacing: Theme.spacing.sm) {
           Text("\(title)正在设计中")

@@ -82,9 +82,9 @@ struct EditView: View {
           }) {
             Image(systemName: "checkmark")
               .font(.system(size: 14, weight: .bold))
-              .foregroundColor(Theme.color.background)
+              .foregroundColor(Theme.color.primaryForeground)
               .frame(width: 56, height: 32)
-              .background(Theme.color.foreground)
+              .background(Theme.color.primary)
               .clipShape(Capsule())
           }
         }

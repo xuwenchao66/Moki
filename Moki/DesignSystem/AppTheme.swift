@@ -3,7 +3,7 @@
 //  Moki
 //
 //  设计系统 - 统一主题入口
-//  基于 X app 的极简黑白灰风格，仅支持浅色模式
+//  基于 Claude 的温暖橙色风格，支持浅色和深色模式
 //  提供便捷访问: Theme.color.xxx, Theme.font.xxx
 //
 
