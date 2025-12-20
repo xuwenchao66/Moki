@@ -23,7 +23,7 @@ extension View {
   ) -> some View {
     self
       .padding(padding)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.background)
       .cornerRadius(radius)
       .shadow(
         color: shadow.color,
@@ -40,7 +40,7 @@ extension View {
   ) -> some View {
     self
       .padding(padding)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.background)
       .cornerRadius(radius)
   }
 }
@@ -52,10 +52,10 @@ struct PrimaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .font(Theme.font.button)
-      .foregroundColor(Theme.color.primaryActionForeground)
+      .foregroundColor(.white)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.primaryAction)
+      .background(Theme.color.foreground)
       .cornerRadius(Theme.radius.md)
       .opacity(configuration.isPressed ? 0.8 : 1.0)
       .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
@@ -71,7 +71,7 @@ struct SecondaryButtonStyle: ButtonStyle {
       .foregroundColor(Theme.color.foreground)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.background)
       .overlay(
         RoundedRectangle(cornerRadius: Theme.radius.md)
           .stroke(Theme.color.border, lineWidth: 1.5)
@@ -87,7 +87,7 @@ struct TextButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .font(Theme.font.button)
-      .foregroundColor(Theme.color.accent)
+      .foregroundColor(Theme.color.foreground)
       .opacity(configuration.isPressed ? 0.6 : 1.0)
       .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
   }
@@ -117,7 +117,7 @@ extension View {
   func toolbarIconStyle(
     size: CGFloat = 16,
     weight: Font.Weight = .regular,
-    color: Color = Theme.color.primaryAction
+    color: Color = Theme.color.foreground
   ) -> some View {
     self
       .font(.system(size: size, weight: weight))

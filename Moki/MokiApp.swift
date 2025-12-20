@@ -21,6 +21,7 @@ struct MokiApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
+        .preferredColorScheme(.light)  // 强制使用浅色模式
     }
   }
 }

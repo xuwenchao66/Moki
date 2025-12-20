@@ -30,7 +30,7 @@ struct AppCard<Content: View>: View {
   var body: some View {
     content
       .padding(padding)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.background)
       .cornerRadius(radius)
       .shadow(
         color: shadow.color,
@@ -66,7 +66,7 @@ struct AppCard<Content: View>: View {
     AppCard(padding: Theme.spacing.sm, shadow: Theme.shadow.xs) {
       HStack(spacing: Theme.spacing.sm) {
         Image(systemName: "heart.fill")
-          .foregroundColor(Theme.color.accent)
+          .foregroundColor(Theme.color.foreground)
         Text("小巧卡片")
           .font(Theme.font.callout)
           .foregroundColor(Theme.color.foreground)

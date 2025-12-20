@@ -90,7 +90,7 @@ struct EditView: View {
         }
         .padding(.horizontal, Theme.spacing.md)
         .padding(.vertical, Theme.spacing.sm)
-        .background(Theme.color.cardBackground.opacity(0.95))
+        .background(Theme.color.background.opacity(0.95))
       }
     }
     .background(Theme.color.background)

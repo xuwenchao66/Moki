@@ -3,6 +3,7 @@
 //  Moki
 //
 //  设计系统 - 统一主题入口
+//  基于 X app 的极简黑白灰风格，仅支持浅色模式
 //  提供便捷访问: Theme.color.xxx, Theme.font.xxx
 //
 
@@ -164,7 +165,7 @@ struct ShadowStyle {
 // MARK: - Environment Values Extension
 
 extension EnvironmentValues {
-  /// 自定义环境值：用户主题偏好
+  /// 自定义环境值：用户主题偏好（保留以防未来需要）
   var userColorScheme: ColorScheme? {
     get { self[UserColorSchemeKey.self] }
     set { self[UserColorSchemeKey.self] = newValue }
@@ -172,5 +173,5 @@ extension EnvironmentValues {
 }
 
 private struct UserColorSchemeKey: EnvironmentKey {
-  static let defaultValue: ColorScheme? = nil
+  static let defaultValue: ColorScheme? = .light
 }
