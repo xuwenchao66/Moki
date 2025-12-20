@@ -21,7 +21,7 @@ struct JournalItemView: View {
           .fill(Theme.color.border)
           .frame(width: 1)
           .padding(.top, 10)
-          .padding(.bottom, -10)
+          .padding(.bottom, isLast ? Theme.spacing.lg + 3 : -10)
 
         // 圆点
         Circle()
