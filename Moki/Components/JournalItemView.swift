@@ -14,33 +14,31 @@ struct JournalItemView: View {
     // 使用 ZStack 实现时间线穿插效果
     ZStack(alignment: .topLeading) {
       // 1. 左侧时间线 (虚线/实线)
-      // 位置：距离左边一定距离 (e.g. 24pt)
+      // 位置：距离左边一定距离
       Rectangle()
-        .fill(Theme.color.border.opacity(0.5))  // 浅浅灰色
+        .fill(Theme.color.border.opacity(0.3))  // 颜色减淡
         .frame(width: 1)
-        .padding(.leading, 24)  // 线的位置
-        .padding(.top, 16)  // 从顶部稍微下来一点，避免连接到上面太紧？或者不需要
+        .padding(.leading, 12)  // 线的位置：更靠左 (原 24)
+        .padding(.top, 14)  // 顶部留一点距离
 
       // 2. 内容区域
-      VStack(alignment: .leading, spacing: 12) {
+      VStack(alignment: .leading, spacing: 10) {
         // 时间胶囊 (作为时间线上的点)
-        // 使用 background 遮挡住后面的线
         Text(dateTimeString)
           .font(.system(size: 13, weight: .medium, design: .monospaced))
           .foregroundColor(Theme.color.foregroundSecondary)
-          .padding(.horizontal, 12)
-          .padding(.vertical, 6)
+          .padding(.horizontal, 10)
+          .padding(.vertical, 4)
           .background(Theme.color.background)  // 遮挡线
-          .overlay(
-            Capsule()
-              .stroke(Theme.color.border.opacity(0.3), lineWidth: 1)
-          )
-          .clipShape(Capsule())
-          // 让胶囊的左侧一部分覆盖在线上
-          // 假设线在 x=24。胶囊如果左对齐，padding(.leading, 12)，那胶囊左边缘在 x=12，胶囊内部就在 x=24 处。
-          .padding(.leading, 12)
+          .clipShape(Capsule())  // 纯净的胶囊背景，去除描边以减少视觉噪音
+          // 让胶囊的中心对齐时间线 (时间线 x=12)
+          // 如果 paddingLeading=0, 胶囊左边贴边。
+          // 我们希望胶囊看起来是挂在时间线上的。
+          // 简单的做法是让胶囊覆盖住线。
+          // 如果线在 12pt，我们让胶囊左对齐即可，只要胶囊的左边距足够小。
+          .padding(.leading, 0)
 
-        // 正文内容 (缩进以避开左侧时间线)
+        // 正文内容
         VStack(alignment: .leading, spacing: 12) {
           Text(content)
             .font(Theme.font.journalBody)
@@ -51,7 +49,7 @@ struct JournalItemView: View {
           // 图片区
           if !images.isEmpty {
             MediaGridView(images: images)
-              .padding(.top, 2)
+              .padding(.top, 4)
           }
 
           // 底部标签与操作栏
@@ -60,7 +58,7 @@ struct JournalItemView: View {
               ForEach(tags, id: \.self) { tag in
                 Text("#\(tag)")
                   .font(.system(size: 12, weight: .regular))
-                  .foregroundColor(Theme.color.accent)
+                  .foregroundColor(Theme.color.foregroundSecondary)  // 标签颜色调淡
               }
             }
 
@@ -84,7 +82,7 @@ struct JournalItemView: View {
             }
           }
         }
-        .padding(.leading, 44)  // 内容缩进 (24 + 20)
+        .padding(.leading, 28)  // 内容缩进：减少缩进 (原 44)，让内容更紧凑
         .padding(.bottom, 24)  // 底部间距
       }
     }
