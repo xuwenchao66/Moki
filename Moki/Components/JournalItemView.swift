@@ -17,14 +17,11 @@ struct JournalItemView: View {
     HStack(alignment: .top, spacing: 0) {
       // 1. 时间线区域
       ZStack(alignment: .top) {
-        // 连线
-        if !isLast {
-          Rectangle()
-            .fill(Theme.color.border)
-            .frame(width: 1)
-            .padding(.top, 10)  // 从圆点下方开始
-            .padding(.bottom, -10)  // 延伸到下一个 item
-        }
+        Rectangle()
+          .fill(Theme.color.border)
+          .frame(width: 1)
+          .padding(.top, 10)  // 从圆点下方开始
+          .padding(.bottom, -10)  // 延伸到下一个 item
 
         // 圆点
         Circle()
@@ -46,12 +43,12 @@ struct JournalItemView: View {
         // 图片区
         if !images.isEmpty {
           MediaGridView(images: images)
+            .background(Color.red)
             .padding(.top, Theme.spacing.xxs)
         }
 
         // 底部标签与操作栏
         HStack(spacing: Theme.spacing.xs) {
-          // 时间放在标签前面
           Text(timeString)
             .font(.system(size: 12, weight: .medium, design: .monospaced))
             .foregroundColor(Theme.color.foregroundSecondary)
