@@ -13,29 +13,29 @@ struct JournalItemView: View {
   var body: some View {
     // 使用 ZStack 实现时间线穿插效果
     ZStack(alignment: .topLeading) {
-      // 1. 左侧时间线 (虚线/实线)
-      // 位置：距离左边一定距离
+      // 1. 左侧时间线 (实线)
+      // 位置：Theme.spacing.lg (24)
       Rectangle()
-        .fill(Theme.color.border.opacity(0.3))  // 颜色减淡
+        .fill(Theme.color.border)  // 加深颜色：移除 opacity
         .frame(width: 1)
-        .padding(.leading, 24)  // 线的位置：向右移一点，给胶囊“左超出”留空间
-        .padding(.top, 14)  // 顶部留一点距离
+        .padding(.leading, Theme.spacing.lg)
+        .padding(.top, 0)  // 贯穿顶部，由胶囊背景遮挡
 
       // 2. 内容区域
-      VStack(alignment: .leading, spacing: 10) {
+      VStack(alignment: .leading, spacing: Theme.spacing.sm) {  // 统一间距 12
         // 时间胶囊 (作为时间线上的点)
         Text(dateTimeString)
           .font(.system(size: 13, weight: .medium, design: .monospaced))
           .foregroundColor(Theme.color.foregroundSecondary)
-          .padding(.horizontal, 10)
-          .padding(.vertical, 4)
+          .padding(.horizontal, Theme.spacing.sm)  // 12
+          .padding(.vertical, Theme.spacing.xxs)  // 4
           .background(Theme.color.background)  // 遮挡线
-          .clipShape(Capsule())  // 纯净的胶囊背景
-          // 胶囊位置：左边距 0，而线在 24，所以胶囊左边比线靠左 24pt，形成“左超出”效果
+          .clipShape(Capsule())
+          // 胶囊位置：左边距 0，覆盖在位于 24 的线上
           .padding(.leading, 0)
 
         // 正文内容
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Theme.spacing.sm) {  // 统一间距 12
           Text(content)
             .font(Theme.font.journalBody)
             .foregroundColor(Theme.color.foreground)
@@ -45,16 +45,16 @@ struct JournalItemView: View {
           // 图片区
           if !images.isEmpty {
             MediaGridView(images: images)
-              .padding(.top, 4)
+              .padding(.top, Theme.spacing.xxs)  // 4
           }
 
           // 底部标签与操作栏
-          HStack(spacing: 8) {
+          HStack(spacing: Theme.spacing.xs) {  // 8
             if !tags.isEmpty {
               ForEach(tags, id: \.self) { tag in
                 Text("#\(tag)")
                   .font(.system(size: 12, weight: .regular))
-                  .foregroundColor(Theme.color.foregroundSecondary)  // 标签颜色调淡
+                  .foregroundColor(Theme.color.foregroundSecondary)
               }
             }
 
@@ -78,8 +78,8 @@ struct JournalItemView: View {
             }
           }
         }
-        .padding(.leading, 40)  // 内容缩进：比线的位置(24)再往右一些，保持层级
-        .padding(.bottom, 24)  // 底部间距
+        .padding(.leading, Theme.spacing.lg + Theme.spacing.md)  // 24 + 16 = 40，保持层次感
+        .padding(.bottom, Theme.spacing.lg)  // 24
       }
     }
     .padding(.horizontal, Theme.spacing.md)
