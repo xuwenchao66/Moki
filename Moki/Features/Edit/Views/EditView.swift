@@ -50,7 +50,7 @@ struct EditView: View {
       // 3. 底部工具栏
       VStack(spacing: 0) {
         Divider()
-          .overlay(Theme.color.divider)
+          .overlay(Theme.color.border)
 
         HStack {
           // 功能图标组
@@ -90,7 +90,7 @@ struct EditView: View {
         }
         .padding(.horizontal, Theme.spacing.md)
         .padding(.vertical, Theme.spacing.sm)
-        .background(Theme.color.background.opacity(0.95))
+        .background(Theme.color.background)
       }
     }
     .background(Theme.color.background)

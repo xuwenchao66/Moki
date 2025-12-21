@@ -64,9 +64,6 @@ struct AppColors {
   /// 边框色
   static let border = Color("Border")
 
-  /// 分割线
-  static let divider = border
-
   /// 输入框边框色
   static let input = Color("Input")
 

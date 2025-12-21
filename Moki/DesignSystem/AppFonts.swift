@@ -38,6 +38,9 @@ struct AppFonts {
   /// 三级标题 - 卡片标题
   static let title3 = Font.system(size: 20, weight: .medium, design: .default)
 
+  /// 四级标题 - 小标题
+  static let title4 = Font.system(size: 18, weight: .medium, design: .default)
+
   // MARK: - 正文字体 (Body)
 
   /// 正文
@@ -45,9 +48,6 @@ struct AppFonts {
 
   /// 日记正文
   static let journalBody = Font.system(size: 17, weight: .regular, design: .serif)
-
-  /// 正文强调
-  static let bodyBold = Font.system(size: 17, weight: .semibold, design: .default)
 
   /// 副文本
   static let callout = Font.system(size: 16, weight: .regular, design: .default)

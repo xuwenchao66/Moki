@@ -48,6 +48,9 @@ struct Spacing {
   /// 默认间距 - 16pt
   static let md: CGFloat = 16
 
+  /// 默认间距 - 18pt
+  static let md1: CGFloat = 18
+
   /// 中等间距 - 20pt
   static let md2: CGFloat = 20
 

@@ -41,16 +41,24 @@ struct TimelineView: View {
 
   // MARK: - Formatters
 
-  private static let dayFormatter: DateFormatter = {
+  private static let monthDayFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd"
+    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.dateFormat = "M月d日"
     return formatter
   }()
 
-  // 用于显示的日期格式
-  private static let headerDateFormatter: DateFormatter = {
+  private static let weekdayFormatter: DateFormatter = {
     let formatter = DateFormatter()
-    formatter.dateFormat = "yyyy-MM-dd"
+    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.dateFormat = "EEE"  // 周日/周一…
+    return formatter
+  }()
+
+  private static let yearFormatter: DateFormatter = {
+    let formatter = DateFormatter()
+    formatter.locale = Locale(identifier: "zh_CN")
+    formatter.dateFormat = "yyyy"
     return formatter
   }()
 
@@ -67,38 +75,51 @@ struct TimelineView: View {
           )
         } else {
           ScrollView {
-            LazyVStack(spacing: 0) {
-              // 顶部留白
+            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+              // 顶部呼吸
               Color.clear.frame(height: Theme.spacing.md)
 
-              ForEach(Array(entries.enumerated()), id: \.element.id) { index, entry in
-                let showDate = shouldShowDate(at: index)
-                let extra = parseMetadata(entry.metadata)
+              ForEach(dayGroups, id: \.id) { group in
+                Section(
+                  header:
+                    dayHeader(for: group.day)
+                    .padding(.top, Theme.spacing.sm)
+                    .padding(.bottom, Theme.spacing.md2)
+                    .padding(.horizontal, Theme.spacing.md2)
+                    .background(Theme.color.background)
+                ) {
+                  ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
+                    let extra = parseMetadata(entry.metadata)
+                    let isLast = index == group.entries.count - 1
 
-                VStack(spacing: 0) {
-                  if showDate {
-                    dateHeader(for: entry.createdAt)
-                      .padding(.bottom, Theme.spacing.sm)
-                      .padding(.top, index == 0 ? 0 : Theme.spacing.md)
+                    JournalItemView(
+                      content: entry.text,
+                      date: entry.createdAt,
+                      tags: extra.tags,
+                      images: extra.images,
+                      onEditTapped: {
+                        // TODO: Edit Action
+                      },
+                      onDeleteTapped: {
+                        diaryService.delete(entry)
+                      }
+                    )
+                    .padding(.horizontal, Theme.spacing.md2)
+                    .padding(.bottom, Theme.spacing.lg)
+
+                    if !isLast {
+                      Rectangle()
+                        .fill(Theme.color.border)
+                        .frame(height: 1)
+                        .padding(.horizontal, Theme.spacing.md2)
+                        .padding(.bottom, Theme.spacing.lg)
+                    }
                   }
 
-                  JournalItemView(
-                    content: entry.text,
-                    date: entry.createdAt,
-                    tags: extra.tags,
-                    images: extra.images,
-                    onEditTapped: {
-                      // TODO: Edit Action
-                    },
-                    onDeleteTapped: {
-                      diaryService.delete(entry)
-                    }
-                  )
-                  // 移除之前的 padding，由 JournalItemView 自己控制或这里控制
-                  // 如果没有背景卡片，就不需要额外的 padding，除非是 item 间距
-                  .padding(.bottom, Theme.spacing.md)
+                  // 组与组之间的呼吸（同一天最后一条不需要额外分割线）
+                  Color.clear
+                    .frame(height: Theme.spacing.md2)
                 }
-                .padding(.horizontal, Theme.spacing.md)
               }
 
               Spacer(minLength: 80)
@@ -123,8 +144,8 @@ struct TimelineView: View {
         .padding(.bottom, Theme.spacing.lg)
       }
       .background(Theme.color.background)
-      .navigationTitle("Moki")
       .navigationBarTitleDisplayMode(.inline)
+      .navigationTitle("Moki")
       .toolbar {
         ToolbarItem(placement: .navigationBarLeading) {
           Button {
@@ -151,35 +172,55 @@ struct TimelineView: View {
 
   // MARK: - Helpers
 
-  private func shouldShowDate(at index: Int) -> Bool {
-    if index == 0 { return true }
-    let current = entries[index].createdAt
-    let previous = entries[index - 1].createdAt
-    return !Calendar.current.isDate(current, inSameDayAs: previous)
+  private struct DayGroup: Identifiable {
+    let id: String
+    let day: Date
+    let entries: [MokiDiary]
   }
 
-  private func dateHeader(for date: Date) -> some View {
-    HStack(spacing: Theme.spacing.xs) {
-      Text(date, formatter: Self.capsuleDateFormatter)
-        .font(Theme.font.caption)
-        .fontWeight(.semibold)
-        .foregroundColor(Theme.color.primary)
-        .padding(.horizontal, Theme.spacing.xs)
-        .padding(.vertical, Theme.spacing.xxs)
-        .background(Theme.color.primary.opacity(0.1))
-        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
+  private var dayGroups: [DayGroup] {
+    guard !entries.isEmpty else { return [] }
 
-      Rectangle()
-        .fill(Theme.color.border)
-        .frame(height: 1)
+    // 简洁、好维护：直接按“当天 00:00”分组，再按日期倒序输出
+    let grouped = Dictionary(grouping: entries) { entry in
+      Calendar.current.startOfDay(for: entry.createdAt)
+    }
+
+    return grouped.keys
+      .sorted(by: >)
+      .map { day in
+        let list = (grouped[day] ?? []).sorted { $0.createdAt > $1.createdAt }
+        return DayGroup(id: day.toMokiDateString(), day: day, entries: list)
+      }
+  }
+
+  private func dayHeader(for date: Date) -> some View {
+    let title = dayHeaderTitle(for: date)
+    let subtitle = dayHeaderSubtitle(for: date)
+
+    return HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.sm) {
+      Text(title)
+        .font(Theme.font.title4)
+        .fontWeight(.bold)
+        .foregroundColor(Theme.color.foreground)
+
+      Text(subtitle)
+        .font(Theme.font.footnote)
+        .foregroundColor(Theme.color.mutedForeground)
+
+      Spacer()
     }
   }
 
-  private static let capsuleDateFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.dateFormat = "M月d日 yyyy"
-    return formatter
-  }()
+  private func dayHeaderTitle(for date: Date) -> String {
+    return Self.monthDayFormatter.string(from: date)
+  }
+
+  private func dayHeaderSubtitle(for date: Date) -> String {
+    let wd = Self.weekdayFormatter.string(from: date)
+    let year = Self.yearFormatter.string(from: date)
+    return "\(wd) · \(year)"
+  }
 
   private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
     guard let data = json.data(using: .utf8),

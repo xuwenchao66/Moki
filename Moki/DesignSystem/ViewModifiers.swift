@@ -154,7 +154,7 @@ extension View {
 // MARK: - Separator (分割线)
 
 struct Separator: View {
-  var color: Color = Theme.color.divider
+  var color: Color = Theme.color.border
   var height: CGFloat = 1
 
   var body: some View {
