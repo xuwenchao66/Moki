@@ -55,31 +55,19 @@ struct Spacing {
   /// 大间距 - 24pt (区块间距)
   static let lg: CGFloat = 24
 
+  /// 大间距 - 28pt (区块间距)
+  static let lg2: CGFloat = 28
+
   /// 很大间距 - 32pt
   static let xl: CGFloat = 32
 
   /// 超大间距 - 48pt (大留白,代替分割线)
   static let xxl: CGFloat = 48
 
-  /// 巨大间距 - 56pt (日记条目之间的奢侈留白)
-  static let xxxl: CGFloat = 56
-
   // MARK: - Semantic Spacing (语义化间距)
 
   /// 文本行间距 - 优化阅读体验 (8pt)
   static let textLineSpacing: CGFloat = 8
-
-  /// 日记条目底部间距 - 奢侈的留白感
-  static let entryBottom: CGFloat = 56
-
-  /// 日期组底部间距 - 天与天之间的分割
-  static let dayGroupBottom: CGFloat = 32
-
-  /// 日期头部上方间距
-  static let dayHeaderTop: CGFloat = 10
-
-  /// 日期头部下方间距
-  static let dayHeaderBottom: CGFloat = 30
 }
 
 // MARK: - Radius (圆角系统)

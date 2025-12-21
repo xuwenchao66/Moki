@@ -77,14 +77,14 @@ struct TimelineView: View {
           ScrollView {
             LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
               // 顶部呼吸
-              Color.clear.frame(height: Theme.spacing.lg)
+              Color.clear.frame(height: Theme.spacing.md)
 
               ForEach(dayGroups, id: \.id) { group in
                 Section(
                   header:
                     dayHeader(for: group.day)
-                    .padding(.top, Theme.spacing.dayHeaderTop)
-                    .padding(.bottom, Theme.spacing.dayHeaderBottom)
+                    .padding(.top, Theme.spacing.xs)
+                    .padding(.bottom, Theme.spacing.lg2)
                     .padding(.horizontal, Theme.spacing.lg)
                     .background(Theme.color.background)
                 ) {
@@ -104,12 +104,12 @@ struct TimelineView: View {
                       }
                     )
                     .padding(.horizontal, Theme.spacing.lg)
-                    .padding(.bottom, Theme.spacing.entryBottom)
+                    .padding(.bottom, Theme.spacing.xxl)
                   }
 
                   // 天与天之间的大留白 - 代替分割线
                   Color.clear
-                    .frame(height: Theme.spacing.dayGroupBottom)
+                    .frame(height: Theme.spacing.xl)
                 }
               }
 
