@@ -80,7 +80,7 @@ struct TagsView: View {
               } label: {
                 Image(systemName: "ellipsis")
                   .font(.system(size: 16))
-                  .foregroundColor(Theme.color.foregroundTertiary)
+                  .foregroundColor(Theme.color.mutedForeground)
                   .frame(width: 38, height: 38, alignment: .trailing)
                   .contentShape(Rectangle())
               }

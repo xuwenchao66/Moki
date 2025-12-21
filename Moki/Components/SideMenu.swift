@@ -131,7 +131,7 @@ private struct MenuButton: View {
           .font(.system(size: 16))  // 字体稍微改小一点点，更精致
           .fontWeight(isSelected ? .medium : .regular)
       }
-      .foregroundColor(isSelected ? Theme.color.primary : Theme.color.foregroundSecondary)
+      .foregroundColor(isSelected ? Theme.color.primary : Theme.color.mutedForeground)
       .padding(.vertical, 4)  // 大幅减小垂直 Padding，依靠 Stack spacing 控制间距
       .frame(maxWidth: .infinity, alignment: .leading)
       .contentShape(Rectangle())

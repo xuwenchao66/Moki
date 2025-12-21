@@ -61,7 +61,8 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.font = UIFont.systemFont(ofSize: Constants.fontSize)
     // 从 Theme.color.foreground 获取颜色（适配深色模式）
     textView.textColor = UIColor(Theme.color.foreground)
-    textView.tintColor = UIColor(Theme.color.primary)
+    // 光标使用黑色（与 Anthropic CTA 一致）
+    textView.tintColor = UIColor(Theme.color.foreground)
 
     // 输入行为（适合日记场景）
     textView.autocapitalizationType = .sentences  // 句首字母大写

@@ -50,14 +50,14 @@ struct JournalItemView: View {
         HStack(spacing: Theme.spacing.xs) {
           Text(timeString)
             .font(.system(size: 12, weight: .medium, design: .monospaced))
-            .foregroundColor(Theme.color.foregroundSecondary)
+            .foregroundColor(Theme.color.mutedForeground)
             .padding(.trailing, 4)
 
           if !tags.isEmpty {
             ForEach(tags, id: \.self) { tag in
               Text("#\(tag)")
                 .font(.system(size: 12, weight: .regular))
-                .foregroundColor(Theme.color.foregroundSecondary)
+                .foregroundColor(Theme.color.mutedForeground)
             }
           }
 
@@ -75,7 +75,7 @@ struct JournalItemView: View {
           } label: {
             Image(systemName: "ellipsis")
               .font(.system(size: 16))
-              .foregroundColor(Theme.color.foregroundTertiary)
+              .foregroundColor(Theme.color.mutedForeground)
               .frame(width: 32, height: 18)
               .contentShape(Rectangle())
           }

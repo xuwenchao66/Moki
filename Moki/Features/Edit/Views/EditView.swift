@@ -31,7 +31,7 @@ struct EditView: View {
             .font(.system(size: 13))
         }
         .font(.system(size: 14))
-        .foregroundColor(Theme.color.foregroundSecondary)
+        .foregroundColor(Theme.color.mutedForeground)
       }
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding(.horizontal, Theme.spacing.md)
@@ -72,7 +72,7 @@ struct EditView: View {
 
           Spacer()
 
-          // 完成按钮
+          // 完成按钮 - 使用深黑色 #141413（参考 Anthropic CTA）
           Button(action: {
             if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
               dismiss()
@@ -84,7 +84,7 @@ struct EditView: View {
               .font(.system(size: 14, weight: .bold))
               .foregroundColor(Theme.color.primaryForeground)
               .frame(width: 56, height: 32)
-              .background(Theme.color.primary)
+              .background(Theme.color.cardForeground)
               .clipShape(Capsule())
           }
         }

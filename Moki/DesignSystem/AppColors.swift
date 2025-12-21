@@ -80,12 +80,4 @@ struct AppColors {
 
   /// 危险操作前景色
   static let destructiveForeground = Color("DestructiveForeground")
-
-  // MARK: - 兼容性别名 (Compatibility Aliases)
-
-  /// 次要前景色 - 兼容旧代码
-  static let foregroundSecondary = mutedForeground
-
-  /// 三级前景色 - 兼容旧代码
-  static let foregroundTertiary = mutedForeground
 }

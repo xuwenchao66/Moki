@@ -47,7 +47,7 @@ extension View {
 
 // MARK: - Button Styles (按钮样式)
 
-/// 主按钮样式 - 温暖橙色填充
+/// 主按钮样式 - 深色填充
 struct PrimaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
@@ -55,7 +55,7 @@ struct PrimaryButtonStyle: ButtonStyle {
       .foregroundColor(Theme.color.primaryForeground)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.primary)
+      .background(Theme.color.cardForeground)
       .cornerRadius(Theme.radius.md)
       .opacity(configuration.isPressed ? 0.8 : 1.0)
       .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
@@ -140,14 +140,14 @@ extension View {
   func subtitleStyle() -> some View {
     self
       .font(Theme.font.subheadline)
-      .foregroundColor(Theme.color.foregroundSecondary)
+      .foregroundColor(Theme.color.mutedForeground)
   }
 
   /// 说明文字样式
   func captionStyle() -> some View {
     self
       .font(Theme.font.caption)
-      .foregroundColor(Theme.color.foregroundTertiary)
+      .foregroundColor(Theme.color.mutedForeground)
   }
 }
 

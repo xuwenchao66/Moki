@@ -100,13 +100,13 @@ struct TimelineView: View {
           .background(Theme.color.background)
         }
 
-        // FAB
+        // FAB - 深色按钮
         Button(action: { showAddEntry = true }) {
           Image(systemName: "plus")
             .font(.system(size: 22, weight: .light))
             .foregroundColor(Theme.color.primaryForeground)
             .frame(width: 52, height: 52)
-            .background(Theme.color.primary)
+            .background(Theme.color.cardForeground)
             .clipShape(Circle())
             .shadow(
               color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,
@@ -168,7 +168,7 @@ struct TimelineView: View {
 
       Text(date, formatter: Self.yearFormatter)
         .font(.system(size: 14, weight: .regular))
-        .foregroundColor(Theme.color.foregroundSecondary)
+        .foregroundColor(Theme.color.mutedForeground)
 
       Spacer()
     }
