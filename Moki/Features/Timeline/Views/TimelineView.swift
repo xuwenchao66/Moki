@@ -84,7 +84,7 @@ struct TimelineView: View {
                   header:
                     dayHeader(for: group.day)
                     .padding(.top, Theme.spacing.xs)
-                    .padding(.bottom, Theme.spacing.lg2)
+                    .padding(.bottom, Theme.spacing.xl)
                     .padding(.horizontal, Theme.spacing.lg)
                     .background(Theme.color.background)
                 ) {
@@ -104,12 +104,12 @@ struct TimelineView: View {
                       }
                     )
                     .padding(.horizontal, Theme.spacing.lg)
-                    .padding(.bottom, Theme.spacing.xxl)
+                    .padding(.bottom, Theme.spacing.xxxl)
                   }
 
                   // 天与天之间的大留白 - 代替分割线
                   Color.clear
-                    .frame(height: Theme.spacing.xl)
+                    .frame(height: Theme.spacing.lg)
                 }
               }
 
