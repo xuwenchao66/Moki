@@ -109,7 +109,7 @@ struct TimelineView: View {
 
                   // 天与天之间的大留白 - 代替分割线
                   Color.clear
-                    .frame(height: Theme.spacing.lg)
+                    .frame(height: Theme.spacing.lg2)
                 }
               }
 
