@@ -159,16 +159,19 @@ struct TimelineView: View {
   }
 
   private func dateHeader(for date: Date) -> some View {
-    HStack {
+    HStack(spacing: Theme.spacing.xs) {
       Text(date, formatter: Self.capsuleDateFormatter)
-        .font(.system(size: 14, weight: .medium))
+        .font(Theme.font.caption)
+        .fontWeight(.semibold)
         .foregroundColor(Theme.color.primary)
-        .padding(.horizontal, Theme.spacing.sm)
+        .padding(.horizontal, Theme.spacing.xs)
         .padding(.vertical, Theme.spacing.xxs)
         .background(Theme.color.primary.opacity(0.1))
-        .clipShape(Capsule())
+        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
 
-      Spacer()
+      Rectangle()
+        .fill(Theme.color.border)
+        .frame(height: 1)
     }
   }
 

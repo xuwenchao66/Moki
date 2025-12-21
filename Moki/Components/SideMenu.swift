@@ -89,7 +89,7 @@ struct SideMenu: View {
           .padding(.bottom, Theme.spacing.xxl)
         }
         .frame(width: 280)
-        .background(Theme.color.background)
+        .background(Theme.color.secondary)
         .edgesIgnoringSafeArea(.all)
 
         // 2. 透明占位区域

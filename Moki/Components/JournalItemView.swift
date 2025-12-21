@@ -11,71 +11,51 @@ struct JournalItemView: View {
   var onDeleteTapped: (() -> Void)? = nil
 
   var body: some View {
-    VStack(alignment: .leading, spacing: Theme.spacing.sm) {
-      Text(content)
-        .font(Theme.font.journalBody)  // 使用 AppTheme 中的字体
-        .foregroundColor(Theme.color.foreground)
-        .lineSpacing(Theme.spacing.textLineSpacing)  // 使用 AppTheme 中的行间距
-        .fixedSize(horizontal: false, vertical: true)
+    HStack(alignment: .top, spacing: 14) {
+      // 2pt 左侧边线（HTML：默认透明，hover 才变色；iOS 无 hover，这里保留布局骨架）
+      Rectangle()
+        .fill(Color.clear)
+        .frame(width: 2)
 
-      // 图片区
-      if !images.isEmpty {
-        MediaGridView(images: images)
-          .padding(.top, Theme.spacing.xxs)
-      }
+      VStack(alignment: .leading, spacing: Theme.spacing.xxs) {
+        Text(content)
+          .font(Theme.font.journalBody)
+          .foregroundColor(Theme.color.foreground)
+          .lineSpacing(Theme.spacing.textLineSpacing)
+          .fixedSize(horizontal: false, vertical: true)
 
-      // 底部标签与操作栏
-      HStack(spacing: Theme.spacing.xs) {
-        Text(timeString)
-          .font(.system(size: 13, weight: .medium, design: .monospaced))  // 稍微调整大小
-          .foregroundColor(Theme.color.mutedForeground)
+        if !images.isEmpty {
+          MediaGridView(images: images)
+            .padding(.top, Theme.spacing.xxs)
+        }
 
-        if !tags.isEmpty {
-          ForEach(tags, id: \.self) { tag in
-            HStack(spacing: 4) {
-              // 简单的图标映射逻辑，实际可以根据 tag 内容更智能
-              Image(systemName: getIcon(for: tag))
-                .font(.caption2)
+        HStack(spacing: Theme.spacing.md) {
+          Text(timeString)
+            .font(Theme.font.caption)
+            .foregroundColor(Theme.color.mutedForeground)
+
+          if !tags.isEmpty {
+            ForEach(tags, id: \.self) { tag in
               Text(tag)
-                .font(.system(size: 13, weight: .regular))
-            }
-            .foregroundColor(Theme.color.mutedForeground)
-          }
-        }
-
-        Spacer()
-
-        Menu {
-          if let onEditTapped {
-            Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }
-          }
-          if let onDeleteTapped {
-            Button(role: .destructive, action: onDeleteTapped) {
-              Label("删除", systemImage: "trash")
+                .font(Theme.font.caption)
+                .foregroundColor(Theme.color.mutedForeground)
             }
           }
-        } label: {
-          Image(systemName: "ellipsis")
-            .font(.system(size: 16))
-            .foregroundColor(Theme.color.mutedForeground)
-            .frame(width: 32, height: 18)
-            .contentShape(Rectangle())
+          Spacer()
         }
+        .padding(.top, Theme.spacing.xxs)
       }
     }
-    .padding(Theme.spacing.md)  // 内边距
-    .background(Theme.color.card)  // 卡片背景
-  }
-
-  // 简单的 Tag 图标映射
-  private func getIcon(for tag: String) -> String {
-    switch tag.lowercased() {
-    case "reading": return "book"
-    case "coffee": return "cup.and.saucer"
-    case "thinking": return "cloud"
-    case "idea": return "lightbulb"
-    case "work": return "briefcase"
-    default: return "tag"
+    .contentShape(Rectangle())
+    .contextMenu {
+      if let onEditTapped {
+        Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }
+      }
+      if let onDeleteTapped {
+        Button(role: .destructive, action: onDeleteTapped) {
+          Label("删除", systemImage: "trash")
+        }
+      }
     }
   }
 
