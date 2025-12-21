@@ -77,20 +77,19 @@ struct TimelineView: View {
           ScrollView {
             LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
               // 顶部呼吸
-              Color.clear.frame(height: Theme.spacing.md)
+              Color.clear.frame(height: Theme.spacing.lg)
 
               ForEach(dayGroups, id: \.id) { group in
                 Section(
                   header:
                     dayHeader(for: group.day)
-                    .padding(.top, Theme.spacing.sm)
-                    .padding(.bottom, Theme.spacing.md2)
-                    .padding(.horizontal, Theme.spacing.md2)
+                    .padding(.top, Theme.spacing.dayHeaderTop)
+                    .padding(.bottom, Theme.spacing.dayHeaderBottom)
+                    .padding(.horizontal, Theme.spacing.lg)
                     .background(Theme.color.background)
                 ) {
-                  ForEach(Array(group.entries.enumerated()), id: \.element.id) { index, entry in
+                  ForEach(group.entries, id: \.id) { entry in
                     let extra = parseMetadata(entry.metadata)
-                    let isLast = index == group.entries.count - 1
 
                     JournalItemView(
                       content: entry.text,
@@ -104,21 +103,13 @@ struct TimelineView: View {
                         diaryService.delete(entry)
                       }
                     )
-                    .padding(.horizontal, Theme.spacing.md2)
-                    .padding(.bottom, Theme.spacing.lg)
-
-                    if !isLast {
-                      Rectangle()
-                        .fill(Theme.color.border)
-                        .frame(height: 1)
-                        .padding(.horizontal, Theme.spacing.md2)
-                        .padding(.bottom, Theme.spacing.lg)
-                    }
+                    .padding(.horizontal, Theme.spacing.lg)
+                    .padding(.bottom, Theme.spacing.entryBottom)
                   }
 
-                  // 组与组之间的呼吸（同一天最后一条不需要额外分割线）
+                  // 天与天之间的大留白 - 代替分割线
                   Color.clear
-                    .frame(height: Theme.spacing.md2)
+                    .frame(height: Theme.spacing.dayGroupBottom)
                 }
               }
 
@@ -194,32 +185,29 @@ struct TimelineView: View {
       }
   }
 
+  /// 日期头部 - 大小对比设计
+  /// 大数字(Day) + 小辅助信息(Month/Weekday)
+  /// 这是平面设计中产生高级感的最简单技巧
   private func dayHeader(for date: Date) -> some View {
-    let title = dayHeaderTitle(for: date)
-    let subtitle = dayHeaderSubtitle(for: date)
+    let day = Calendar.current.component(.day, from: date)
+    let month = Calendar.current.component(.month, from: date)
+    let weekday = Self.weekdayFormatter.string(from: date)
 
-    return HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.sm) {
-      Text(title)
-        .font(Theme.font.title4)
-        .fontWeight(.bold)
+    return HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.xs) {
+      // 巨大的数字 - 视觉锚点
+      Text("\(day)")
+        .font(Theme.font.dateLarge)
         .foregroundColor(Theme.color.foreground)
+        .tracking(-0.5)
 
-      Text(subtitle)
-        .font(Theme.font.footnote)
+      // 小辅助信息
+      Text("\(month)月 / \(weekday)")
+        .font(Theme.font.dateSmall)
         .foregroundColor(Theme.color.mutedForeground)
+        .textCase(.uppercase)
 
       Spacer()
     }
-  }
-
-  private func dayHeaderTitle(for date: Date) -> String {
-    return Self.monthDayFormatter.string(from: date)
-  }
-
-  private func dayHeaderSubtitle(for date: Date) -> String {
-    let wd = Self.weekdayFormatter.string(from: date)
-    let year = Self.yearFormatter.string(from: date)
-    return "\(wd) · \(year)"
   }
 
   private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {

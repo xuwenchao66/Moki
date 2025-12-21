@@ -28,42 +28,58 @@ enum Theme {
 }
 
 // MARK: - Spacing (间距系统)
+// 基于 8px 网格系统,消除魔法数值
 
 struct Spacing {
-  /// 微小间距 - 2pt (新增)
+  /// 微小间距 - 2pt
   static let xxxs: CGFloat = 2
 
-  /// 极小间距 - 4pt
+  /// 极小间距 - 4pt (微调)
   static let xxs: CGFloat = 4
 
-  /// 稍小间距 - 6pt (新增，用于紧凑布局)
+  /// 稍小间距 - 6pt (紧凑布局)
   static let compact: CGFloat = 6
 
-  /// 很小间距 - 8pt
+  /// 很小间距 - 8pt (元素内间距)
   static let xs: CGFloat = 8
 
   /// 小间距 - 12pt
   static let sm: CGFloat = 12
 
-  /// 默认间距 - 16pt
+  /// 默认间距 - 16pt (常规间距,标准槽)
   static let md: CGFloat = 16
 
-  /// 中等间距 - 20pt
+  /// 中等间距 - 20pt (页面边距)
   static let md2: CGFloat = 20
 
-  /// 大间距 - 24pt
+  /// 大间距 - 24pt (区块间距)
   static let lg: CGFloat = 24
 
   /// 很大间距 - 32pt
   static let xl: CGFloat = 32
 
-  /// 超大间距 - 48pt
+  /// 超大间距 - 48pt (大留白,代替分割线)
   static let xxl: CGFloat = 48
 
-  // MARK: - Semantic Spacing
+  /// 巨大间距 - 56pt (日记条目之间的奢侈留白)
+  static let xxxl: CGFloat = 56
+
+  // MARK: - Semantic Spacing (语义化间距)
 
   /// 文本行间距 - 优化阅读体验 (8pt)
   static let textLineSpacing: CGFloat = 8
+
+  /// 日记条目底部间距 - 奢侈的留白感
+  static let entryBottom: CGFloat = 56
+
+  /// 日期组底部间距 - 天与天之间的分割
+  static let dayGroupBottom: CGFloat = 32
+
+  /// 日期头部上方间距
+  static let dayHeaderTop: CGFloat = 10
+
+  /// 日期头部下方间距
+  static let dayHeaderBottom: CGFloat = 30
 }
 
 // MARK: - Radius (圆角系统)

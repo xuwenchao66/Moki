@@ -1,5 +1,9 @@
 import SwiftUI
 
+/// 日记条目组件 - 三明治结构
+/// Layer 1: 内容层 (Content) - 衬线体,情感优先
+/// Layer 2: 媒体层 (Media) - 图片/视频
+/// Layer 3: 信息层 (Meta) - 时间+标签,极度弱化
 struct JournalItemView: View {
   let content: String
   let date: Date
@@ -12,21 +16,24 @@ struct JournalItemView: View {
 
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
+      // Layer 1: 内容层 - 纯文字,衬线体
       Text(content)
         .font(Theme.font.journalBody)
         .foregroundColor(Theme.color.foreground)
-        .lineSpacing(Theme.spacing.compact)
+        .lineSpacing(Theme.font.journalBodyLineSpacing)
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.bottom, Theme.spacing.sm)
+        .padding(.bottom, Theme.spacing.md)
 
+      // Layer 2: 媒体层 - 图片
       if !images.isEmpty {
         MediaRowView(images: images)
-          .padding(.bottom, Theme.spacing.sm)
+          .padding(.bottom, Theme.spacing.md)
       }
 
+      // Layer 3: 信息层 - 极度弱化,像书页页码
       HStack(alignment: .center, spacing: Theme.spacing.sm) {
         Text(timeString)
-          .font(Theme.font.footnote)
+          .font(Theme.font.timestamp)
           .foregroundColor(Theme.color.mutedForeground)
 
         if !tags.isEmpty {
@@ -58,20 +65,22 @@ struct JournalItemView: View {
   }
 }
 
+/// 标签组件 - 极简设计,不加边框不加背景
 private struct TagText: View {
   let tag: String
 
   var body: some View {
-    HStack(spacing: 1) {
+    HStack(spacing: Theme.spacing.xxxs) {
       Text("#")
-        .opacity(0.5)
+        .opacity(0.6)
       Text(tag)
     }
-    .font(Theme.font.footnote)
+    .font(Theme.font.tag)
     .foregroundColor(Theme.color.mutedForeground)
   }
 }
 
+/// 媒体展示组件 - 圆角矩形,通栏显示
 private struct MediaRowView: View {
   let images: [String]
 
@@ -81,19 +90,18 @@ private struct MediaRowView: View {
     case 1:
       MediaPlaceholderView()
         .frame(maxWidth: .infinity)
-        .frame(height: 200)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous))
+        .frame(height: 220)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
 
     case 2:
-      HStack(spacing: Theme.spacing.xs) {  // ~8
+      HStack(spacing: Theme.spacing.xs) {
         MediaPlaceholderView()
         MediaPlaceholderView()
       }
       .frame(height: 150)
-      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous))
+      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
 
     default:
-      // 简单退化：多图按 2 列网格展示，保持紧凑节奏
       LazyVGrid(
         columns: [GridItem(.flexible(), spacing: Theme.spacing.xs), GridItem(.flexible())],
         spacing: Theme.spacing.xs
@@ -103,7 +111,7 @@ private struct MediaRowView: View {
             .aspectRatio(1, contentMode: .fill)
         }
       }
-      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous))
+      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
     }
   }
 }

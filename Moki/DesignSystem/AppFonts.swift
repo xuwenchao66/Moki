@@ -3,7 +3,7 @@
 //  Moki
 //
 //  设计系统 - 字体定义
-//  简约风格 (统一无衬线字体)
+//  混排风格: Serif (情感/内容) + Sans-serif (系统/数据)
 //
 
 import SwiftUI
@@ -11,9 +11,33 @@ import UIKit
 
 struct AppFonts {
 
-  // MARK: - 标题字体 (Headings)
+  // MARK: - 日期字体 (Date Typography) - Sans-serif 代表"系统/时间"
 
-  /// 特大标题 - 简约风格
+  /// 日期大数字 - 视觉锚点
+  static let dateLarge = Font.system(size: 32, weight: .heavy, design: .default)
+
+  /// 日期小标签 - 辅助信息 (月份/星期)
+  static let dateSmall = Font.system(size: 14, weight: .medium, design: .default)
+
+  // MARK: - 内容字体 (Content Typography) - Serif 代表"人的情感"
+
+  /// 日记正文 - 衬线体,阅读性优先
+  static let journalBody = Font.system(size: 17, weight: .regular, design: .serif)
+
+  /// 日记正文行高系数
+  static let journalBodyLineSpacing: CGFloat = 8
+
+  // MARK: - 元数据字体 (Meta Typography) - Sans-serif 代表"机器/参数"
+
+  /// 时间戳 - 12小时制
+  static let timestamp = Font.system(size: 12, weight: .semibold, design: .default)
+
+  /// 标签 - 弱化但清晰
+  static let tag = Font.system(size: 12, weight: .regular, design: .default)
+
+  // MARK: - 系统字体 (System Typography)
+
+  /// 特大标题
   static let largeTitle = Font.system(size: 36, weight: .bold, design: .rounded)
 
   /// 日期标题 (月份分组) - 杂志感衬线体
@@ -29,25 +53,20 @@ struct AppFonts {
     return base
   }()
 
-  /// 一级标题 - 页面标题
+  /// 一级标题
   static let title1 = Font.system(size: 30, weight: .bold, design: .default)
 
-  /// 二级标题 - 章节标题
+  /// 二级标题
   static let title2 = Font.system(size: 24, weight: .semibold, design: .default)
 
-  /// 三级标题 - 卡片标题
+  /// 三级标题
   static let title3 = Font.system(size: 20, weight: .medium, design: .default)
 
-  /// 四级标题 - 小标题
+  /// 四级标题
   static let title4 = Font.system(size: 18, weight: .medium, design: .default)
-
-  // MARK: - 正文字体 (Body)
 
   /// 正文
   static let body = Font.system(size: 17, weight: .regular, design: .default)
-
-  /// 日记正文
-  static let journalBody = Font.system(size: 17, weight: .regular, design: .serif)
 
   /// 副文本
   static let callout = Font.system(size: 16, weight: .regular, design: .default)
