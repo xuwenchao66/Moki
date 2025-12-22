@@ -68,7 +68,7 @@ struct Spacing {
   static let xxl: CGFloat = 48
 
   /// 超大间距 - 60pt (日记条目之间的奢侈留白)
-  static let xxxl: CGFloat = 60
+  static let xxxl: CGFloat = 64
 
   // MARK: - Semantic Spacing (语义化间距)
 
