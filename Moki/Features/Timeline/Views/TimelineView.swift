@@ -75,42 +75,40 @@ struct TimelineView: View {
           )
         } else {
           ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0, pinnedViews: [.sectionHeaders]) {
+            LazyVStack(alignment: .leading, spacing: 0) {
               // 顶部呼吸
-              Color.clear.frame(height: Theme.spacing.md)
+              Color.clear.frame(height: Theme.spacing.lg)
 
               ForEach(dayGroups, id: \.id) { group in
-                Section(
-                  header:
-                    dayHeader(for: group.day)
-                    .padding(.top, Theme.spacing.xs)
-                    .padding(.bottom, Theme.spacing.xl)
-                    .padding(.horizontal, Theme.spacing.lg)
-                    .background(Theme.color.background)
-                ) {
-                  ForEach(group.entries, id: \.id) { entry in
-                    let extra = parseMetadata(entry.metadata)
+                // 日期头部
+                dayHeader(for: group.day)
+                  .padding(.top, Theme.spacing.xs)
+                  .padding(.bottom, Theme.spacing.xl)
+                  .padding(.horizontal, Theme.spacing.lg)
 
-                    JournalItemView(
-                      content: entry.text,
-                      date: entry.createdAt,
-                      tags: extra.tags,
-                      images: extra.images,
-                      onEditTapped: {
-                        // TODO: Edit Action
-                      },
-                      onDeleteTapped: {
-                        diaryService.delete(entry)
-                      }
-                    )
-                    .padding(.horizontal, Theme.spacing.lg)
-                    .padding(.bottom, Theme.spacing.xxxl)
-                  }
+                // 该天的所有条目
+                ForEach(group.entries, id: \.id) { entry in
+                  let extra = parseMetadata(entry.metadata)
 
-                  // 天与天之间的大留白 - 代替分割线
-                  Color.clear
-                    .frame(height: Theme.spacing.lg2)
+                  JournalItemView(
+                    content: entry.text,
+                    date: entry.createdAt,
+                    tags: extra.tags,
+                    images: extra.images,
+                    onEditTapped: {
+                      // TODO: Edit Action
+                    },
+                    onDeleteTapped: {
+                      diaryService.delete(entry)
+                    }
+                  )
+                  .padding(.horizontal, Theme.spacing.lg)
+                  .padding(.bottom, Theme.spacing.xxxl)
                 }
+
+                // 天与天之间的大留白 - 代替分割线
+                Color.clear
+                  .frame(height: Theme.spacing.lg2)
               }
 
               Spacer(minLength: 80)
