@@ -110,8 +110,6 @@ struct TimelineView: View {
                 Color.clear
                   .frame(height: Theme.spacing.xxl)
               }
-
-              Spacer(minLength: 80)
             }
           }
           .background(Theme.color.background)
