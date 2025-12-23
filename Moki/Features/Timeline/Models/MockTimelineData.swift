@@ -115,6 +115,20 @@ extension MockEntry {
         images: ["2"],
         tags: ["阅读", "摘录"]
       ),
+
+      // MARK: - 去年数据 (2024)
+      MockEntry(
+        content: "再见 2024。这一年发生了很多事，开始做独立开发，开始认真记录生活。希望明年会更好。",
+        date: time(-12, 0, 23, 59),
+        images: ["1"],
+        tags: ["年度总结"]
+      ),
+      MockEntry(
+        content: "翻到了去年的老照片，那时候头发还很短。",
+        date: time(-15, 0, 14, 20),
+        images: ["2"],
+        tags: ["回忆"]
+      ),
     ]
   }
 }

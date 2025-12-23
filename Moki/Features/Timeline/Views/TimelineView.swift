@@ -188,6 +188,9 @@ struct TimelineView: View {
     let day = Calendar.current.component(.day, from: date)
     let month = Calendar.current.component(.month, from: date)
     let weekday = Self.weekdayFormatter.string(from: date)
+    let year = Calendar.current.component(.year, from: date)
+    let currentYear = Calendar.current.component(.year, from: Date())
+    let isPastYear = year != currentYear
 
     return HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.xs) {
       // 巨大的数字 - 视觉锚点
@@ -197,11 +200,17 @@ struct TimelineView: View {
         .tracking(-0.5)
 
       // 小辅助信息
-      Text("\(month)月 / \(weekday)")
-        .font(Theme.font.dateSmall)
-        .foregroundColor(Theme.color.mutedForeground)
-        .textCase(.uppercase)
-        .offset(y: -2)  // 视觉对齐修正
+      HStack(spacing: 0) {
+        Text("\(month)月 / \(weekday)")
+        if isPastYear {
+          Text(" · \(String(year))")
+            .foregroundColor(Theme.color.mutedForeground.opacity(0.6))
+        }
+      }
+      .font(Theme.font.dateSmall)
+      .foregroundColor(Theme.color.mutedForeground)
+      .textCase(.uppercase)
+      .offset(y: -2)  // 视觉对齐修正
 
       Spacer()
     }
