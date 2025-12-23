@@ -14,7 +14,7 @@ struct AppFonts {
   // MARK: - 日期字体 (Date Typography) - Sans-serif 代表"系统/时间"
 
   /// 日期大数字 - 视觉锚点
-  static let dateLarge = Font.system(size: 32, weight: .semibold, design: .default)
+  static let dateLarge = Font.system(size: 30, weight: .semibold, design: .default)
 
   /// 日期小标签 - 辅助信息 (月份/星期)
   static let dateSmall = Font.system(size: 14, weight: .medium, design: .default)

@@ -196,7 +196,7 @@ struct TimelineView: View {
       // 巨大的数字 - 视觉锚点
       Text("\(day)")
         .font(Theme.font.dateLarge)
-        .foregroundColor(Theme.color.foreground)
+        .foregroundColor(Theme.color.mutedForeground)  // 使用现有的柔和色
         .tracking(-0.5)
 
       // 小辅助信息
