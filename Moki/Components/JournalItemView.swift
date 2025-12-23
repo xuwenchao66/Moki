@@ -22,17 +22,21 @@ struct JournalItemView: View {
         .foregroundColor(Theme.color.foreground)
         .lineSpacing(Theme.font.journalBodyLineSpacing)
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.bottom, Theme.spacing.md)
+        .padding(.bottom, Theme.spacing.sm)
 
       // Layer 2: 媒体层 - 图片
       if !images.isEmpty {
         MediaRowView(images: images)
-          .padding(.bottom, Theme.spacing.md)
+          .padding(.bottom, Theme.spacing.sm)
       }
 
       // Layer 3: 信息层 - 极度弱化,像书页页码
-      HStack(alignment: .center, spacing: Theme.spacing.sm) {
+      HStack(alignment: .center, spacing: Theme.spacing.xs) {
         Text(timeString)
+          .font(Theme.font.timestamp)
+          .foregroundColor(Color(uiColor: .systemGray)) // 稍微深一点的灰
+
+        Text("·")
           .font(Theme.font.timestamp)
           .foregroundColor(Theme.color.mutedForeground)
 
@@ -70,9 +74,9 @@ private struct TagText: View {
   let tag: String
 
   var body: some View {
-    HStack(spacing: Theme.spacing.xxxs) {
+    HStack(spacing: 0) {
       Text("#")
-        .opacity(0.6)
+        .opacity(0.4)
       Text(tag)
     }
     .font(Theme.font.tag)
@@ -89,9 +93,9 @@ private struct MediaRowView: View {
     switch count {
     case 1:
       MediaPlaceholderView()
+        .aspectRatio(4/3, contentMode: .fill)
         .frame(maxWidth: .infinity)
-        .frame(height: 220)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.xl, style: .continuous))
 
     case 2:
       HStack(spacing: Theme.spacing.xs) {
@@ -99,7 +103,7 @@ private struct MediaRowView: View {
         MediaPlaceholderView()
       }
       .frame(height: 150)
-      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
+      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.xl, style: .continuous))
 
     default:
       LazyVGrid(
@@ -111,7 +115,7 @@ private struct MediaRowView: View {
             .aspectRatio(1, contentMode: .fill)
         }
       }
-      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
+      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.xl, style: .continuous))
     }
   }
 }

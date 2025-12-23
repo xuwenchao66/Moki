@@ -25,7 +25,7 @@ struct AppFonts {
   static let journalBody = Font.system(size: 17, weight: .regular, design: .serif)
 
   /// 日记正文行高系数
-  static let journalBodyLineSpacing: CGFloat = 8
+  static let journalBodyLineSpacing: CGFloat = 12
 
   // MARK: - 元数据字体 (Meta Typography) - Sans-serif 代表"机器/参数"
 

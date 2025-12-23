@@ -83,7 +83,7 @@ struct TimelineView: View {
                 // 日期头部
                 dayHeader(for: group.day)
                   .padding(.top, Theme.spacing.xs)
-                  .padding(.bottom, Theme.spacing.xl)
+                  .padding(.bottom, Theme.spacing.lg)
                   .padding(.horizontal, Theme.spacing.lg)
 
                 // 该天的所有条目
@@ -103,12 +103,12 @@ struct TimelineView: View {
                     }
                   )
                   .padding(.horizontal, Theme.spacing.lg)
-                  .padding(.bottom, Theme.spacing.xxxl)
+                  .padding(.bottom, Theme.spacing.xxl)
                 }
 
                 // 天与天之间的大留白 - 代替分割线
                 Color.clear
-                  .frame(height: Theme.spacing.lg)
+                  .frame(height: Theme.spacing.xxl)
               }
 
               Spacer(minLength: 80)
@@ -203,6 +203,7 @@ struct TimelineView: View {
         .font(Theme.font.dateSmall)
         .foregroundColor(Theme.color.mutedForeground)
         .textCase(.uppercase)
+        .offset(y: -2)  // 视觉对齐修正
 
       Spacer()
     }
