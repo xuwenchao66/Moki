@@ -1,11 +1,4 @@
-//
-//  AppColors.swift
-//  Moki
-//
-//  设计系统 - 颜色定义
-//  基于 Claude 的温暖风格主题
-//  支持浅色和深色模式
-//
+// https://tweakcn.com/editor/theme?p=colors
 
 import SwiftUI
 
@@ -44,45 +37,67 @@ struct AppColors {
   // MARK: - 基础色 (Foundation)
 
   /// 主背景色
-  static let background = Color(hex: "F5F3EF")
+  static let background = Color(hex: "faf9f5")
 
   /// 主前景色
-  static let foreground = Color(hex: "1A1A1A")
+  static let foreground = Color(hex: "3d3929")
 
   // MARK: - 主色调 (Primary)
 
   /// 主要强调色
-  static let primary = Color(hex: "D97757")
+  static let primary = Color(hex: "c96442")
 
   /// 主色前景色
-  static let primaryForeground = Color(hex: "FFFFFF")
+  static let primaryForeground = Color(hex: "ffffff")
 
   // MARK: - 次要色 (Secondary)
 
   /// 次要色
-  static let secondary = Color(hex: "EBE8E1")
+  static let secondary = Color(hex: "e9e6dc")
 
   /// 次要色前景
-  static let secondaryForeground = Color(hex: "333333")
+  static let secondaryForeground = Color(hex: "535146")
 
   // MARK: - 柔和色 (Muted)
 
   /// 柔和背景色
-  static let muted = Color(hex: "E4E5E6")
+  static let muted = Color(hex: "ede9de")
 
   /// 柔和前景色
-  static let mutedForeground = Color(hex: "999999")
+  static let mutedForeground = Color(hex: "83827d")
+
+  // MARK: - 强调色 (Accent)
+
+  /// 强调色
+  static let accent = Color(hex: "e9e6dc")
+
+  /// 强调色前景
+  static let accentForeground = Color(hex: "28261b")
 
   // MARK: - 卡片 (Card)
 
   /// 卡片背景色
-  static let card = Color(hex: "F5F6F6")
+  static let card = Color(hex: "faf9f5")
 
   /// 卡片前景色
-  static let cardForeground = Color(hex: "333333")
+  static let cardForeground = Color(hex: "141413")
 
   // MARK: - 语义色 (Semantic)
 
   /// 边框色
-  static let border = Color(hex: "000000").opacity(0.05)
+  static let border = Color(hex: "dad9d4")
+
+  /// 输入框边框色
+  static let input = Color(hex: "b4b2a7")
+
+  /// 焦点环颜色
+  static let ring = Color(hex: "c96442")
+
+  // MARK: - 警示色 (Destructive)
+
+  /// 危险/删除操作色
+  static let destructive = Color(hex: "1A1D20")
+
+  /// 危险操作前景色
+  static let destructiveForeground = Color(hex: "FFFFFF")
 }

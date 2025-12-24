@@ -197,7 +197,7 @@ struct TimelineView: View {
       Text("\(day)")
         .font(Theme.font.dateLarge)
         .fontDesign(.serif)
-        .foregroundColor(Theme.color.foreground.opacity(0.7))
+        .foregroundColor(Theme.color.mutedForeground)
         .fontWeight(.semibold)
 
       // 小辅助信息
@@ -205,7 +205,7 @@ struct TimelineView: View {
         Text("\(month)月 / \(weekday)")
         if isPastYear {
           Text(" · \(String(year))")
-            .foregroundColor(Theme.color.mutedForeground.opacity(0.6))
+            .foregroundColor(Theme.color.mutedForeground.opacity(0.8))
         }
       }
       .font(Theme.font.footnote)

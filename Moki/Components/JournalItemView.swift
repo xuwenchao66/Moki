@@ -76,7 +76,7 @@ private struct TagText: View {
   var body: some View {
     HStack(spacing: 0) {
       Text("#")
-        .opacity(0.4)
+        .opacity(0.6)
       Text(tag)
     }
     .font(Theme.font.footnote)
