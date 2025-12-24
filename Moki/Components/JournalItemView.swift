@@ -33,11 +33,11 @@ struct JournalItemView: View {
       // Layer 3: 信息层 - 极度弱化,像书页页码
       HStack(alignment: .center, spacing: Theme.spacing.xs) {
         Text(timeString)
-          .font(Theme.font.timestamp)
+          .font(Theme.font.footnote)
           .foregroundColor(Theme.color.mutedForeground)
 
         Text("·")
-          .font(Theme.font.timestamp)
+          .font(Theme.font.footnote)
           .foregroundColor(Theme.color.mutedForeground)
 
         if !tags.isEmpty {
@@ -79,7 +79,7 @@ private struct TagText: View {
         .opacity(0.4)
       Text(tag)
     }
-    .font(Theme.font.tag)
+    .font(Theme.font.footnote)
     .foregroundColor(Theme.color.mutedForeground)
   }
 }

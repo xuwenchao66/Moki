@@ -27,18 +27,7 @@ struct AppFonts {
   /// 日记正文行高系数
   static let journalBodyLineSpacing: CGFloat = 12
 
-  // MARK: - 元数据字体 (Meta Typography) - Sans-serif 代表"机器/参数"
-
-  /// 时间戳 - 12小时制
-  static let timestamp = Font.system(size: 12, weight: .semibold, design: .default)
-
-  /// 标签 - 弱化但清晰
-  static let tag = Font.system(size: 12, weight: .regular, design: .default)
-
   // MARK: - 系统字体 (System Typography)
-
-  /// 特大标题
-  static let largeTitle = Font.system(size: 36, weight: .bold, design: .rounded)
 
   /// 日期标题 (月份分组) - 杂志感衬线体
   static let dateTitle = Font.system(size: 26, weight: .bold, design: .serif)
