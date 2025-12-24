@@ -196,8 +196,9 @@ struct TimelineView: View {
       // 巨大的数字 - 视觉锚点
       Text("\(day)")
         .font(Theme.font.dateLarge)
+        .fontDesign(.serif)
         .foregroundColor(Theme.color.foreground.opacity(0.7))
-        .tracking(-0.5)
+        .fontWeight(.semibold)
 
       // 小辅助信息
       HStack(spacing: 0) {
@@ -210,7 +211,7 @@ struct TimelineView: View {
       .font(Theme.font.dateSmall)
       .foregroundColor(Theme.color.mutedForeground)
       .textCase(.uppercase)
-      .offset(y: -2)  // 视觉对齐修正
+      .offset(y: -1)
 
       Spacer()
     }

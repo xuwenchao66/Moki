@@ -34,7 +34,7 @@ struct JournalItemView: View {
       HStack(alignment: .center, spacing: Theme.spacing.xs) {
         Text(timeString)
           .font(Theme.font.timestamp)
-          .foregroundColor(Color(uiColor: .systemGray)) // 稍微深一点的灰
+          .foregroundColor(Theme.color.mutedForeground)
 
         Text("·")
           .font(Theme.font.timestamp)
@@ -93,7 +93,7 @@ private struct MediaRowView: View {
     switch count {
     case 1:
       MediaPlaceholderView()
-        .aspectRatio(4/3, contentMode: .fill)
+        .aspectRatio(4 / 3, contentMode: .fill)
         .frame(maxWidth: .infinity)
         .clipShape(RoundedRectangle(cornerRadius: Theme.radius.xl, style: .continuous))
 
