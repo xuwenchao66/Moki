@@ -9,18 +9,15 @@
 import SwiftUI
 
 struct SideMenu: View {
-  @Binding var selectedTab: Tab
-  var onSelect: (() -> Void)?
+  var onSelect: ((Tab) -> Void)?
 
-  init(selectedTab: Binding<Tab>, onSelect: (() -> Void)? = nil) {
-    _selectedTab = selectedTab
+  init(onSelect: ((Tab) -> Void)? = nil) {
     self.onSelect = onSelect
   }
 
   // MARK: - Tab Definition
 
-  enum Tab: CaseIterable {
-    case timeline
+  enum Tab: CaseIterable, Hashable, Codable {
     case calendar
     case tags
     case stats
@@ -28,7 +25,6 @@ struct SideMenu: View {
 
     var icon: String {
       switch self {
-      case .timeline: return "dock.rectangle"
       case .calendar: return "calendar"
       case .tags: return "number"
       case .stats: return "chart.bar"
@@ -38,7 +34,6 @@ struct SideMenu: View {
 
     var title: String {
       switch self {
-      case .timeline: return "时间轴"
       case .calendar: return "日历"
       case .tags: return "标签"
       case .stats: return "统计"
@@ -67,7 +62,6 @@ struct SideMenu: View {
               MenuButton(
                 icon: tab.icon,
                 title: tab.title,
-                isSelected: selectedTab == tab,
                 action: { select(tab) }
               )
             }
@@ -81,7 +75,6 @@ struct SideMenu: View {
             MenuButton(
               icon: tab.icon,
               title: tab.title,
-              isSelected: selectedTab == tab,
               action: { select(tab) }
             )
           }
@@ -103,12 +96,7 @@ struct SideMenu: View {
 
 extension SideMenu {
   fileprivate func select(_ tab: Tab) {
-    guard selectedTab != tab else {
-      onSelect?()
-      return
-    }
-    selectedTab = tab
-    onSelect?()
+    onSelect?(tab)
   }
 }
 
@@ -117,21 +105,19 @@ extension SideMenu {
 private struct MenuButton: View {
   let icon: String
   let title: String
-  let isSelected: Bool
   let action: () -> Void
 
   var body: some View {
     Button(action: action) {
       HStack(spacing: Theme.spacing.md) {
         Image(systemName: icon)
-          .font(.system(size: 17, weight: isSelected ? .medium : .light))  // 图标微调小一点，Weight 变轻
+          .font(.system(size: 17, weight: .regular))  // 图标微调小一点
           .frame(width: 22)  // 限制图标宽度
 
         Text(title)
           .font(.system(size: 16))  // 字体稍微改小一点点，更精致
-          .fontWeight(isSelected ? .medium : .regular)
       }
-      .foregroundColor(isSelected ? Theme.color.primary : Theme.color.mutedForeground)
+      .foregroundColor(Theme.color.foreground)
       .padding(.vertical, 4)  // 大幅减小垂直 Padding，依靠 Stack spacing 控制间距
       .frame(maxWidth: .infinity, alignment: .leading)
       .contentShape(Rectangle())
@@ -143,6 +129,6 @@ private struct MenuButton: View {
 #Preview {
   ZStack {
     Color.black.opacity(0.3).ignoresSafeArea()
-    SideMenu(selectedTab: .constant(.timeline))
+    SideMenu()
   }
 }

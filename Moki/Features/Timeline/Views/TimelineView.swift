@@ -65,95 +65,93 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
-    NavigationStack {
-      ZStack(alignment: .bottomTrailing) {
-        if entries.isEmpty {
-          EmptyStateView(
-            title: "还没有记录",
-            message: "点击 + 创建你的独家记忆",
-            action: { showAddEntry = true }
-          )
-        } else {
-          ScrollView {
-            LazyVStack(alignment: .leading, spacing: 0) {
-              // 顶部呼吸
-              Color.clear.frame(height: Theme.spacing.lg)
+    ZStack(alignment: .bottomTrailing) {
+      if entries.isEmpty {
+        EmptyStateView(
+          title: "还没有记录",
+          message: "点击 + 创建你的独家记忆",
+          action: { showAddEntry = true }
+        )
+      } else {
+        ScrollView {
+          LazyVStack(alignment: .leading, spacing: 0) {
+            // 顶部呼吸
+            Color.clear.frame(height: Theme.spacing.lg)
 
-              ForEach(dayGroups, id: \.id) { group in
-                // 日期头部
-                dayHeader(for: group.day)
-                  .padding(.top, Theme.spacing.xs)
-                  .padding(.bottom, Theme.spacing.lg)
-                  .padding(.horizontal, Theme.spacing.lg)
+            ForEach(dayGroups, id: \.id) { group in
+              // 日期头部
+              dayHeader(for: group.day)
+                .padding(.top, Theme.spacing.xs)
+                .padding(.bottom, Theme.spacing.lg)
+                .padding(.horizontal, Theme.spacing.lg)
 
-                // 该天的所有条目
-                ForEach(group.entries, id: \.id) { entry in
-                  let extra = parseMetadata(entry.metadata)
+              // 该天的所有条目
+              ForEach(group.entries, id: \.id) { entry in
+                let extra = parseMetadata(entry.metadata)
 
-                  JournalItemView(
-                    content: entry.text,
-                    date: entry.createdAt,
-                    tags: extra.tags,
-                    images: extra.images,
-                    onEditTapped: {
-                      // TODO: Edit Action
-                    },
-                    onDeleteTapped: {
-                      diaryService.delete(entry)
-                    }
-                  )
-                  .padding(.horizontal, Theme.spacing.lg)
-                  .padding(.bottom, Theme.spacing.xxl)
-                }
-
-                // 天与天之间的大留白 - 代替分割线
-                Color.clear
-                  .frame(height: Theme.spacing.xxl)
+                JournalItemView(
+                  content: entry.text,
+                  date: entry.createdAt,
+                  tags: extra.tags,
+                  images: extra.images,
+                  onEditTapped: {
+                    // TODO: Edit Action
+                  },
+                  onDeleteTapped: {
+                    diaryService.delete(entry)
+                  }
+                )
+                .padding(.horizontal, Theme.spacing.lg)
+                .padding(.bottom, Theme.spacing.xxl)
               }
+
+              // 天与天之间的大留白 - 代替分割线
+              Color.clear
+                .frame(height: Theme.spacing.xxl)
             }
           }
-          .background(Theme.color.background)
         }
+        .background(Theme.color.background)
+      }
 
-        // FAB - 深色按钮
-        Button(action: { showAddEntry = true }) {
-          Image(systemName: "plus")
-            .font(.system(size: 22, weight: .light))
-            .foregroundColor(Theme.color.primaryForeground)
-            .frame(width: 52, height: 52)
-            .background(Theme.color.cardForeground)
-            .clipShape(Circle())
-            .shadow(
-              color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,
-              y: Theme.shadow.md.y)
-        }
-        .padding(.trailing, Theme.spacing.lg)
-        .padding(.bottom, Theme.spacing.lg)
+      // FAB - 深色按钮
+      Button(action: { showAddEntry = true }) {
+        Image(systemName: "plus")
+          .font(.system(size: 22, weight: .light))
+          .foregroundColor(Theme.color.primaryForeground)
+          .frame(width: 52, height: 52)
+          .background(Theme.color.cardForeground)
+          .clipShape(Circle())
+          .shadow(
+            color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,
+            y: Theme.shadow.md.y)
       }
-      .background(Theme.color.background)
-      .navigationBarTitleDisplayMode(.inline)
-      .navigationTitle("Moki")
-      .toolbar {
-        ToolbarItem(placement: .navigationBarLeading) {
-          Button {
-            withAnimation { isSideMenuPresented.toggle() }
-          } label: {
-            Image(systemName: "line.3.horizontal")
-              .foregroundColor(Theme.color.foreground)
-          }
+      .padding(.trailing, Theme.spacing.lg)
+      .padding(.bottom, Theme.spacing.lg)
+    }
+    .background(Theme.color.background)
+    .navigationBarTitleDisplayMode(.inline)
+    .navigationTitle("Moki")
+    .toolbar {
+      ToolbarItem(placement: .navigationBarLeading) {
+        Button {
+          withAnimation { isSideMenuPresented.toggle() }
+        } label: {
+          Image(systemName: "line.3.horizontal")
+            .foregroundColor(Theme.color.foreground)
         }
+      }
 
-        ToolbarItem(placement: .primaryAction) {
-          Button {
-          } label: {
-            Image(systemName: "magnifyingglass")
-              .foregroundColor(Theme.color.foreground)
-          }
+      ToolbarItem(placement: .primaryAction) {
+        Button {
+        } label: {
+          Image(systemName: "magnifyingglass")
+            .foregroundColor(Theme.color.foreground)
         }
       }
-      .navigationDestination(isPresented: $showAddEntry) {
-        EditView().sideMenuGesture(enabled: false)
-      }
+    }
+    .navigationDestination(isPresented: $showAddEntry) {
+      EditView().sideMenuGesture(enabled: false)
     }
   }
 
@@ -229,5 +227,7 @@ struct TimelineView: View {
 }
 
 #Preview {
-  TimelineView(isSideMenuPresented: .constant(false))
+  NavigationStack {
+    TimelineView(isSideMenuPresented: .constant(false))
+  }
 }

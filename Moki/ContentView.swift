@@ -9,41 +9,43 @@ import SwiftUI
 
 struct ContentView: View {
   @State private var isMenuOpen = false
-  @State private var selectedTab: SideMenu.Tab = .timeline
+  @State private var navPath = NavigationPath()
 
   var body: some View {
-    // 使用同步视图：子视图的 .sideMenuGesture() 会自动向上传递并应用到环境值
     SideMenuGestureSyncView {
       ZStack(alignment: .leading) {
-        // 1. 主内容区域 - 根据选项切换
-        featureHost
-          .disabled(isMenuOpen)
-
-        // 2. 侧边栏容器（包含遮罩、动画、手势处理）
-        SideMenuContainer(isShowing: $isMenuOpen) {
-          SideMenu(selectedTab: $selectedTab) {
-            isMenuOpen = false
+        NavigationStack(path: $navPath) {
+          TimelineView(
+            isSideMenuPresented: Binding(
+              get: { isMenuOpen },
+              set: { isMenuOpen = $0 }
+            )
+          )
+          .navigationDestination(for: SideMenu.Tab.self) { tab in
+            destinationView(for: tab)
+              .sideMenuGesture(enabled: false)
           }
         }
-      }
-      .onChange(of: selectedTab) { _ in
-        isMenuOpen = false
+        .disabled(isMenuOpen)
+
+        SideMenuContainer(isShowing: $isMenuOpen) {
+          SideMenu { tab in
+            handleMenuSelection(tab)
+          }
+        }
       }
     }
   }
 
-  // MARK: - Feature Routing
+  private func handleMenuSelection(_ tab: SideMenu.Tab) {
+    isMenuOpen = false
+    navPath = NavigationPath()
+    navPath.append(tab)
+  }
 
   @ViewBuilder
-  private var featureHost: some View {
-    switch selectedTab {
-    case .timeline:
-      TimelineView(
-        isSideMenuPresented: Binding(
-          get: { isMenuOpen },
-          set: { isMenuOpen = $0 }
-        )
-      )
+  private func destinationView(for tab: SideMenu.Tab) -> some View {
+    switch tab {
     case .tags:
       TagsView(onMenuButtonTapped: { isMenuOpen = true })
     case .calendar:
@@ -78,8 +80,6 @@ struct ContentView: View {
       return "统计"
     case .settings:
       return "设置"
-    case .timeline:
-      return "时间轴"
     case .tags:
       return "标签"
     }
@@ -93,8 +93,6 @@ struct ContentView: View {
       return "统计页面尚在打磨中，将提供写作数据洞察。"
     case .settings:
       return "设置中心即将上线，敬请期待。"
-    case .timeline:
-      return ""
     case .tags:
       return ""
     }
@@ -115,42 +113,31 @@ private struct FeaturePlaceholderView: View {
   let onMenuButtonTapped: () -> Void
 
   var body: some View {
-    NavigationStack {
-      VStack(spacing: Theme.spacing.lg) {
-        Spacer()
+    VStack(spacing: Theme.spacing.lg) {
+      Spacer()
 
-        Image(systemName: systemImage)
-          .font(.system(size: 56, weight: .light))
+      Image(systemName: systemImage)
+        .font(.system(size: 56, weight: .light))
+        .foregroundColor(Theme.color.mutedForeground)
+
+      VStack(spacing: Theme.spacing.sm) {
+        Text("\(title)正在设计中")
+          .font(Theme.font.title3)
+          .foregroundColor(Theme.color.foreground)
+
+        Text(message)
+          .font(Theme.font.callout)
           .foregroundColor(Theme.color.mutedForeground)
-
-        VStack(spacing: Theme.spacing.sm) {
-          Text("\(title)正在设计中")
-            .font(Theme.font.title3)
-            .foregroundColor(Theme.color.foreground)
-
-          Text(message)
-            .font(Theme.font.callout)
-            .foregroundColor(Theme.color.mutedForeground)
-            .multilineTextAlignment(.center)
-        }
-
-        Spacer()
+          .multilineTextAlignment(.center)
       }
-      .padding(Theme.spacing.xl)
-      .frame(maxWidth: .infinity, maxHeight: .infinity)
-      .background(Theme.color.background)
-      .navigationTitle(title)
-      .navigationBarTitleDisplayMode(.inline)
-      .toolbar {
-        ToolbarItem(placement: .navigationBarLeading) {
-          Button {
-            onMenuButtonTapped()
-          } label: {
-            Image(systemName: "line.3.horizontal")
-          }
-          .toolbarIconStyle()
-        }
-      }
+
+      Spacer()
     }
+    .padding(Theme.spacing.xl)
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .background(Theme.color.background)
+    .navigationTitle(title)
+    .navigationBarTitleDisplayMode(.inline)
+
   }
 }
