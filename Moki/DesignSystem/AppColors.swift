@@ -82,6 +82,10 @@ struct AppColors {
   /// 卡片前景色
   static let cardForeground = Color(hex: "141413")
 
+  static let buttonBackground = Color(hex: "141413")
+
+  static let buttonForeground = Color(hex: "faf9f5")
+
   // MARK: - 语义色 (Semantic)
 
   /// 边框色
