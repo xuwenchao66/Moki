@@ -68,11 +68,10 @@ struct EditView: View {
             }
           }
           .font(.system(size: 18, weight: .regular))
-          .foregroundColor(Theme.color.foreground)  // 加深颜色：secondary -> foreground
+          .foregroundColor(Theme.color.foreground)
 
           Spacer()
 
-          // 完成按钮 - 使用深黑色 #141413（参考 Anthropic CTA）
           Button(action: {
             if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
               dismiss()
@@ -82,9 +81,9 @@ struct EditView: View {
           }) {
             Image(systemName: "checkmark")
               .font(.system(size: 14, weight: .bold))
-              .foregroundColor(Theme.color.primaryForeground)
+              .foregroundColor(Theme.color.buttonForeground)
               .frame(width: 56, height: 32)
-              .background(Theme.color.cardForeground)
+              .background(Theme.color.buttonBackground)
               .clipShape(Capsule())
           }
         }
