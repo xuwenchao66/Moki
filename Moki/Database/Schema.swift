@@ -73,12 +73,26 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
   /// 修改时间
   var updatedAt: Date?
 
+  /// JSON 扩展字段
+  /// 用于存储标签的展示配置和扩展属性
+  ///
+  /// 普通标签示例: {"icon": "🏖️"}
+  ///
+  /// 书籍形态标签示例: {
+  ///   "displayMode": "book",              // 展示模式：book(书籍) / tag(标签)
+  ///   "coverImage": "travel_2024.jpg",    // 封面图片（本地文件名或 URL）
+  ///   "coverColor": "#4A90E2",            // 封面背景色
+  ///   "description": "2024年的旅行记录"    // 书籍描述
+  /// }
+  var metadata: String = "{}"
+
   init(
     id: UUID = UUID(),
     name: String,
     color: String? = nil,
     order: Int = 0,
-    createdAt: Date = Date()
+    createdAt: Date = Date(),
+    metadata: String = "{}"
   ) {
     self.id = id
     self.name = name
@@ -86,6 +100,7 @@ struct MokiTag: Identifiable, Codable, Equatable, Hashable {
     self.order = order
     self.createdAt = createdAt
     self.updatedAt = nil
+    self.metadata = metadata
   }
 }
 

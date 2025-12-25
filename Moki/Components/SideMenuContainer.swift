@@ -170,7 +170,7 @@ struct SideMenuContainer<Content: View>: View {
 
         // 侧边栏容器
         SideMenuContainer(isShowing: $isShowing) {
-          SideMenu(selectedTab: .constant(.timeline)) {
+          SideMenu { _ in
             isShowing = false
           }
         }

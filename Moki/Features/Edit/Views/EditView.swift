@@ -31,7 +31,7 @@ struct EditView: View {
             .font(.system(size: 13))
         }
         .font(.system(size: 14))
-        .foregroundColor(Theme.color.foregroundSecondary)
+        .foregroundColor(Theme.color.mutedForeground)
       }
       .frame(maxWidth: .infinity, alignment: .leading)
       .padding(.horizontal, Theme.spacing.md)
@@ -50,7 +50,7 @@ struct EditView: View {
       // 3. 底部工具栏
       VStack(spacing: 0) {
         Divider()
-          .overlay(Theme.color.divider)
+          .overlay(Theme.color.border)
 
         HStack {
           // 功能图标组
@@ -68,11 +68,10 @@ struct EditView: View {
             }
           }
           .font(.system(size: 18, weight: .regular))
-          .foregroundColor(Theme.color.foreground)  // 加深颜色：secondary -> foreground
+          .foregroundColor(Theme.color.foreground)
 
           Spacer()
 
-          // 完成按钮
           Button(action: {
             if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
               dismiss()
@@ -82,15 +81,15 @@ struct EditView: View {
           }) {
             Image(systemName: "checkmark")
               .font(.system(size: 14, weight: .bold))
-              .foregroundColor(Theme.color.background)
+              .foregroundColor(Theme.color.buttonForeground)
               .frame(width: 56, height: 32)
-              .background(Theme.color.foreground)
+              .background(Theme.color.buttonBackground)
               .clipShape(Capsule())
           }
         }
         .padding(.horizontal, Theme.spacing.md)
         .padding(.vertical, Theme.spacing.sm)
-        .background(Theme.color.cardBackground.opacity(0.95))
+        .background(Theme.color.background)
       }
     }
     .background(Theme.color.background)

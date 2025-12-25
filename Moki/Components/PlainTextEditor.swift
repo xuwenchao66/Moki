@@ -57,10 +57,12 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.backgroundColor = .clear
     textView.text = text
 
-    // 字体/颜色
+    // 字体/颜色 - 使用主题色
     textView.font = UIFont.systemFont(ofSize: Constants.fontSize)
-    textView.textColor = UIColor(named: "foreground") ?? .label
-    textView.tintColor = UIColor(named: "primaryAction") ?? .black
+    // 从 Theme.color.foreground 获取颜色（适配深色模式）
+    textView.textColor = UIColor(Theme.color.foreground)
+    // 光标使用黑色（与 Anthropic CTA 一致）
+    textView.tintColor = UIColor(Theme.color.foreground)
 
     // 输入行为（适合日记场景）
     textView.autocapitalizationType = .sentences  // 句首字母大写
@@ -109,7 +111,7 @@ struct PlainTextEditor: UIViewRepresentable {
     let placeholderLabel = UILabel()
     placeholderLabel.text = placeholder
     placeholderLabel.font = textView.font
-    placeholderLabel.textColor = UIColor(named: "foregroundTertiary") ?? .secondaryLabel
+    placeholderLabel.textColor = UIColor(Theme.color.mutedForeground)
     placeholderLabel.numberOfLines = 0
     placeholderLabel.tag = Constants.placeholderTag
     placeholderLabel.translatesAutoresizingMaskIntoConstraints = false

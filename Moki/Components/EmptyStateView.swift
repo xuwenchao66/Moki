@@ -40,7 +40,7 @@ struct EmptyStateView: View {
 
           Text(message)
             .font(Theme.font.callout)
-            .foregroundColor(Theme.color.foregroundSecondary)
+            .foregroundColor(Theme.color.mutedForeground)
             .multilineTextAlignment(.center)
         }
 

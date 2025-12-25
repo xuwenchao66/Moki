@@ -23,7 +23,7 @@ extension View {
   ) -> some View {
     self
       .padding(padding)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.card)
       .cornerRadius(radius)
       .shadow(
         color: shadow.color,
@@ -40,22 +40,22 @@ extension View {
   ) -> some View {
     self
       .padding(padding)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.card)
       .cornerRadius(radius)
   }
 }
 
 // MARK: - Button Styles (按钮样式)
 
-/// 主按钮样式 - 黑色填充
+/// 主按钮样式 - 深色填充
 struct PrimaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .font(Theme.font.button)
-      .foregroundColor(Theme.color.primaryActionForeground)
+      .foregroundColor(Theme.color.primaryForeground)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.primaryAction)
+      .background(Theme.color.cardForeground)
       .cornerRadius(Theme.radius.md)
       .opacity(configuration.isPressed ? 0.8 : 1.0)
       .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
@@ -63,7 +63,7 @@ struct PrimaryButtonStyle: ButtonStyle {
   }
 }
 
-/// 次要按钮样式 - 描边
+/// 次要按钮样式 - 柔和描边
 struct SecondaryButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
@@ -71,7 +71,7 @@ struct SecondaryButtonStyle: ButtonStyle {
       .foregroundColor(Theme.color.foreground)
       .padding(.horizontal, Theme.spacing.lg)
       .padding(.vertical, Theme.spacing.sm)
-      .background(Theme.color.cardBackground)
+      .background(Theme.color.secondary)
       .overlay(
         RoundedRectangle(cornerRadius: Theme.radius.md)
           .stroke(Theme.color.border, lineWidth: 1.5)
@@ -87,7 +87,7 @@ struct TextButtonStyle: ButtonStyle {
   func makeBody(configuration: Configuration) -> some View {
     configuration.label
       .font(Theme.font.button)
-      .foregroundColor(Theme.color.accent)
+      .foregroundColor(Theme.color.foreground)
       .opacity(configuration.isPressed ? 0.6 : 1.0)
       .animation(.easeInOut(duration: 0.15), value: configuration.isPressed)
   }
@@ -117,7 +117,7 @@ extension View {
   func toolbarIconStyle(
     size: CGFloat = 16,
     weight: Font.Weight = .regular,
-    color: Color = Theme.color.primaryAction
+    color: Color = Theme.color.foreground
   ) -> some View {
     self
       .font(.system(size: size, weight: weight))
@@ -140,21 +140,21 @@ extension View {
   func subtitleStyle() -> some View {
     self
       .font(Theme.font.subheadline)
-      .foregroundColor(Theme.color.foregroundSecondary)
+      .foregroundColor(Theme.color.mutedForeground)
   }
 
   /// 说明文字样式
   func captionStyle() -> some View {
     self
       .font(Theme.font.caption)
-      .foregroundColor(Theme.color.foregroundTertiary)
+      .foregroundColor(Theme.color.mutedForeground)
   }
 }
 
 // MARK: - Separator (分割线)
 
 struct Separator: View {
-  var color: Color = Theme.color.divider
+  var color: Color = Theme.color.border
   var height: CGFloat = 1
 
   var body: some View {

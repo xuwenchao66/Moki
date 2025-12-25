@@ -13,45 +13,34 @@ struct TagsView: View {
   @State private var isEditorPresented = false
 
   var body: some View {
-    NavigationStack {
-      content
-        .navigationTitle("标签")
-        .navigationBarTitleDisplayMode(.inline)
-        .toolbar {
-          ToolbarItem(placement: .navigationBarLeading) {
-            Button {
-              onMenuButtonTapped?()
-            } label: {
-              Image(systemName: "line.3.horizontal")
-            }
-            .toolbarIconStyle()
+    content
+      .navigationTitle("标签")
+      .navigationBarTitleDisplayMode(.inline)
+      .toolbar {
+        ToolbarItem(placement: .primaryAction) {
+          Button {
+            showEditor(.create)
+          } label: {
+            Image(systemName: "plus")
           }
-
-          ToolbarItem(placement: .primaryAction) {
-            Button {
-              showEditor(.create)
-            } label: {
-              Image(systemName: "plus")
-            }
-            .toolbarIconStyle()
-          }
+          .toolbarIconStyle()
         }
-    }
-    .alert(editorTitle, isPresented: $isEditorPresented) {
-      TextField("", text: $editorName)
-        .textInputAutocapitalization(.never)
-
-      Button(editorActionTitle) {
-        commit()
       }
-      .disabled(isEditorNameInvalid)
+      .alert(editorTitle, isPresented: $isEditorPresented) {
+        TextField("", text: $editorName)
+          .textInputAutocapitalization(.never)
 
-      Button("取消", role: .cancel) {
-        isEditorPresented = false
+        Button(editorActionTitle) {
+          commit()
+        }
+        .disabled(isEditorNameInvalid)
+
+        Button("取消", role: .cancel) {
+          isEditorPresented = false
+        }
+      } message: {
+        Text("例如：灵感、阅读、健身...")
       }
-    } message: {
-      Text("例如：灵感、阅读、健身...")
-    }
   }
 
   @ViewBuilder
@@ -80,7 +69,7 @@ struct TagsView: View {
               } label: {
                 Image(systemName: "ellipsis")
                   .font(.system(size: 16))
-                  .foregroundColor(Theme.color.foregroundTertiary)
+                  .foregroundColor(Theme.color.mutedForeground)
                   .frame(width: 38, height: 38, alignment: .trailing)
                   .contentShape(Rectangle())
               }
@@ -199,5 +188,7 @@ private enum TagEditorMode {
 
 #Preview {
   configureAppDependencies()
-  return TagsView()
+  return NavigationStack {
+    TagsView()
+  }
 }
