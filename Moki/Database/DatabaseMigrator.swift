@@ -28,6 +28,7 @@ enum AppDatabaseMigrator {
         t.column("updatedAt", .text)
         t.column("deletedAt", .text)  // 软删除时间戳
         t.column("isStarred", .boolean).notNull().defaults(to: false)
+        t.column("timeZone", .text).notNull().defaults(to: TimeZone.current.identifier)  // 默认当前时区
         t.column("metadata", .text).notNull().defaults(to: "{}")  // JSON 扩展字段
       }
 
@@ -39,6 +40,7 @@ enum AppDatabaseMigrator {
         t.column("order", .integer).notNull().defaults(to: 0)  // 排序
         t.column("createdAt", .text).notNull()
         t.column("updatedAt", .text)
+        t.column("metadata", .text).notNull().defaults(to: "{}")  // JSON 扩展字段
       }
 
       // 3. 日记-标签关联表（多对多）

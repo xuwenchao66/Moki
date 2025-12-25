@@ -34,6 +34,7 @@ struct TimelineView: View {
         id: mock.id,
         text: mock.content,
         createdAt: mock.date,
+        timeZone: TimeZone.current.identifier,
         metadata: metadata
       )
     }

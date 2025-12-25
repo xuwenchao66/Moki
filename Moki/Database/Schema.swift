@@ -24,6 +24,10 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
   /// 是否标星
   var isStarred: Bool = false
 
+  /// 时区 (例如 "Asia/Shanghai")
+  /// 用于记录日记创建时的时区，确保在不同时区查看时能还原"当时"的时间感
+  var timeZone: String
+
   /// JSON 扩展字段
   /// 用于存储额外数据，不需要频繁修改表结构
   /// 示例: {"mood": "happy", "weather": "sunny", "location": "home"}
@@ -37,6 +41,7 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
     createdAt: Date = Date(),
     deletedAt: Date? = nil,
     isStarred: Bool = false,
+    timeZone: String = TimeZone.current.identifier,
     metadata: String = "{}"
   ) {
     self.id = id
@@ -45,6 +50,7 @@ struct MokiDiary: Identifiable, Codable, Equatable, Hashable {
     self.updatedAt = nil
     self.deletedAt = deletedAt
     self.isStarred = isStarred
+    self.timeZone = timeZone
     self.metadata = metadata
   }
 }
