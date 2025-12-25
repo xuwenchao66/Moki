@@ -153,6 +153,7 @@ struct TimelineView: View {
     .navigationDestination(isPresented: $showAddEntry) {
       EditView().sideMenuGesture(enabled: false)
     }
+    .sideMenuGesture(enabled: true)
   }
 
   // MARK: - Helpers
