@@ -23,7 +23,6 @@ struct ContentView: View {
           )
           .navigationDestination(for: SideMenu.Tab.self) { tab in
             destinationView(for: tab)
-              .sideMenuGesture(enabled: false)
           }
         }
         .disabled(isMenuOpen)

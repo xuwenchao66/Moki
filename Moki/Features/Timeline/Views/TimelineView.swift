@@ -4,7 +4,7 @@ import SwiftUI
 
 struct TimelineView: View {
   @Binding var isSideMenuPresented: Bool
-
+  @State private var isViewActive = false
   @State private var showAddEntry = false
   private let diaryService = DiaryService()
 
@@ -151,9 +151,11 @@ struct TimelineView: View {
       }
     }
     .navigationDestination(isPresented: $showAddEntry) {
-      EditView().sideMenuGesture(enabled: false)
+      EditView()
     }
-    .sideMenuGesture(enabled: true)
+    .onAppear { isViewActive = true }
+    .onDisappear { isViewActive = false }
+    .sideMenuGesture(enabled: isViewActive)
   }
 
   // MARK: - Helpers
