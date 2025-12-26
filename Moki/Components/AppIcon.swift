@@ -4,6 +4,9 @@ enum AppIconName: String {
   case arrowLeft = "arrow-left-light"
   case magnifyingGlass = "magnifying-glass-light"
   case list = "list-light"
+  case plus = "plus-light"
+  case sliderHorizontal = "slider-horizontal-light"
+  case caretLeft = "caret-left-light"
 }
 
 struct AppIcon: View {
