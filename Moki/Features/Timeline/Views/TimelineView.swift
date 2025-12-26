@@ -138,16 +138,14 @@ struct TimelineView: View {
         Button {
           withAnimation { isSideMenuPresented.toggle() }
         } label: {
-          Image(systemName: "line.3.horizontal")
-            .foregroundColor(Theme.color.foreground)
+          AppIcon(icon: .list).withTapArea()
         }
       }
 
       ToolbarItem(placement: .primaryAction) {
         Button {
         } label: {
-          Image(systemName: "magnifyingglass")
-            .foregroundColor(Theme.color.foreground)
+          AppIcon(icon: .magnifyingGlass).withTapArea()
         }
       }
     }
