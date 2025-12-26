@@ -131,24 +131,6 @@ struct TimelineView: View {
       .padding(.bottom, Theme.spacing.lg)
     }
     .background(Theme.color.background)
-    // .navigationBarTitleDisplayMode(.inline)
-    // .navigationTitle("Moki")
-    // .toolbar {
-    //   ToolbarItem(placement: .navigationBarLeading) {
-    //     Button {
-    //       withAnimation { isSideMenuPresented.toggle() }
-    //     } label: {
-    //       AppIcon(icon: .list).withTapArea()
-    //     }
-    //   }
-
-    //   ToolbarItem(placement: .primaryAction) {
-    //     Button {
-    //     } label: {
-    //       AppIcon(icon: .magnifyingGlass).withTapArea()
-    //     }
-    //   }
-    // }
     .navigationDestination(isPresented: $showAddEntry) {
       EditView()
     }
