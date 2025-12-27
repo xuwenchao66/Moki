@@ -68,33 +68,17 @@ struct SideMenu: View {
       Spacer()
 
       // 3. 底部：落款信息
-      VStack(alignment: .leading, spacing: Theme.spacing.xs) {
-        Text("Written by You")
-          .font(Theme.font.subheadline)
-          .foregroundColor(Theme.color.foreground)
-
-        HStack(spacing: Theme.spacing.xs) {
-          Text("Moki Journal")
-            .font(Theme.font.footnote)
-            .foregroundColor(Theme.color.mutedForeground)
-
-          Text("v1.0.0")
-            .font(Theme.font.caption)
-            .foregroundColor(Theme.color.mutedForeground)
-            .padding(.horizontal, Theme.spacing.xs)
-            .padding(.vertical, Theme.spacing.xxs)
-            .background(Color.black.opacity(0.04))
-            .cornerRadius(4)
-        }
+      HStack(spacing: Theme.spacing.xs) {
+        Text("MOKI JOURNAL")
+        Text("·")
+        Text("V1.0.0")
       }
-      .padding(.top, 24)
+      .font(Theme.font.caption)
+      .foregroundColor(Theme.color.mutedForeground)
+      .tracking(1)
       .padding(.bottom, 50)
       .padding(.horizontal, 32)
       .frame(maxWidth: .infinity, alignment: .leading)
-      .overlay(
-        Separator(),
-        alignment: .top
-      )
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .background(Theme.color.background)
