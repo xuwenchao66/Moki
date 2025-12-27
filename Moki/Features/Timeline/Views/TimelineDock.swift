@@ -44,7 +44,7 @@ struct TimelineDock: View {
       Capsule()
         .stroke(Theme.color.primaryForeground.opacity(0.6), lineWidth: 1)
     )
-    .padding(.bottom, 34)
+    .padding(.bottom, 32)
   }
 }
 
