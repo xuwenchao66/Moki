@@ -12,10 +12,42 @@ enum AppIconName: String {
   case calendarBlank = "calendar-blank"
 }
 
+enum AppIconSize: String {
+  case s = "s"
+  case sm = "sm"
+  case m = "m"
+  case l = "l"
+
+  var value: CGFloat {
+    switch self {
+    case .s:
+      return 16
+    case .sm:
+      return 20
+    case .m:
+      return 24
+    case .l:
+      return 32
+    }
+  }
+}
+
 struct AppIcon: View {
   let icon: AppIconName
-  var size: CGFloat = 24
-  var color: Color? = AppColors.foreground
+  var size: CGFloat
+  var color: Color?
+
+  init(icon: AppIconName, size: CGFloat = 24, color: Color? = AppColors.foreground) {
+    self.icon = icon
+    self.size = size
+    self.color = color
+  }
+
+  init(icon: AppIconName, size: AppIconSize = .m, color: Color? = AppColors.foreground) {
+    self.icon = icon
+    self.size = size.value
+    self.color = color
+  }
 
   var body: some View {
     Image(icon.rawValue)

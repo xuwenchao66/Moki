@@ -66,7 +66,7 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
-    ZStack(alignment: .bottomTrailing) {
+    ZStack(alignment: .bottom) {
       if entries.isEmpty {
         EmptyStateView(
           title: "还没有记录",
@@ -111,24 +111,14 @@ struct TimelineView: View {
                 .frame(height: Theme.spacing.xxl)
             }
           }
+          // 底部留白，防止内容被 Dock 遮挡
+          Color.clear.frame(height: 100)
         }
         .background(Theme.color.background)
       }
 
-      // FAB - 深色按钮
-      Button(action: { showAddEntry = true }) {
-        Image(systemName: "plus")
-          .font(.system(size: 22, weight: .light))
-          .foregroundColor(Theme.color.buttonForeground)
-          .frame(width: 52, height: 52)
-          .background(Theme.color.buttonBackground)
-          .clipShape(Circle())
-          .shadow(
-            color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,
-            y: Theme.shadow.md.y)
-      }
-      .padding(.trailing, Theme.spacing.lg)
-      .padding(.bottom, Theme.spacing.lg)
+      // Dock View
+      dockView
     }
     .background(Theme.color.background)
     .navigationDestination(isPresented: $showAddEntry) {
@@ -196,6 +186,49 @@ struct TimelineView: View {
 
       Spacer()
     }
+  }
+
+  private var dockView: some View {
+    HStack(spacing: 24) {
+      Button(action: {
+        withAnimation {
+          isSideMenuPresented.toggle()
+        }
+      }) {
+        AppIcon(icon: .fadersHorizontal, size: .m, color: Color(hex: "5E5E5E"))
+          .withTapArea()
+      }
+
+      Button(action: { showAddEntry = true }) {
+        ZStack {
+          Circle()
+            .fill(Theme.color.buttonBackground)
+            .frame(width: 44, height: 44)
+            .shadow(color: Color.black.opacity(0.3), radius: 12, x: 0, y: 4)
+
+          AppIcon(icon: .plus, size: .sm, color: .white)
+        }
+      }
+
+      Button(action: {
+        // Placeholder for calendar action
+      }) {
+        AppIcon(icon: .calendarBlank, size: .m, color: Theme.color.buttonBackground)
+          .withTapArea()
+      }
+    }
+    .padding(.horizontal, 12)
+    .padding(.vertical, 6)
+    .background(.ultraThinMaterial)
+    .background(Color.white.opacity(0.85))
+    .clipShape(Capsule())
+    .shadow(color: Color(hex: "2C2825").opacity(0.12), radius: 32, x: 0, y: 12)
+    .shadow(color: Color(hex: "2C2825").opacity(0.06), radius: 12, x: 0, y: 4)
+    .overlay(
+      Capsule()
+        .stroke(Color.white.opacity(0.6), lineWidth: 1)
+    )
+    .padding(.bottom, 34)
   }
 
   private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
