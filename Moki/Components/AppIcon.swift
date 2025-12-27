@@ -1,13 +1,15 @@
 import SwiftUI
 
 enum AppIconName: String {
-  case arrowLeft = "arrow-left-light"
-  case magnifyingGlass = "magnifying-glass-light"
-  case list = "list-light"
-  case plus = "plus-light"
-  case sliderHorizontal = "slider-horizontal-light"
-  case caretLeft = "caret-left-light"
-  case fadersHorizontal = "faders-horizontal-light"
+  case arrowLeftLight = "arrow-left-light"
+  case magnifyingGlassLight = "magnifying-glass-light"
+  case listLight = "list-light"
+  case plusLight = "plus-light"
+  case sliderHorizontalLight = "slider-horizontal-light"
+  case caretLeftLight = "caret-left-light"
+  case fadersHorizontal = "faders-horizontal"
+  case plus = "plus"
+  case calendarBlank = "calendar-blank"
 }
 
 struct AppIcon: View {
