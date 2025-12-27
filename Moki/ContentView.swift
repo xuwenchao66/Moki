@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Moki
-//
-//  Created by xuwecnhao on 11/23/25.
-//
-
 import SwiftUI
 
 struct ContentView: View {
@@ -47,11 +40,11 @@ struct ContentView: View {
     switch tab {
     case .tags:
       TagsView(onMenuButtonTapped: { isMenuOpen = true })
-    case .calendar:
+    case .search:
       FeaturePlaceholderView(
-        title: placeholderTitle(.calendar),
-        message: placeholderMessage(.calendar),
-        systemImage: "calendar",
+        title: placeholderTitle(.search),
+        message: placeholderMessage(.search),
+        systemImage: "magnifyingglass",
         onMenuButtonTapped: { isMenuOpen = true }
       )
     case .stats:
@@ -73,8 +66,8 @@ struct ContentView: View {
 
   private func placeholderTitle(_ tab: SideMenu.Tab) -> String {
     switch tab {
-    case .calendar:
-      return "日历"
+    case .search:
+      return "搜索"
     case .stats:
       return "统计"
     case .settings:
@@ -86,8 +79,8 @@ struct ContentView: View {
 
   private func placeholderMessage(_ tab: SideMenu.Tab) -> String {
     switch tab {
-    case .calendar:
-      return "计划中的日历视图，帮助你按日期回顾灵感。"
+    case .search:
+      return "强大的搜索功能正在开发中，帮助你快速找到美好回忆。"
     case .stats:
       return "统计页面尚在打磨中，将提供写作数据洞察。"
     case .settings:

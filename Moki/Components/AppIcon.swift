@@ -10,6 +10,10 @@ enum AppIconName: String {
   case fadersHorizontal = "faders-horizontal"
   case plus = "plus"
   case calendarBlank = "calendar-blank"
+  case chartBar = "chart-bar"
+  case gearSix = "gear-six"
+  case hash = "hash"
+  case magnifyingGlass = "magnifying-glass"
 }
 
 enum AppIconSize: String {
