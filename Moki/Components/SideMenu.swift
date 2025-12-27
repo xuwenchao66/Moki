@@ -51,7 +51,6 @@ struct SideMenu: View {
       }
       .padding(.top, 60)
       .padding(.bottom, 50)
-      .padding(.horizontal, 32)
 
       // 2. 菜单列表
       VStack(alignment: .leading, spacing: Theme.spacing.xl2) {
@@ -63,7 +62,6 @@ struct SideMenu: View {
           )
         }
       }
-      .padding(.horizontal, 32)
 
       Spacer()
 
@@ -77,10 +75,10 @@ struct SideMenu: View {
       .foregroundColor(Theme.color.mutedForeground)
       .tracking(1)
       .padding(.bottom, 50)
-      .padding(.horizontal, 32)
       .frame(maxWidth: .infinity, alignment: .leading)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(.horizontal, 32)
     .background(Theme.color.background)
     .ignoresSafeArea()
   }
