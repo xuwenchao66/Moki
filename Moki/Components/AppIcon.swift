@@ -13,20 +13,20 @@ enum AppIconName: String {
 }
 
 enum AppIconSize: String {
-  case s = "s"
+  case xs = "xs"
   case sm = "sm"
-  case m = "m"
-  case l = "l"
+  case md = "md"
+  case lg = "lg"
 
   var value: CGFloat {
     switch self {
-    case .s:
+    case .xs:
       return 16
     case .sm:
       return 20
-    case .m:
+    case .md:
       return 24
-    case .l:
+    case .lg:
       return 32
     }
   }
@@ -43,7 +43,7 @@ struct AppIcon: View {
     self.color = color
   }
 
-  init(icon: AppIconName, size: AppIconSize = .m, color: Color? = AppColors.foreground) {
+  init(icon: AppIconName, size: AppIconSize = .md, color: Color? = AppColors.foreground) {
     self.icon = icon
     self.size = size.value
     self.color = color

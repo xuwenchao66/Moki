@@ -195,7 +195,7 @@ struct TimelineView: View {
           isSideMenuPresented.toggle()
         }
       }) {
-        AppIcon(icon: .fadersHorizontal, size: .m, color: Color(hex: "5E5E5E"))
+        AppIcon(icon: .fadersHorizontal, size: .md, color: Theme.color.cardForeground)
           .withTapArea()
       }
 
@@ -206,14 +206,14 @@ struct TimelineView: View {
             .frame(width: 44, height: 44)
             .shadow(color: Color.black.opacity(0.3), radius: 12, x: 0, y: 4)
 
-          AppIcon(icon: .plus, size: .sm, color: .white)
+          AppIcon(icon: .plus, size: .sm, color: Theme.color.primaryForeground)
         }
       }
 
       Button(action: {
         // Placeholder for calendar action
       }) {
-        AppIcon(icon: .calendarBlank, size: .m, color: Theme.color.buttonBackground)
+        AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.cardForeground)
           .withTapArea()
       }
     }
