@@ -7,6 +7,7 @@ enum AppIconName: String {
   case plus = "plus-light"
   case sliderHorizontal = "slider-horizontal-light"
   case caretLeft = "caret-left-light"
+  case fadersHorizontal = "faders-horizontal-light"
 }
 
 struct AppIcon: View {
