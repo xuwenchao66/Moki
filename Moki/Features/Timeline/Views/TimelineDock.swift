@@ -36,13 +36,13 @@ struct TimelineDock: View {
     .padding(.horizontal, 12)
     .padding(.vertical, 6)
     .background(.ultraThinMaterial)
-    .background(Color.white.opacity(0.85))
+    .background(Theme.color.primaryForeground.opacity(0.85))
     .clipShape(Capsule())
     .shadow(color: Color(hex: "2C2825").opacity(0.12), radius: 32, x: 0, y: 12)
     .shadow(color: Color(hex: "2C2825").opacity(0.06), radius: 12, x: 0, y: 4)
     .overlay(
       Capsule()
-        .stroke(Color.white.opacity(0.6), lineWidth: 1)
+        .stroke(Theme.color.primaryForeground.opacity(0.6), lineWidth: 1)
     )
     .padding(.bottom, 34)
   }
