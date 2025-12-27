@@ -40,7 +40,8 @@ struct SideMenu: View {
       // 1. 头部：Logo + Slogan
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
         Text("Moki")
-          .font(.system(size: 34, weight: .semibold, design: .serif))
+          .font(Theme.font.title1)
+          .fontDesign(.serif)
           .foregroundColor(Theme.color.foreground)
           .tracking(1)
 
@@ -49,8 +50,8 @@ struct SideMenu: View {
           .foregroundColor(Theme.color.mutedForeground)
           .tracking(0.5)
       }
-      .padding(.top, 60)
-      .padding(.bottom, 50)
+      .padding(.top, Theme.spacing.xxxl)
+      .padding(.bottom, Theme.spacing.xxl)
 
       // 2. 菜单列表
       VStack(alignment: .leading, spacing: Theme.spacing.xl2) {
@@ -74,11 +75,11 @@ struct SideMenu: View {
       .font(Theme.font.caption)
       .foregroundColor(Theme.color.mutedForeground)
       .tracking(1)
-      .padding(.bottom, 50)
+      .padding(.bottom, Theme.spacing.xxxl)
       .frame(maxWidth: .infinity, alignment: .leading)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
-    .padding(.horizontal, 32)
+    .padding(.horizontal, Theme.spacing.xl)
     .background(Theme.color.background)
     .ignoresSafeArea()
   }
