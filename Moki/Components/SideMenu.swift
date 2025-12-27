@@ -103,7 +103,7 @@ private struct MenuButton: View {
   var body: some View {
     Button(action: action) {
       HStack(spacing: Theme.spacing.md) {
-        AppIcon(icon: icon, size: .md, color: Theme.color.foreground)
+        AppIcon(icon: icon, size: .md, color: Theme.color.mutedForeground)
 
         Text(title)
           .font(Theme.font.title4)
