@@ -65,7 +65,7 @@ struct SideMenuContainer<Content: View>: View {
           .gesture(gestureEnabled ? fullScreenDragGesture(screenWidth: geometry.size.width) : nil)
           .zIndex(2)
       }
-      .onChange(of: isShowing) { newValue in
+      .onChange(of: isShowing) { _, newValue in
         // 外部状态变化时，同步offset
         setMenu(open: newValue)
       }

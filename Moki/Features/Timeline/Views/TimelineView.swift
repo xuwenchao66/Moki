@@ -118,7 +118,10 @@ struct TimelineView: View {
       }
 
       // Dock View
-      dockView
+      TimelineDock(
+        onMenuTapped: { isSideMenuPresented.toggle() },
+        onAddTapped: { showAddEntry = true }
+      )
     }
     .background(Theme.color.background)
     .navigationDestination(isPresented: $showAddEntry) {
@@ -186,49 +189,6 @@ struct TimelineView: View {
 
       Spacer()
     }
-  }
-
-  private var dockView: some View {
-    HStack(spacing: 24) {
-      Button(action: {
-        withAnimation {
-          isSideMenuPresented.toggle()
-        }
-      }) {
-        AppIcon(icon: .fadersHorizontal, size: .md, color: Theme.color.cardForeground)
-          .withTapArea()
-      }
-
-      Button(action: { showAddEntry = true }) {
-        ZStack {
-          Circle()
-            .fill(Theme.color.buttonBackground)
-            .frame(width: 44, height: 44)
-            .shadow(color: Color.black.opacity(0.3), radius: 12, x: 0, y: 4)
-
-          AppIcon(icon: .plus, size: .sm, color: Theme.color.primaryForeground)
-        }
-      }
-
-      Button(action: {
-        // Placeholder for calendar action
-      }) {
-        AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.cardForeground)
-          .withTapArea()
-      }
-    }
-    .padding(.horizontal, 12)
-    .padding(.vertical, 6)
-    .background(.ultraThinMaterial)
-    .background(Color.white.opacity(0.85))
-    .clipShape(Capsule())
-    .shadow(color: Color(hex: "2C2825").opacity(0.12), radius: 32, x: 0, y: 12)
-    .shadow(color: Color(hex: "2C2825").opacity(0.06), radius: 12, x: 0, y: 4)
-    .overlay(
-      Capsule()
-        .stroke(Color.white.opacity(0.6), lineWidth: 1)
-    )
-    .padding(.bottom, 34)
   }
 
   private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
