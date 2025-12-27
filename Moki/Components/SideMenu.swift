@@ -50,7 +50,7 @@ struct SideMenu: View {
           .foregroundColor(Theme.color.mutedForeground)
           .tracking(0.5)
       }
-      .padding(.top, Theme.spacing.xxxl)
+      .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
 
       // 2. 菜单列表
@@ -102,12 +102,12 @@ private struct MenuButton: View {
 
   var body: some View {
     Button(action: action) {
-      HStack(spacing: Theme.spacing.md) {
-        AppIcon(icon: icon, size: .md, color: Theme.color.mutedForeground)
+      HStack(spacing: Theme.spacing.md2) {
+        AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
 
         Text(title)
-          .font(Theme.font.title4)
-          .foregroundColor(Theme.color.foreground)
+          .font(Theme.font.body)
+          .foregroundColor(Theme.color.secondaryForeground)
       }
       .contentShape(Rectangle())
     }
