@@ -34,6 +34,7 @@ struct TimelineView: View {
         id: mock.id,
         text: mock.content,
         createdAt: mock.date,
+        timeZone: TimeZone.current.identifier,
         metadata: metadata
       )
     }
@@ -65,7 +66,7 @@ struct TimelineView: View {
   // MARK: - View
 
   var body: some View {
-    ZStack(alignment: .bottomTrailing) {
+    ZStack(alignment: .bottom) {
       if entries.isEmpty {
         EmptyStateView(
           title: "还没有记录",
@@ -110,46 +111,19 @@ struct TimelineView: View {
                 .frame(height: Theme.spacing.xxl)
             }
           }
+          // 底部留白，防止内容被 Dock 遮挡
+          Color.clear.frame(height: 100)
         }
         .background(Theme.color.background)
       }
 
-      // FAB - 深色按钮
-      Button(action: { showAddEntry = true }) {
-        Image(systemName: "plus")
-          .font(.system(size: 22, weight: .light))
-          .foregroundColor(Theme.color.buttonForeground)
-          .frame(width: 52, height: 52)
-          .background(Theme.color.buttonBackground)
-          .clipShape(Circle())
-          .shadow(
-            color: Theme.shadow.md.color, radius: Theme.shadow.md.radius, x: Theme.shadow.md.x,
-            y: Theme.shadow.md.y)
-      }
-      .padding(.trailing, Theme.spacing.lg)
-      .padding(.bottom, Theme.spacing.lg)
+      // Dock View
+      TimelineDock(
+        onMenuTapped: { isSideMenuPresented.toggle() },
+        onAddTapped: { showAddEntry = true }
+      )
     }
     .background(Theme.color.background)
-    .navigationBarTitleDisplayMode(.inline)
-    .navigationTitle("Moki")
-    .toolbar {
-      ToolbarItem(placement: .navigationBarLeading) {
-        Button {
-          withAnimation { isSideMenuPresented.toggle() }
-        } label: {
-          Image(systemName: "line.3.horizontal")
-            .foregroundColor(Theme.color.foreground)
-        }
-      }
-
-      ToolbarItem(placement: .primaryAction) {
-        Button {
-        } label: {
-          Image(systemName: "magnifyingglass")
-            .foregroundColor(Theme.color.foreground)
-        }
-      }
-    }
     .navigationDestination(isPresented: $showAddEntry) {
       EditView()
     }

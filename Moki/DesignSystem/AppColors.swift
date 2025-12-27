@@ -74,12 +74,8 @@ struct AppColors {
   /// 强调色前景
   static let accentForeground = Color(hex: "28261b")
 
-  // MARK: - 卡片 (Card)
-
-  /// 卡片背景色
   static let card = Color(hex: "faf9f5")
 
-  /// 卡片前景色
   static let cardForeground = Color(hex: "141413")
 
   static let buttonBackground = Color(hex: "141413")

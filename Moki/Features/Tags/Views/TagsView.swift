@@ -23,7 +23,6 @@ struct TagsView: View {
           } label: {
             Image(systemName: "plus")
           }
-          .toolbarIconStyle()
         }
       }
       .alert(editorTitle, isPresented: $isEditorPresented) {

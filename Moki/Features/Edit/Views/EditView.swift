@@ -102,7 +102,8 @@ struct EditView: View {
   private func saveEntry() {
     let entry = MokiDiary(
       text: content,
-      createdAt: entryDate
+      createdAt: entryDate,
+      timeZone: TimeZone.current.identifier
     )
     diaryService.create(entry)
     dismiss()
