@@ -21,7 +21,7 @@ struct SideMenuContainer<Content: View>: View {
 
   init(
     isShowing: Binding<Bool>,
-    menuWidth: CGFloat = 280,
+    menuWidth: CGFloat = 300,
     edgeWidth: CGFloat = 30,  // 左侧边缘 30pt 区域可触发
     @ViewBuilder content: () -> Content
   ) {

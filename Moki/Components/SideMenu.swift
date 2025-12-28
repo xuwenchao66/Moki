@@ -26,10 +26,18 @@ struct SideMenu: View {
 
     var title: String {
       switch self {
-      case .search: return "搜索日记"
-      case .stats: return "统计回顾"
-      case .tags: return "标签管理"
-      case .settings: return "更多设置"
+      case .search: return "搜索"
+      case .stats: return "统计"
+      case .tags: return "标签"
+      case .settings: return "设置"
+      }
+    }
+
+    // 标记哪些 Tab 属于主要功能区（顶部）
+    var isMainFeature: Bool {
+      switch self {
+      case .search, .stats, .tags: return true
+      case .settings: return false
       }
     }
   }
@@ -53,9 +61,9 @@ struct SideMenu: View {
       .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
 
-      // 2. 菜单列表
+      // 2. 菜单列表 (主要功能区)
       VStack(alignment: .leading, spacing: Theme.spacing.xl2) {
-        ForEach(Tab.allCases, id: \.self) { tab in
+        ForEach(Tab.allCases.filter { $0.isMainFeature }, id: \.self) { tab in
           MenuButton(
             icon: tab.icon,
             title: tab.title,
@@ -64,19 +72,38 @@ struct SideMenu: View {
         }
       }
 
+      // X App Style: 自动撑开中间区域
       Spacer()
 
-      // 3. 底部：落款信息
-      HStack(spacing: Theme.spacing.xs) {
-        Text("MOKI JOURNAL")
-        Text("·")
-        Text("V1.0.0")
+      // 3. 底部区域 (分割线 + 设置 + 版本号)
+      VStack(alignment: .leading, spacing: 0) {
+        // 分割线
+        Rectangle()
+          .fill(Theme.color.border.opacity(0.3))
+          .frame(height: 1)
+          .padding(.bottom, Theme.spacing.xl)
+
+        // 设置入口 (沉底)
+        ForEach(Tab.allCases.filter { !$0.isMainFeature }, id: \.self) { tab in
+          MenuButton(
+            icon: tab.icon,
+            title: tab.title,
+            action: { select(tab) }
+          )
+        }
+
+        // 落款信息
+        HStack(spacing: Theme.spacing.xs) {
+          Text("MOKI JOURNAL")
+          Text("·")
+          Text("V1.0.0")
+        }
+        .font(Theme.font.caption)
+        .foregroundColor(Theme.color.mutedForeground)
+        .tracking(1)
+        .padding(.top, Theme.spacing.xl)
+        .padding(.bottom, Theme.spacing.xxxl)
       }
-      .font(Theme.font.caption)
-      .foregroundColor(Theme.color.mutedForeground)
-      .tracking(1)
-      .padding(.bottom, Theme.spacing.xxxl)
-      .frame(maxWidth: .infinity, alignment: .leading)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(.horizontal, Theme.spacing.xl)
