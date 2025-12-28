@@ -138,6 +138,8 @@ private struct MenuButton: View {
         Text(title)
           .font(Theme.font.body)
           .foregroundColor(Theme.color.secondaryForeground)
+
+        Spacer()
       }
       .contentShape(Rectangle())
     }
