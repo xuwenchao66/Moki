@@ -128,7 +128,10 @@ private struct MenuButton: View {
   let action: () -> Void
 
   var body: some View {
-    Button(action: action) {
+    Button(action: {
+      HapticManager.shared.light()
+      action()
+    }) {
       HStack(spacing: Theme.spacing.md2) {
         AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
 
