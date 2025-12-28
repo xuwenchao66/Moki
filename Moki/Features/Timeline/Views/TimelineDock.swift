@@ -6,7 +6,7 @@ struct TimelineDock: View {
   var onCalendarTapped: (() -> Void)?
 
   var body: some View {
-    HStack(spacing: 24) {
+    HStack(spacing: Theme.spacing.lg2) {
       Button(action: {
         HapticManager.shared.light()
         onMenuTapped()
@@ -37,24 +37,24 @@ struct TimelineDock: View {
           .withTapArea()
       }
     }
-    .padding(.horizontal, 12)
-    .padding(.vertical, 6)
-    .background(.ultraThinMaterial)
-    .background(Theme.color.primaryForeground.opacity(0.85))
+    .padding(.horizontal, Theme.spacing.md)
+    .padding(.vertical, Theme.spacing.compact)
+    .background(Theme.color.primaryForeground)
     .clipShape(Capsule())
-    .shadow(color: Color(hex: "2C2825").opacity(0.12), radius: 32, x: 0, y: 12)
-    .shadow(color: Color(hex: "2C2825").opacity(0.06), radius: 12, x: 0, y: 4)
     .overlay(
       Capsule()
         .stroke(Theme.color.primaryForeground.opacity(0.6), lineWidth: 1)
     )
+    .shadow(color: Color(hex: "2C2825").opacity(0.08), radius: 2, x: 0, y: 2)
+    .shadow(color: Color(hex: "2C2825").opacity(0.06), radius: 16, x: 0, y: 8)
     .padding(.bottom, 32)
   }
 }
 
 #Preview {
   ZStack(alignment: .bottom) {
-    Color.gray.opacity(0.1).ignoresSafeArea()
+    Theme.color.background
+      .ignoresSafeArea()
     TimelineDock(onMenuTapped: {}, onAddTapped: {})
   }
 }
