@@ -21,7 +21,7 @@ struct MokiApp: App {
   var body: some Scene {
     WindowGroup {
       ContentView()
-        .tint(Theme.color.secondary)
+        .tint(Theme.color.foreground)
     }
   }
 }
