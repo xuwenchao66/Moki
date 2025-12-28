@@ -1,10 +1,3 @@
-//
-//  PlainTextEditor.swift
-//  Moki
-//
-//  基于 UITextView 的可控编辑组件，支持占位符、行高、主题样式
-//
-
 import SwiftUI
 import UIKit
 
@@ -57,8 +50,14 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.backgroundColor = .clear
     textView.text = text
 
-    // 字体/颜色 - 使用主题色
-    textView.font = UIFont.systemFont(ofSize: Constants.fontSize)
+    // 字体/颜色 - 使用主题色 (Serif 风格，与阅读页保持一致)
+    let descriptor = UIFont.systemFont(ofSize: Constants.fontSize).fontDescriptor.withDesign(.serif)
+    if let descriptor = descriptor {
+      textView.font = UIFont(descriptor: descriptor, size: Constants.fontSize)
+    } else {
+      textView.font = UIFont.systemFont(ofSize: Constants.fontSize)
+    }
+
     // 从 Theme.color.foreground 获取颜色（适配深色模式）
     textView.textColor = UIColor(Theme.color.foreground)
     // 光标使用黑色（与 Anthropic CTA 一致）

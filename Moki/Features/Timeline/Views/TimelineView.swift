@@ -111,8 +111,6 @@ struct TimelineView: View {
                 .frame(height: Theme.spacing.xxl)
             }
           }
-          // 底部留白，防止内容被 Dock 遮挡
-          Color.clear.frame(height: 100)
         }
         .background(Theme.color.background)
       }

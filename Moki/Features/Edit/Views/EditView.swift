@@ -1,5 +1,4 @@
 import SwiftUI
-import UIKit
 
 struct EditView: View {
   @Environment(\.dismiss) private var dismiss
@@ -14,83 +13,22 @@ struct EditView: View {
 
   var body: some View {
     VStack(spacing: 0) {
-      // 1. 顶部 Header (日期 + 元数据)
-      VStack(alignment: .leading, spacing: 8) {
-        // 大标题日期
-        Text(formattedDateMain())
-          .font(Theme.font.dateTitle)
-          .foregroundColor(Theme.color.foreground)
+      // 1. Header
+      headerView
+        .padding(.vertical, Theme.spacing.md)
+        .padding(.horizontal, Theme.spacing.lg)
 
-        // 元数据：星期 · 时间 · 天气/心情
-        HStack(spacing: 6) {
-          Text(formattedDateSub())
-          Text("·")
-          Text(formattedTime())
-          Text("·")
-          Label("多云", systemImage: "cloud.sun.fill")  // TODO: 自动获取天气
-            .font(.system(size: 13))
-        }
-        .font(.system(size: 14))
-        .foregroundColor(Theme.color.mutedForeground)
-      }
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .padding(.horizontal, Theme.spacing.md)
-      .padding(.top, Theme.spacing.md)
-      .padding(.bottom, Theme.spacing.sm)
-
-      // 2. 输入区域
+      // 2. Editor
       PlainTextEditor(
         text: $content,
         isFocused: $isFocused,
-        placeholder: "在这里记录你的想法..."
+        placeholder: "记录此刻..."
       )
-      .frame(maxHeight: .infinity)
-      .padding(.horizontal, Theme.spacing.md)
+      .frame(maxWidth: .infinity, maxHeight: .infinity)
+      .padding(.horizontal, Theme.spacing.lg)
 
-      // 3. 底部工具栏
-      VStack(spacing: 0) {
-        Divider()
-          .overlay(Theme.color.border)
-
-        HStack {
-          // 功能图标组
-          HStack(spacing: 20) {
-            Button(action: { /* TODO: Tag */  }) {
-              Image(systemName: "number")
-            }
-
-            Button(action: { /* TODO: Photo */  }) {
-              Image(systemName: "photo")
-            }
-
-            Button(action: { /* TODO: Camera */  }) {
-              Image(systemName: "camera")
-            }
-          }
-          .font(.system(size: 18, weight: .regular))
-          .foregroundColor(Theme.color.foreground)
-
-          Spacer()
-
-          Button(action: {
-            if content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-              dismiss()
-            } else {
-              saveEntry()
-            }
-          }) {
-            Image(systemName: "checkmark")
-              .font(.system(size: 14, weight: .bold))
-              .foregroundColor(Theme.color.buttonForeground)
-              .frame(width: 56, height: 32)
-              .background(Theme.color.buttonBackground)
-              .clipShape(Capsule())
-          }
-        }
-        .padding(.horizontal, Theme.spacing.md)
-        .padding(.vertical, Theme.spacing.sm)
-        .background(Theme.color.background)
-      }
+      // 3. Toolbar
+      toolbarView
     }
     .background(Theme.color.background)
     .toolbar(.hidden, for: .navigationBar)
@@ -98,6 +36,82 @@ struct EditView: View {
       isFocused = true
     }
   }
+
+  // MARK: - Subviews
+
+  private var headerView: some View {
+    HStack(spacing: Theme.spacing.compact) {
+      // 2025.12.28 · 周日 16:54
+      Text(formattedDateMain())
+      Text("·")
+      Text(formattedDateSub())
+      Text(formattedTime())
+
+      Spacer()
+    }
+    .font(Theme.font.callout)
+    .foregroundColor(Theme.color.mutedForeground)
+  }
+
+  private var toolbarView: some View {
+    VStack(spacing: 0) {
+      Divider()
+        .overlay(Theme.color.border)
+
+      HStack {
+        // 左侧功能区
+        HStack(spacing: Theme.spacing.lg) {
+          Button(action: {
+            HapticManager.shared.light()
+            /* TODO: Tags */
+          }) {
+            AppIcon(icon: .hash, size: .md, color: Theme.color.foreground)
+              .contentShape(Rectangle())
+          }
+
+          Button(action: {
+            HapticManager.shared.light()
+            /* TODO: Photo */
+          }) {
+            AppIcon(icon: .image, size: .md, color: Theme.color.foreground)
+              .contentShape(Rectangle())
+          }
+
+          Button(action: {
+            HapticManager.shared.light()
+            /* TODO: Camera */
+          }) {
+            AppIcon(icon: .camera, size: .md, color: Theme.color.foreground)
+              .contentShape(Rectangle())
+          }
+        }
+
+        Spacer()
+
+        // 右侧保存按钮
+        Button(action: {
+          HapticManager.shared.light()
+          saveEntry()
+        }) {
+          ZStack {
+            Capsule()
+              .fill(Theme.color.buttonBackground)
+              .frame(width: 56, height: 36)
+              .shadow(color: Theme.color.buttonBackground.opacity(0.2), radius: 4, x: 0, y: 2)
+
+            AppIcon(icon: .check, size: .sm, color: Theme.color.buttonForeground)
+          }
+        }
+        .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+        .opacity(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? 0.6 : 1)
+      }
+      .padding(.horizontal, Theme.spacing.lg)
+      .padding(.vertical, Theme.spacing.sm)
+      .background(Theme.color.background)
+    }
+  }
+
+  // MARK: - Actions
 
   private func saveEntry() {
     let entry = MokiDiary(
@@ -109,19 +123,19 @@ struct EditView: View {
     dismiss()
   }
 
-  // MARK: - Date Formatters
+  // MARK: - Formatters
 
   private func formattedDateMain() -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "yyyy年M月d日"
+    formatter.dateFormat = "yyyy年MM月dd日"
     return formatter.string(from: entryDate)
   }
 
   private func formattedDateSub() -> String {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "EEEE"
+    formatter.dateFormat = "EEE"
     return formatter.string(from: entryDate)
   }
 
@@ -134,7 +148,5 @@ struct EditView: View {
 }
 
 #Preview {
-  NavigationView {
-    EditView()
-  }
+  EditView()
 }
