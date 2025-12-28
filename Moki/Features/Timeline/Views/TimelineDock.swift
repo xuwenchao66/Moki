@@ -3,19 +3,22 @@ import SwiftUI
 struct TimelineDock: View {
   var onMenuTapped: () -> Void
   var onAddTapped: () -> Void
+  var onCalendarTapped: (() -> Void)?
 
   var body: some View {
     HStack(spacing: 24) {
       Button(action: {
-        withAnimation {
-          onMenuTapped()
-        }
+        HapticManager.shared.light()
+        onMenuTapped()
       }) {
         AppIcon(icon: .fadersHorizontal, size: .md, color: Theme.color.cardForeground)
           .withTapArea()
       }
 
-      Button(action: { onAddTapped() }) {
+      Button(action: {
+        HapticManager.shared.light()
+        onAddTapped()
+      }) {
         ZStack {
           Circle()
             .fill(Theme.color.buttonBackground)
@@ -27,7 +30,8 @@ struct TimelineDock: View {
       }
 
       Button(action: {
-        // Placeholder for calendar action
+        HapticManager.shared.light()
+        onCalendarTapped?()
       }) {
         AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.cardForeground)
           .withTapArea()

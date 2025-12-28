@@ -1,9 +1,11 @@
 //
 //  SideMenuContainer.swift
 //  Moki
+//
 //  参考 https://github.com/muhammadabbas001/SideMenuSwiftUI
 //  侧边栏容器组件
 //  负责遮罩层、动画、显示/隐藏逻辑、手势处理
+//
 
 import SwiftUI
 
@@ -19,9 +21,12 @@ struct SideMenuContainer<Content: View>: View {
   /// 读取环境值：侧边栏手势是否启用
   @Environment(\.sideMenuGestureEnabled) private var gestureEnabled
 
+  // 记录震动是否已触发，防止一次拖动多次震动
+  @State private var hasHapticTriggered = false
+
   init(
     isShowing: Binding<Bool>,
-    menuWidth: CGFloat = 280,
+    menuWidth: CGFloat = 300,
     edgeWidth: CGFloat = 30,  // 左侧边缘 30pt 区域可触发
     @ViewBuilder content: () -> Content
   ) {
@@ -81,6 +86,12 @@ struct SideMenuContainer<Content: View>: View {
         // 只响应向右拖动
         guard value.translation.width > 0 else { return }
 
+        // 触发震动（仅在刚开始拖动且还没震动过时触发）
+        if !hasHapticTriggered {
+          HapticManager.shared.light()
+          hasHapticTriggered = true
+        }
+
         let translation = value.translation.width
         let newOffset = -menuWidth + translation
 
@@ -88,6 +99,8 @@ struct SideMenuContainer<Content: View>: View {
         menuOffset = Swift.max(-menuWidth, Swift.min(0, newOffset))
       }
       .onEnded { value in
+        hasHapticTriggered = false  // 重置震动状态
+
         let translation = value.translation.width
         let threshold = menuWidth / 4
 
@@ -108,10 +121,19 @@ struct SideMenuContainer<Content: View>: View {
         let base = isShowing ? 0 : -menuWidth
         let newOffset = base + translation
 
+        // 触发震动（如果是从左侧边缘开始拉出）
+        // 如果是从已打开状态往回推（关闭），通常不需要震动，或者可以只在"开始动"的一瞬间震
+        if !isShowing && !hasHapticTriggered && translation > 0 {
+          HapticManager.shared.light()
+          hasHapticTriggered = true
+        }
+
         // 跟手拖动，限制在 [-menuWidth, 0]
         menuOffset = Swift.max(-menuWidth, Swift.min(0, newOffset))
       }
       .onEnded { value in
+        hasHapticTriggered = false  // 重置震动状态
+
         let translation = value.translation.width
         let threshold = menuWidth / 4
 

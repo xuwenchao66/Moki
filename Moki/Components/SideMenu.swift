@@ -1,11 +1,3 @@
-//
-//  SideMenu.swift
-//  Moki
-//
-//  侧边栏导航菜单
-//  遵循 Claude 温暖风格：简约、温暖、橙色主题
-//
-
 import SwiftUI
 
 struct SideMenu: View {
@@ -18,77 +10,105 @@ struct SideMenu: View {
   // MARK: - Tab Definition
 
   enum Tab: CaseIterable, Hashable, Codable {
-    case calendar
-    case tags
+    case search
     case stats
+    case tags
     case settings
 
-    var icon: String {
+    var icon: AppIconName {
       switch self {
-      case .calendar: return "calendar"
-      case .tags: return "number"
-      case .stats: return "chart.bar"
-      case .settings: return "gearshape"
+      case .search: return .magnifyingGlass
+      case .stats: return .chartBar
+      case .tags: return .hash
+      case .settings: return .gearSix
       }
     }
 
     var title: String {
       switch self {
-      case .calendar: return "日历"
-      case .tags: return "标签"
+      case .search: return "搜索"
       case .stats: return "统计"
+      case .tags: return "标签"
       case .settings: return "设置"
       }
     }
 
-    /// 是否在底部显示（设置项）
-    var isBottomItem: Bool {
-      self == .settings
+    // 标记哪些 Tab 属于主要功能区（顶部）
+    var isMainFeature: Bool {
+      switch self {
+      case .search, .stats, .tags: return true
+      case .settings: return false
+      }
     }
   }
 
+  // MARK: - Styles
   var body: some View {
-    GeometryReader { proxy in
-      HStack(spacing: 0) {
-        // 1. 侧边栏主体
-        VStack(alignment: .leading, spacing: 0) {
-          // 留白 Header
-          Spacer()
-            .frame(height: 100)
+    VStack(alignment: .leading, spacing: 0) {
+      // 1. 头部：Logo + Slogan
+      VStack(alignment: .leading, spacing: Theme.spacing.sm) {
+        Text("Moki")
+          .font(Theme.font.title1)
+          .fontDesign(.serif)
+          .foregroundColor(Theme.color.foreground)
+          .tracking(1)
 
-          // 主菜单项
-          VStack(spacing: 20) {
-            ForEach(Tab.allCases.filter { !$0.isBottomItem }, id: \.self) { tab in
-              MenuButton(
-                icon: tab.icon,
-                title: tab.title,
-                action: { select(tab) }
-              )
-            }
-          }
-          .padding(.horizontal, Theme.spacing.xl)
+        Text("Taste life twice.")
+          .font(.custom("Georgia-Italic", size: 16))
+          .foregroundColor(Theme.color.mutedForeground)
+          .tracking(0.5)
+      }
+      .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
+      .padding(.bottom, Theme.spacing.xxl)
 
-          Spacer()
-
-          // 底部菜单项（设置）
-          ForEach(Tab.allCases.filter { $0.isBottomItem }, id: \.self) { tab in
-            MenuButton(
-              icon: tab.icon,
-              title: tab.title,
-              action: { select(tab) }
-            )
-          }
-          .padding(.horizontal, Theme.spacing.xl)
-          .padding(.bottom, Theme.spacing.xxl)
+      // 2. 菜单列表 (主要功能区)
+      VStack(alignment: .leading, spacing: Theme.spacing.xl2) {
+        ForEach(Tab.allCases.filter { $0.isMainFeature }, id: \.self) { tab in
+          MenuButton(
+            icon: tab.icon,
+            title: tab.title,
+            action: { select(tab) }
+          )
         }
-        .frame(width: 280)
-        .background(Theme.color.secondary)
-        .edgesIgnoringSafeArea(.all)
+      }
 
-        // 2. 透明占位区域
-        Spacer()
+      // X App Style: 自动撑开中间区域
+      Spacer()
+
+      // 3. 底部区域 (分割线 + 设置 + 版本号)
+      VStack(alignment: .leading, spacing: 0) {
+        // 分割线
+        Rectangle()
+          .fill(Theme.color.border.opacity(0.3))
+          .frame(height: 1)
+          .padding(.bottom, Theme.spacing.xl)
+
+        // 设置入口 (沉底)
+        ForEach(Tab.allCases.filter { !$0.isMainFeature }, id: \.self) { tab in
+          MenuButton(
+            icon: tab.icon,
+            title: tab.title,
+            action: { select(tab) }
+          )
+        }
+
+        // 落款信息
+        HStack(spacing: Theme.spacing.xs) {
+          Text("MOKI JOURNAL")
+          Text("·")
+          Text("V1.0.0")
+        }
+        .font(Theme.font.caption)
+        .foregroundColor(Theme.color.mutedForeground)
+        .tracking(1)
+        .padding(.top, Theme.spacing.xl)
+        .padding(.bottom, Theme.spacing.xxxl)
       }
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
+    .padding(.horizontal, Theme.spacing.xl)
+    .background(Theme.color.background)
+    .ignoresSafeArea()
   }
 }
 
@@ -103,26 +123,25 @@ extension SideMenu {
 // MARK: - Components
 
 private struct MenuButton: View {
-  let icon: String
+  let icon: AppIconName
   let title: String
   let action: () -> Void
 
   var body: some View {
-    Button(action: action) {
-      HStack(spacing: Theme.spacing.md) {
-        Image(systemName: icon)
-          .font(.system(size: 17, weight: .regular))  // 图标微调小一点
-          .frame(width: 22)  // 限制图标宽度
+    HStack(spacing: Theme.spacing.md2) {
+      AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
 
-        Text(title)
-          .font(.system(size: 16))  // 字体稍微改小一点点，更精致
-      }
-      .foregroundColor(Theme.color.foreground)
-      .padding(.vertical, 4)  // 大幅减小垂直 Padding，依靠 Stack spacing 控制间距
-      .frame(maxWidth: .infinity, alignment: .leading)
-      .contentShape(Rectangle())
+      Text(title)
+        .font(Theme.font.body)
+        .foregroundColor(Theme.color.secondaryForeground)
+
+      Spacer()
     }
-    .buttonStyle(.plain)
+    .contentShape(Rectangle())
+    .onTapGesture {
+      HapticManager.shared.light()
+      action()
+    }
   }
 }
 
@@ -130,5 +149,6 @@ private struct MenuButton: View {
   ZStack {
     Color.black.opacity(0.3).ignoresSafeArea()
     SideMenu()
+      .frame(width: 320)
   }
 }
