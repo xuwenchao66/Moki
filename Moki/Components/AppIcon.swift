@@ -14,6 +14,9 @@ enum AppIconName: String {
   case gearSix = "gear-six"
   case hash = "hash"
   case magnifyingGlass = "magnifying-glass"
+  case camera = "camera"
+  case check = "check"
+  case image = "image"
 }
 
 enum AppIconSize: String {
