@@ -22,8 +22,8 @@ struct TimelineDock: View {
         ZStack {
           Circle()
             .fill(Theme.color.buttonBackground)
-            .frame(width: 44, height: 44)
-            .shadow(color: Theme.color.buttonBackground.opacity(0.3), radius: 12, x: 0, y: 4)
+            .frame(width: 42, height: 42)
+            .shadow(color: Color.black.opacity(0.14), radius: 18, x: 0, y: 8)
 
           AppIcon(icon: .plus, size: .sm, color: Theme.color.primaryForeground)
         }

@@ -97,9 +97,9 @@ struct EditView: View {
             Capsule()
               .fill(Theme.color.buttonBackground)
               .frame(width: 56, height: 36)
-              .shadow(color: Theme.color.buttonBackground.opacity(0.2), radius: 4, x: 0, y: 2)
+              .shadow(color: Theme.color.buttonBackground.opacity(0.1), radius: 4, x: 0, y: 2)
 
-            AppIcon(icon: .check, size: .sm, color: Theme.color.buttonForeground)
+            AppIcon(icon: .check, size: .sm, color: Theme.color.primaryForeground)
           }
         }
         .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

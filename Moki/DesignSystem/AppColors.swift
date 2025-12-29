@@ -80,8 +80,6 @@ struct AppColors {
 
   static let buttonBackground = Color(hex: "141413")
 
-  static let buttonForeground = Color(hex: "faf9f5")
-
   // MARK: - 语义色 (Semantic)
 
   /// 边框色
