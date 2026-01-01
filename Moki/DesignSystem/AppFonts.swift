@@ -22,7 +22,7 @@ struct AppFonts {
   // MARK: - 内容字体 (Content Typography) - Serif 代表"人的情感"
 
   /// 日记正文 - 衬线体,阅读性优先
-  static let journalBody = Font.system(size: 17, weight: .regular, design: .serif)
+  static let journalBody = Font.system(size: 17, weight: .regular, design: .default)
 
   /// 日记正文行高系数
   static let journalBodyLineSpacing: CGFloat = 12
