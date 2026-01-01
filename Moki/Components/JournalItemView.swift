@@ -22,12 +22,12 @@ struct JournalItemView: View {
         .foregroundColor(Theme.color.foreground)
         .lineSpacing(Theme.font.journalBodyLineSpacing)
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.bottom, Theme.spacing.sm)
+        .padding(.bottom, Theme.spacing.md)
 
       // Layer 2: 媒体层 - 图片
       if !images.isEmpty {
         MediaRowView(images: images)
-          .padding(.bottom, Theme.spacing.sm)
+          .padding(.bottom, Theme.spacing.md)
       }
 
       // Layer 3: 信息层 - 极度弱化,像书页页码

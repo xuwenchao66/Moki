@@ -58,6 +58,8 @@ struct AppColors {
   /// 次要色前景
   static let secondaryForeground = Color(hex: "535146")
 
+  static let dateLargeForeground = Color(hex: "C7C1B8")
+
   // MARK: - 柔和色 (Muted)
 
   /// 柔和背景色
