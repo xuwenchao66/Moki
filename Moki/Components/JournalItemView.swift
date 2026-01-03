@@ -18,9 +18,7 @@ struct JournalItemView: View {
     VStack(alignment: .leading, spacing: 0) {
       // Layer 1: 内容层 - 纯文字,衬线体
       Text(content)
-        .font(Theme.font.journalBody)
-        .foregroundColor(Theme.color.foreground)
-        .lineSpacing(Theme.font.journalBodyLineSpacing)
+        .journalBodyStyle()
         .fixedSize(horizontal: false, vertical: true)
         .padding(.bottom, Theme.spacing.md)
 
