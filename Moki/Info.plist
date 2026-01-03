@@ -1,19 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-	<dict>
-		<key>UIUserInterfaceStyle</key>
-		<string>Light</string>
-		<key>UIBackgroundModes</key>
-		<array>
-			<string>remote-notification</string>
-		</array>
-		<key>CFBundleDevelopmentRegion</key>
+<dict>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>zh_CN</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>NotoSerifSC-Regular.ttf</string>
+	</array>
+	<key>CFBundleLocalizations</key>
+	<array>
 		<string>zh_CN</string>
-		<key>CFBundleLocalizations</key>
-		<array>
-			<string>zh_CN</string>
-			<string>en</string>
-		</array>
-	</dict>
+		<string>en</string>
+	</array>
+</dict>
 </plist>
