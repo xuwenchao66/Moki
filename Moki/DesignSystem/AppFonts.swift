@@ -1,11 +1,3 @@
-//
-//  AppFonts.swift
-//  Moki
-//
-//  设计系统 - 字体定义
-//  统一使用 Noto Serif SC
-//
-
 import SwiftUI
 import UIKit
 
