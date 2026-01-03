@@ -1,12 +1,3 @@
-//
-//  AppTheme.swift
-//  Moki
-//
-//  设计系统 - 统一主题入口
-//  基于 Claude 的温暖橙色风格，支持浅色和深色模式
-//  提供便捷访问: Theme.color.xxx, Theme.font.xxx
-//
-
 import SwiftUI
 
 /// 主题命名空间 - 全局访问点
@@ -99,18 +90,4 @@ struct Radius {
 
   /// 圆形 - 9999pt
   static let full: CGFloat = 9999
-}
-
-// MARK: - Environment Values Extension
-
-extension EnvironmentValues {
-  /// 自定义环境值：用户主题偏好（保留以防未来需要）
-  var userColorScheme: ColorScheme? {
-    get { self[UserColorSchemeKey.self] }
-    set { self[UserColorSchemeKey.self] = newValue }
-  }
-}
-
-private struct UserColorSchemeKey: EnvironmentKey {
-  static let defaultValue: ColorScheme? = .light
 }
