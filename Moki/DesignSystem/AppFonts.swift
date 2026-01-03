@@ -61,7 +61,7 @@ struct AppFonts {
   // MARK: - 内容字体
 
   /// 日记正文 - 阅读性优先
-  static let journalBody = serif(16, weight: .regular, relativeTo: .body)
+  static let journalBody = serif(17, weight: .regular, relativeTo: .body)
 
   /// 日记正文行高系数
   static let journalBodyLineSpacing: CGFloat = 10

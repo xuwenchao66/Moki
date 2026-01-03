@@ -170,7 +170,6 @@ struct TimelineView: View {
       // 巨大的数字 - 视觉锚点
       Text(dayString)
         .font(Theme.font.dateLarge)
-        .tracking(-0.8)
         .foregroundColor(Theme.color.dateLargeForeground)
 
       // 小辅助信息

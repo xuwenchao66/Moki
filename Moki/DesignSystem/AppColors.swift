@@ -40,7 +40,7 @@ struct AppColors {
   static let background = Color(hex: "faf9f5")
 
   /// 主前景色
-  static let foreground = Color(hex: "3d3929")
+  static let foreground = Color(hex: "2c2621")
 
   // MARK: - 主色调 (Primary)
 
