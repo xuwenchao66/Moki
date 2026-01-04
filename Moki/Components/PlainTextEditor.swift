@@ -34,7 +34,6 @@ struct PlainTextEditor: UIViewRepresentable {
   // MARK: - Constants
 
   private enum Constants {
-    static let fontSize: CGFloat = 17
     static let placeholderTag = 999
     // 移除内部内边距，完全由外部 SwiftUI padding 控制
     static let horizontalInset: CGFloat = 0
@@ -50,13 +49,8 @@ struct PlainTextEditor: UIViewRepresentable {
     textView.backgroundColor = .clear
     textView.text = text
 
-    // 字体/颜色 - 使用主题色 (Serif 风格，与阅读页保持一致)
-    let descriptor = UIFont.systemFont(ofSize: Constants.fontSize).fontDescriptor.withDesign(.serif)
-    if let descriptor = descriptor {
-      textView.font = UIFont(descriptor: descriptor, size: Constants.fontSize)
-    } else {
-      textView.font = UIFont.systemFont(ofSize: Constants.fontSize)
-    }
+    // 字体/颜色 - 使用 JournalBodyStyle 统一样式
+    textView.font = Theme.font.journalBodyUIFont
 
     // 从 Theme.color.foreground 获取颜色（适配深色模式）
     textView.textColor = UIColor(Theme.color.foreground)
@@ -109,7 +103,7 @@ struct PlainTextEditor: UIViewRepresentable {
   private func setupPlaceholder(in textView: UITextView) {
     let placeholderLabel = UILabel()
     placeholderLabel.text = placeholder
-    placeholderLabel.font = textView.font
+    placeholderLabel.font = Theme.font.journalBodyUIFont
     placeholderLabel.textColor = UIColor(Theme.color.mutedForeground)
     placeholderLabel.numberOfLines = 0
     placeholderLabel.tag = Constants.placeholderTag
@@ -151,21 +145,23 @@ struct PlainTextEditor: UIViewRepresentable {
   }
 
   private func applyParagraphStyle(to textView: UITextView) {
-    guard let font = textView.font else { return }
+    let font = Theme.font.journalBodyUIFont
 
     let paragraph = NSMutableParagraphStyle()
     // 空文本时不设置 lineSpacing，光标保持字体默认高度
-    // 有文本时再应用行间距
-    paragraph.lineSpacing = textView.text.isEmpty ? 0 : Theme.spacing.textLineSpacing
+    // 有文本时再应用行间距（使用 JournalBodyStyle 统一的行间距）
+    paragraph.lineSpacing = textView.text.isEmpty ? 0 : Theme.font.journalBodyLineSpacing
 
     // typingAttributes 影响新输入和光标
+    // 包含 kerning 字间距，与 JournalBodyStyle 保持一致
     textView.typingAttributes = [
       .font: font,
       .foregroundColor: textView.textColor as Any,
       .paragraphStyle: paragraph,
+      .kern: Theme.font.journalBodyKerning,
     ]
 
-    // 已有文本也应用行高
+    // 已有文本也应用样式
     if !textView.text.isEmpty {
       let attr = NSMutableAttributedString(string: textView.text)
       attr.addAttributes(

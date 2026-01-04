@@ -40,7 +40,7 @@ struct AppColors {
   static let background = Color(hex: "faf9f5")
 
   /// 主前景色
-  static let foreground = Color(hex: "3d3929")
+  static let foreground = Color(hex: "2c2621")
 
   // MARK: - 主色调 (Primary)
 
@@ -57,6 +57,8 @@ struct AppColors {
 
   /// 次要色前景
   static let secondaryForeground = Color(hex: "535146")
+
+  static let dateLargeForeground = Color(hex: "C7C1B8")
 
   // MARK: - 柔和色 (Muted)
 
@@ -80,8 +82,6 @@ struct AppColors {
 
   static let buttonBackground = Color(hex: "141413")
 
-  static let buttonForeground = Color(hex: "faf9f5")
-
   // MARK: - 语义色 (Semantic)
 
   /// 边框色
@@ -100,4 +100,9 @@ struct AppColors {
 
   /// 危险操作前景色
   static let destructiveForeground = Color(hex: "FFFFFF")
+
+  // MARK: - 阴影色 (Shadow)
+
+  /// 阴影基础色
+  static let shadow = Color(hex: "2C2523")
 }

@@ -164,14 +164,13 @@ struct TimelineView: View {
     let year = Calendar.current.component(.year, from: date)
     let currentYear = Calendar.current.component(.year, from: Date())
     let isPastYear = year != currentYear
+    let dayString = String(format: "%02d", day)
 
     return HStack(alignment: .firstTextBaseline, spacing: Theme.spacing.xs) {
       // 巨大的数字 - 视觉锚点
-      Text("\(day)")
+      Text(dayString)
         .font(Theme.font.dateLarge)
-        .fontDesign(.serif)
-        .foregroundColor(Theme.color.mutedForeground)
-        .fontWeight(.semibold)
+        .foregroundColor(Theme.color.dateLargeForeground)
 
       // 小辅助信息
       HStack(spacing: 0) {
@@ -182,8 +181,9 @@ struct TimelineView: View {
         }
       }
       .font(Theme.font.footnote)
+      .fontWeight(.medium)
       .foregroundColor(Theme.color.mutedForeground)
-      .offset(y: -2)
+      .offset(y: -1)
 
       Spacer()
     }

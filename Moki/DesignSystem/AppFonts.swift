@@ -1,96 +1,113 @@
-//
-//  AppFonts.swift
-//  Moki
-//
-//  设计系统 - 字体定义
-//  混排风格: Serif (情感/内容) + Sans-serif (系统/数据)
-//
-
 import SwiftUI
 import UIKit
 
 struct AppFonts {
 
-  // MARK: - 日期字体 (Date Typography) - Sans-serif 代表"系统/时间"
+  // MARK: - 字体名常量
+
+  private enum FontName {
+    static let black = "NotoSerifSC-Black"
+    static let bold = "NotoSerifSC-Bold"
+    static let semibold = "NotoSerifSC-SemiBold"
+    static let medium = "NotoSerifSC-Medium"
+    static let regular = "NotoSerifSC-Regular"
+    static let light = "NotoSerifSC-Light"
+    static let extraLight = "NotoSerifSC-ExtraLight"
+  }
+
+  // MARK: - Noto Serif SC 便捷封装
+
+  /// 通用 Serif 字体，按权重映射到已打包的静态字重
+  static func serif(
+    _ size: CGFloat,
+    weight: Font.Weight = .regular,
+    relativeTo style: Font.TextStyle = .body
+  ) -> Font {
+    Font.custom(fontName(for: weight), size: size, relativeTo: style)
+  }
+
+  /// 映射 Font.Weight → 字体名
+  private static func fontName(for weight: Font.Weight) -> String {
+    switch weight {
+    case .black, .heavy: FontName.black
+    case .bold: FontName.bold
+    case .semibold: FontName.semibold
+    case .medium: FontName.medium
+    case .light: FontName.light
+    case .thin, .ultraLight: FontName.extraLight
+    default: FontName.regular
+    }
+  }
+
+  // MARK: - 日期字体
 
   /// 日期大数字 - 视觉锚点
-  static let dateLarge = Font.system(size: 30, weight: .semibold, design: .default)
+  static let dateLarge = serif(36, weight: .semibold, relativeTo: .largeTitle)
 
   /// 日期小标签 - 辅助信息 (月份/星期)
-  static let dateSmall = Font.system(size: 14, weight: .medium, design: .default)
+  static let dateSmall = serif(14, weight: .medium, relativeTo: .footnote)
 
-  // MARK: - 内容字体 (Content Typography) - Serif 代表"人的情感"
+  /// 日期标题 (月份分组)
+  static let dateTitle = serif(26, weight: .bold, relativeTo: .title)
 
-  /// 日记正文 - 衬线体,阅读性优先
-  static let journalBody = Font.system(size: 17, weight: .regular, design: .serif)
+  // MARK: - 内容字体
+
+  /// 日记正文 - 阅读性优先
+  static let journalBody = serif(17, weight: .regular, relativeTo: .body)
+
+  /// 日记正文 UIFont 版本（UIKit 组件使用）
+  static let journalBodyUIFont: UIFont =
+    UIFont(name: FontName.regular, size: 17) ?? UIFont.systemFont(ofSize: 17)
 
   /// 日记正文行高系数
-  static let journalBodyLineSpacing: CGFloat = 12
+  static let journalBodyLineSpacing: CGFloat = 10
 
-  // MARK: - 系统字体 (System Typography)
+  /// 日记正文字间距
+  static let journalBodyKerning: CGFloat = 1.1
 
-  /// 日期标题 (月份分组) - 杂志感衬线体
-  static let dateTitle = Font.system(size: 26, weight: .bold, design: .serif)
+  // MARK: - 标题字体
 
   /// 顶栏标题（UIKit / UINavigationBarAppearance 用）
-  static let headerTitleUIFont: UIFont = {
-    let size: CGFloat = 18
-    let base = UIFont.systemFont(ofSize: size, weight: .bold)
-    if let descriptor = base.fontDescriptor.withDesign(.serif) {
-      return UIFont(descriptor: descriptor, size: size)
-    }
-    return base
-  }()
+  static let headerTitleUIFont =
+    UIFont(name: FontName.bold, size: 18) ?? UIFont.systemFont(ofSize: 18, weight: .bold)
 
   /// 一级标题
-  static let title1 = Font.system(size: 30, weight: .bold, design: .default)
+  static let title1 = serif(30, weight: .bold, relativeTo: .title)
 
   /// 二级标题
-  static let title2 = Font.system(size: 24, weight: .semibold, design: .default)
+  static let title2 = serif(24, weight: .semibold, relativeTo: .title2)
 
   /// 三级标题
-  static let title3 = Font.system(size: 20, weight: .medium, design: .default)
+  static let title3 = serif(20, weight: .medium, relativeTo: .title3)
 
   /// 四级标题
-  static let title4 = Font.system(size: 18, weight: .medium, design: .default)
+  static let title4 = serif(18, weight: .medium, relativeTo: .headline)
+
+  // MARK: - 正文字体
 
   /// 正文
-  static let body = Font.system(size: 17, weight: .regular, design: .default)
+  static let body = serif(17, weight: .regular, relativeTo: .body)
 
   /// 副文本
-  static let callout = Font.system(size: 16, weight: .regular, design: .default)
+  static let callout = serif(16, weight: .regular, relativeTo: .callout)
 
   /// 次要文本
-  static let subheadline = Font.system(size: 15, weight: .regular, design: .default)
+  static let subheadline = serif(15, weight: .regular, relativeTo: .subheadline)
 
   /// 脚注
-  static let footnote = Font.system(size: 13, weight: .regular, design: .default)
+  static let footnote = serif(14, weight: .regular, relativeTo: .footnote)
 
   /// 说明文字
-  static let caption = Font.system(size: 12, weight: .regular, design: .default)
+  static let caption = serif(12, weight: .regular, relativeTo: .caption)
 
   /// 极小文字
-  static let caption2 = Font.system(size: 11, weight: .regular, design: .default)
+  static let caption2 = serif(11, weight: .regular, relativeTo: .caption2)
 
   /// 微型文字
-  static let micro = Font.system(size: 10, weight: .regular, design: .default)
+  static let micro = serif(10, weight: .regular, relativeTo: .caption2)
 
-  // MARK: - 特殊字体 (Special)
+  // MARK: - 特殊字体
 
   /// 按钮字体
-  static let button = Font.system(size: 17, weight: .medium, design: .default)
-}
-
-// MARK: - Font Weight Extension
-
-extension Font.Weight {
-  static let ultraLight = Font.Weight.ultraLight
-  static let thin = Font.Weight.thin
-  static let light = Font.Weight.light
-  static let regular = Font.Weight.regular
-  static let medium = Font.Weight.medium
-  static let semibold = Font.Weight.semibold
-  static let bold = Font.Weight.bold
-  static let heavy = Font.Weight.heavy
-  static let black = Font.Weight.black
+  static let button = serif(17, weight: .medium, relativeTo: .body)
 }

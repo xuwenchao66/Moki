@@ -65,7 +65,7 @@ struct EditView: View {
             HapticManager.shared.light()
             /* TODO: Tags */
           }) {
-            AppIcon(icon: .hash, size: .md, color: Theme.color.foreground)
+            AppIcon(icon: .hash, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
           }
 
@@ -73,7 +73,7 @@ struct EditView: View {
             HapticManager.shared.light()
             /* TODO: Photo */
           }) {
-            AppIcon(icon: .image, size: .md, color: Theme.color.foreground)
+            AppIcon(icon: .image, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
           }
 
@@ -81,7 +81,7 @@ struct EditView: View {
             HapticManager.shared.light()
             /* TODO: Camera */
           }) {
-            AppIcon(icon: .camera, size: .md, color: Theme.color.foreground)
+            AppIcon(icon: .camera, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
           }
         }
@@ -97,9 +97,9 @@ struct EditView: View {
             Capsule()
               .fill(Theme.color.buttonBackground)
               .frame(width: 56, height: 36)
-              .shadow(color: Theme.color.buttonBackground.opacity(0.2), radius: 4, x: 0, y: 2)
+              .appShadow(Theme.shadow.sm)
 
-            AppIcon(icon: .check, size: .sm, color: Theme.color.buttonForeground)
+            AppIcon(icon: .check, size: .sm, color: Theme.color.primaryForeground)
           }
         }
         .disabled(content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)

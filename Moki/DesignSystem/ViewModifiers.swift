@@ -1,11 +1,3 @@
-//
-//  ViewModifiers.swift
-//  Moki
-//
-//  通用视图修饰符
-//  提供一致的 UI 样式，如 .cardStyle()、.buttonStyle() 等
-//
-
 import SwiftUI
 
 // MARK: - Separator (分割线)
@@ -21,20 +13,6 @@ struct Separator: View {
   }
 }
 
-// MARK: - Spacer Helpers
-
-extension View {
-  /// 添加垂直间距
-  func vSpacing(_ spacing: CGFloat) -> some View {
-    self.padding(.vertical, spacing)
-  }
-
-  /// 添加水平间距
-  func hSpacing(_ spacing: CGFloat) -> some View {
-    self.padding(.horizontal, spacing)
-  }
-}
-
 // MARK: - Conditional Modifiers
 
 extension View {
@@ -46,5 +24,29 @@ extension View {
     } else {
       self
     }
+  }
+}
+
+// MARK: - Journal Text Style (日记正文样式)
+
+/// 日记正文样式修饰符
+/// 衬线体 + 舒适行高 + 正文色
+/// 用于日记内容、长文本阅读场景
+struct JournalBodyStyle: ViewModifier {
+  func body(content: Content) -> some View {
+    content
+      .font(Theme.font.journalBody)
+      .kerning(Theme.font.journalBodyKerning)
+      .foregroundColor(Theme.color.foreground)
+      .multilineTextAlignment(.leading)
+      .lineSpacing(Theme.font.journalBodyLineSpacing)
+  }
+}
+
+extension View {
+  /// 应用日记正文样式
+  /// 衬线体 17pt + 行高 1.85 + 前景色
+  func journalBodyStyle() -> some View {
+    modifier(JournalBodyStyle())
   }
 }

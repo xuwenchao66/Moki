@@ -49,7 +49,6 @@ struct SideMenu: View {
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
         Text("Moki")
           .font(Theme.font.title1)
-          .fontDesign(.serif)
           .foregroundColor(Theme.color.foreground)
           .tracking(1)
 

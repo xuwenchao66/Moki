@@ -1,10 +1,3 @@
-//
-//  MokiApp.swift
-//  Moki
-//
-//  Created by xuwecnhao on 11/23/25.
-//
-
 import Dependencies
 import SQLiteData
 import SwiftUI

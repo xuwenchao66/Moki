@@ -1,12 +1,3 @@
-//
-//  AppTheme.swift
-//  Moki
-//
-//  设计系统 - 统一主题入口
-//  基于 Claude 的温暖橙色风格，支持浅色和深色模式
-//  提供便捷访问: Theme.color.xxx, Theme.font.xxx
-//
-
 import SwiftUI
 
 /// 主题命名空间 - 全局访问点
@@ -22,6 +13,9 @@ enum Theme {
 
   /// 圆角系统
   static let radius = Radius.self
+
+  /// 阴影系统
+  static let shadow = AppShadow.self
 }
 
 // MARK: - Spacing (间距系统)
@@ -101,16 +95,71 @@ struct Radius {
   static let full: CGFloat = 9999
 }
 
-// MARK: - Environment Values Extension
+// MARK: - Shadow (阴影系统)
 
-extension EnvironmentValues {
-  /// 自定义环境值：用户主题偏好（保留以防未来需要）
-  var userColorScheme: ColorScheme? {
-    get { self[UserColorSchemeKey.self] }
-    set { self[UserColorSchemeKey.self] = newValue }
-  }
+struct ShadowStyle {
+  let color: Color
+  let opacity: Double
+  let radius: CGFloat
+  let x: CGFloat
+  let y: CGFloat
 }
 
-private struct UserColorSchemeKey: EnvironmentKey {
-  static let defaultValue: ColorScheme? = .light
+struct AppShadow {
+  /// 小阴影 - 按钮等轻微浮动
+  static let sm = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.1,
+    radius: 4,
+    x: 0,
+    y: 2
+  )
+
+  /// 中阴影 - 卡片浮动
+  static let md = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.2,
+    radius: 8,
+    x: 0,
+    y: 4
+  )
+
+  /// 卡片双层阴影 - 第一层（近）
+  static let cardNear = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.08,
+    radius: 2,
+    x: 0,
+    y: 1
+  )
+
+  /// 卡片双层阴影 - 第二层（远）
+  static let cardFar = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.05,
+    radius: 8,
+    x: 0,
+    y: 4
+  )
+}
+
+// MARK: - Shadow View Modifier
+
+extension View {
+  /// 应用单层阴影
+  func appShadow(_ style: ShadowStyle) -> some View {
+    self.shadow(
+      color: style.color.opacity(style.opacity),
+      radius: style.radius,
+      x: style.x,
+      y: style.y
+    )
+  }
+
+  /// 应用卡片双层阴影（浮动效果）
+  func cardShadow() -> some View {
+    self
+      .appShadow(Theme.shadow.cardNear)
+      .appShadow(Theme.shadow.cardFar)
+  }
 }

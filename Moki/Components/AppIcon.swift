@@ -12,6 +12,7 @@ enum AppIconName: String {
   case check = "check"
   case image = "image"
   case caretLeft = "caret-left"
+  case list = "list"
 }
 
 enum AppIconSize: String {
