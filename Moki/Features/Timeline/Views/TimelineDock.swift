@@ -6,8 +6,8 @@ struct TimelineDock: View {
   var onCalendarTapped: (() -> Void)?
   var onAddTapped: () -> Void
 
-  private let dockHeight: CGFloat = 52
-  private let addButtonSize: CGFloat = 52
+  private let dockHeight: CGFloat = 48
+  private let addButtonSize: CGFloat = 48
 
   var body: some View {
     HStack(spacing: Theme.spacing.sm) {
