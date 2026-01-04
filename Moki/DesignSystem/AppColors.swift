@@ -100,4 +100,9 @@ struct AppColors {
 
   /// 危险操作前景色
   static let destructiveForeground = Color(hex: "FFFFFF")
+
+  // MARK: - 阴影色 (Shadow)
+
+  /// 阴影基础色
+  static let shadow = Color(hex: "2C2523")
 }

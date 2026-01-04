@@ -17,7 +17,7 @@ struct TimelineDock: View {
           HapticManager.shared.light()
           onMenuTapped()
         }) {
-          AppIcon(icon: .fadersHorizontal, size: .md, color: Theme.color.secondaryForeground)
+          AppIcon(icon: .fadersHorizontal, size: .md, color: Theme.color.mutedForeground)
             .withTapArea()
         }
 
@@ -25,7 +25,7 @@ struct TimelineDock: View {
           HapticManager.shared.light()
           onSearchTapped?()
         }) {
-          AppIcon(icon: .magnifyingGlass, size: .md, color: Theme.color.secondaryForeground)
+          AppIcon(icon: .magnifyingGlass, size: .md, color: Theme.color.mutedForeground)
             .withTapArea()
         }
 
@@ -33,7 +33,7 @@ struct TimelineDock: View {
           HapticManager.shared.light()
           onCalendarTapped?()
         }) {
-          AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.secondaryForeground)
+          AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.mutedForeground)
             .withTapArea()
         }
       }
@@ -41,8 +41,7 @@ struct TimelineDock: View {
       .frame(height: dockHeight)
       .background(Theme.color.primaryForeground)
       .clipShape(Capsule())
-      .shadow(color: Color(hex: "2C2523").opacity(0.08), radius: 2, x: 0, y: 1)
-      .shadow(color: Color(hex: "2C2523").opacity(0.05), radius: 8, x: 0, y: 4)
+      .cardShadow()
 
       // 右侧正圆：+ 号
       Button(action: {
@@ -57,7 +56,7 @@ struct TimelineDock: View {
           AppIcon(icon: .plus, size: .md, color: Theme.color.primaryForeground)
         }
       }
-      .shadow(color: Color(hex: "2C2523").opacity(0.2), radius: 8, x: 0, y: 4)
+      .appShadow(Theme.shadow.md)
     }
     .padding(.bottom, Theme.spacing.md)
   }

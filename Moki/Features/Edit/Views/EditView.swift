@@ -97,7 +97,7 @@ struct EditView: View {
             Capsule()
               .fill(Theme.color.buttonBackground)
               .frame(width: 56, height: 36)
-              .shadow(color: Theme.color.buttonBackground.opacity(0.1), radius: 4, x: 0, y: 2)
+              .appShadow(Theme.shadow.sm)
 
             AppIcon(icon: .check, size: .sm, color: Theme.color.primaryForeground)
           }

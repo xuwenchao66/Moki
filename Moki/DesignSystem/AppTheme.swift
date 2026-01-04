@@ -13,6 +13,9 @@ enum Theme {
 
   /// 圆角系统
   static let radius = Radius.self
+
+  /// 阴影系统
+  static let shadow = AppShadow.self
 }
 
 // MARK: - Spacing (间距系统)
@@ -90,4 +93,73 @@ struct Radius {
 
   /// 圆形 - 9999pt
   static let full: CGFloat = 9999
+}
+
+// MARK: - Shadow (阴影系统)
+
+struct ShadowStyle {
+  let color: Color
+  let opacity: Double
+  let radius: CGFloat
+  let x: CGFloat
+  let y: CGFloat
+}
+
+struct AppShadow {
+  /// 小阴影 - 按钮等轻微浮动
+  static let sm = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.1,
+    radius: 4,
+    x: 0,
+    y: 2
+  )
+
+  /// 中阴影 - 卡片浮动
+  static let md = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.2,
+    radius: 8,
+    x: 0,
+    y: 4
+  )
+
+  /// 卡片双层阴影 - 第一层（近）
+  static let cardNear = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.08,
+    radius: 2,
+    x: 0,
+    y: 1
+  )
+
+  /// 卡片双层阴影 - 第二层（远）
+  static let cardFar = ShadowStyle(
+    color: AppColors.shadow,
+    opacity: 0.05,
+    radius: 8,
+    x: 0,
+    y: 4
+  )
+}
+
+// MARK: - Shadow View Modifier
+
+extension View {
+  /// 应用单层阴影
+  func appShadow(_ style: ShadowStyle) -> some View {
+    self.shadow(
+      color: style.color.opacity(style.opacity),
+      radius: style.radius,
+      x: style.x,
+      y: style.y
+    )
+  }
+
+  /// 应用卡片双层阴影（浮动效果）
+  func cardShadow() -> some View {
+    self
+      .appShadow(Theme.shadow.cardNear)
+      .appShadow(Theme.shadow.cardFar)
+  }
 }
