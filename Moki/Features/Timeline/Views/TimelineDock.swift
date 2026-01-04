@@ -17,7 +17,7 @@ struct TimelineDock: View {
           HapticManager.shared.light()
           onMenuTapped()
         }) {
-          AppIcon(icon: .fadersHorizontal, size: .md, color: Theme.color.mutedForeground)
+          AppIcon(icon: .list, size: .md, color: Theme.color.secondaryForeground)
             .withTapArea()
         }
 
@@ -25,7 +25,7 @@ struct TimelineDock: View {
           HapticManager.shared.light()
           onSearchTapped?()
         }) {
-          AppIcon(icon: .magnifyingGlass, size: .md, color: Theme.color.mutedForeground)
+          AppIcon(icon: .magnifyingGlass, size: .md, color: Theme.color.secondaryForeground)
             .withTapArea()
         }
 
@@ -33,7 +33,7 @@ struct TimelineDock: View {
           HapticManager.shared.light()
           onCalendarTapped?()
         }) {
-          AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.mutedForeground)
+          AppIcon(icon: .calendarBlank, size: .md, color: Theme.color.secondaryForeground)
             .withTapArea()
         }
       }
