@@ -65,7 +65,7 @@ struct EditView: View {
             HapticManager.shared.light()
             /* TODO: Tags */
           }) {
-            AppIcon(icon: .hash, size: .md, color: Theme.color.foreground)
+            AppIcon(icon: .hash, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
           }
 
@@ -73,7 +73,7 @@ struct EditView: View {
             HapticManager.shared.light()
             /* TODO: Photo */
           }) {
-            AppIcon(icon: .image, size: .md, color: Theme.color.foreground)
+            AppIcon(icon: .image, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
           }
 
@@ -81,7 +81,7 @@ struct EditView: View {
             HapticManager.shared.light()
             /* TODO: Camera */
           }) {
-            AppIcon(icon: .camera, size: .md, color: Theme.color.foreground)
+            AppIcon(icon: .camera, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
           }
         }

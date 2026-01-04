@@ -36,7 +36,7 @@ struct JournalBodyStyle: ViewModifier {
   func body(content: Content) -> some View {
     content
       .font(Theme.font.journalBody)
-      .kerning(1.1)
+      .kerning(Theme.font.journalBodyKerning)
       .foregroundColor(Theme.color.foreground)
       .multilineTextAlignment(.leading)
       .lineSpacing(Theme.font.journalBodyLineSpacing)

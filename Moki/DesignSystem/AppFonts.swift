@@ -55,8 +55,15 @@ struct AppFonts {
   /// 日记正文 - 阅读性优先
   static let journalBody = serif(17, weight: .regular, relativeTo: .body)
 
+  /// 日记正文 UIFont 版本（UIKit 组件使用）
+  static let journalBodyUIFont: UIFont =
+    UIFont(name: FontName.regular, size: 17) ?? UIFont.systemFont(ofSize: 17)
+
   /// 日记正文行高系数
   static let journalBodyLineSpacing: CGFloat = 10
+
+  /// 日记正文字间距
+  static let journalBodyKerning: CGFloat = 1.1
 
   // MARK: - 标题字体
 
