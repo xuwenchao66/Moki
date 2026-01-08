@@ -59,7 +59,7 @@ struct AppFonts {
   /// 日期小标签 - 辅助信息 (月份/星期)
   static let dateSmall: Font = serif(14, weight: .medium)
 
-  static let menuItemTitle: Font = serif(18, weight: .medium)
+  static let menuItemTitle: Font = serif(18)
 
   // MARK: - 标题字体（系统字体）
 
