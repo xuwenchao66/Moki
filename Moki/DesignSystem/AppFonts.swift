@@ -54,18 +54,23 @@ struct AppFonts {
   // MARK: - 日期字体（系统字体）
 
   /// 日期大数字 - 视觉锚点
-  static let dateLarge: Font = .system(size: 36, weight: .semibold)
+  static let dateLarge = serif(36, weight: .semibold)
 
   /// 日期小标签 - 辅助信息 (月份/星期)
-  static let dateSmall: Font = .system(size: 14, weight: .medium)
+  static let dateSmall: Font = serif(14, weight: .medium)
 
-  /// 日期标题 (月份分组)
-  static let dateTitle: Font = .system(size: 26, weight: .bold)
+  static let menuItemTitle: Font = serif(18, weight: .medium)
 
   // MARK: - 标题字体（系统字体）
 
   /// 顶栏标题（UIKit / UINavigationBarAppearance 用）
   static let headerTitleUIFont = UIFont.systemFont(ofSize: 18, weight: .bold)
+
+  /// 品牌标题（宋体）
+  static let brandTitle: Font = serif(30, weight: .semibold)
+
+  /// 品牌副标题（Georgia 斜体）
+  static let brandSubtitle: Font = .custom("Georgia-Italic", size: 16)
 
   /// 一级标题
   static let title1: Font = .system(size: 30, weight: .bold)

@@ -48,14 +48,14 @@ struct SideMenu: View {
       // 1. 头部：Logo + Slogan
       VStack(alignment: .leading, spacing: Theme.spacing.sm) {
         Text("Moki")
-          .font(Theme.font.title1)
+          .font(Theme.font.brandTitle)
           .foregroundColor(Theme.color.foreground)
           .tracking(1)
 
         Text("Taste life twice.")
-          .font(.custom("Georgia-Italic", size: 16))
+          .font(Theme.font.brandSubtitle)
           .foregroundColor(Theme.color.mutedForeground)
-          .tracking(0.5)
+          .tracking(0.7)
       }
       .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
@@ -99,7 +99,6 @@ struct SideMenu: View {
         }
         .font(Theme.font.caption)
         .foregroundColor(Theme.color.mutedForeground)
-        .tracking(1)
         .padding(.top, Theme.spacing.xl)
         .padding(.bottom, Theme.spacing.xxxl)
       }
@@ -131,7 +130,7 @@ private struct MenuButton: View {
       AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
 
       Text(title)
-        .font(Theme.font.body)
+        .font(Theme.font.menuItemTitle)
         .foregroundColor(Theme.color.secondaryForeground)
 
       Spacer()
