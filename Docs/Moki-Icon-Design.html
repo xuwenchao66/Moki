@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moki - Icon Design</title>
+  <style>
+    :root {
+      --bg-color: #F2F2F2;
+      /* 模拟 iOS 壁纸背景 */
+      --icon-bg: #FAF9F5;
+      /* Moki 暖米白 */
+      --icon-ink: #2C2825;
+      /* Moki 深褐黑 */
+      --icon-accent: #C96442;
+      /* 点睛色 */
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 40px 20px;
+      font-family: -apple-system, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 40px;
+    }
+
+    h2 {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Icon 容器 */
+    .icon-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .icon-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    /* 模拟 iOS 图标形状 */
+    .app-icon {
+      width: 120px;
+      height: 120px;
+      border-radius: 26px;
+      /* iOS 连续圆角模拟 */
+      background-color: var(--icon-bg);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(0, 0, 0, 0.02);
+      /* 微弱描边 */
+    }
+
+    .label {
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    /* --- 方案 A: 全拼 (User Idea) --- */
+    .icon-text-full {
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-weight: 900;
+      font-size: 42px;
+      /* 4个字母限制了字号 */
+      color: var(--icon-ink);
+      letter-spacing: -1px;
+      margin-top: -4px;
+      /* 视觉修正 */
+    }
+
+    /* --- 方案 B: 单字母 M (Monogram) --- */
+    .icon-text-m {
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-weight: 900;
+      font-size: 90px;
+      /* 这是一个巨大的 M */
+      color: var(--icon-ink);
+      line-height: 1;
+      margin-top: -8px;
+    }
+
+    /* --- 方案 C: 某刻 (Chinese) --- */
+    .icon-text-cn {
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-weight: 900;
+      font-size: 56px;
+      color: var(--icon-ink);
+      line-height: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      letter-spacing: -4px;
+      writing-mode: vertical-rl;
+      /* 竖排更有味道 */
+    }
+
+    /* --- 方案 D: M + 点 (Brand Mark) --- */
+    .icon-mark {
+      position: relative;
+    }
+
+    .icon-mark-m {
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-weight: 900;
+      font-size: 80px;
+      color: var(--icon-ink);
+    }
+
+    .icon-mark-dot {
+      position: absolute;
+      bottom: 24px;
+      right: -12px;
+      width: 16px;
+      height: 16px;
+      background-color: var(--icon-accent);
+      /* 红色/橙色点 */
+      border-radius: 50%;
+    }
+
+    /* 材质纹理模拟 (Noise) */
+    .texture {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      mix-blend-mode: multiply;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h2>Moki App Icon 方案对比</h2>
+
+  <div class="icon-grid">
+
+    <!-- 方案 A -->
+    <div class="icon-wrapper">
+      <div class="app-icon">
+        <div class="texture"></div>
+        <div class="icon-text-full">Moki</div>
+      </div>
+      <div class="label">A. 全拼 (你的想法)</div>
+    </div>
+
+    <!-- 方案 B -->
+    <div class="icon-wrapper">
+      <div class="app-icon">
+        <div class="texture"></div>
+        <div class="icon-text-m">M</div>
+      </div>
+      <div class="label">B. 单字 (更有冲击力)</div>
+    </div>
+
+    <!-- 方案 C -->
+    <div class="icon-wrapper">
+      <div class="app-icon">
+        <div class="texture"></div>
+        <div class="icon-text-cn">某刻</div>
+      </div>
+      <div class="label">C. 中文 (竖排)</div>
+    </div>
+
+    <!-- 方案 D -->
+    <div class="icon-wrapper">
+      <div class="app-icon">
+        <div class="texture"></div>
+        <div class="icon-mark">
+          <span class="icon-mark-m">M</span>
+          <span class="icon-mark-dot"></span>
+        </div>
+      </div>
+      <div class="label">D. 品牌符号 (M+点)</div>
+    </div>
+
+  </div>
+
+  <p style="margin-top:40px; color:#999; font-size:12px; max-width:300px; text-align:center; line-height:1.6;">
+    * 注：所有图标都添加了微弱的纸张噪点纹理，以增加实物质感。
+  </p>
+
+</body>
+
+</html>
