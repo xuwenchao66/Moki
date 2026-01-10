@@ -46,16 +46,16 @@ struct SideMenu: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       // 1. 头部：Logo + Slogan
-      VStack(alignment: .leading, spacing: Theme.spacing.sm) {
-        Text("Moki")
+      VStack(alignment: .leading, spacing: Theme.spacing.xs) {
+        Text("某刻")
           .font(Theme.font.brandTitle)
           .foregroundColor(Theme.color.foreground)
-          .tracking(1)
+          .tracking(16)
 
-        Text("Taste life twice.")
-          .font(Theme.font.brandSubtitle)
+        Text("MOKI JOURNAL")
+          .font(Theme.font.caption)
           .foregroundColor(Theme.color.mutedForeground)
-          .tracking(0.7)
+          .kerning(1)
       }
       .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
@@ -90,18 +90,8 @@ struct SideMenu: View {
             action: { select(tab) }
           )
         }
-
-        // 落款信息
-        HStack(spacing: Theme.spacing.xs) {
-          Text("MOKI JOURNAL")
-          Text("·")
-          Text("V1.0.0")
-        }
-        .font(Theme.font.caption)
-        .foregroundColor(Theme.color.mutedForeground)
-        .padding(.top, Theme.spacing.xl)
-        .padding(.bottom, Theme.spacing.xxxl)
       }
+      .padding(.bottom, Theme.spacing.xxl)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(.horizontal, Theme.spacing.xl)

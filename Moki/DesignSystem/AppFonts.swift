@@ -67,7 +67,7 @@ struct AppFonts {
   static let headerTitleUIFont = UIFont.systemFont(ofSize: 18, weight: .bold)
 
   /// 品牌标题（宋体）
-  static let brandTitle: Font = serif(30, weight: .semibold)
+  static let brandTitle: Font = serif(40, weight: .semibold)
 
   /// 品牌副标题（Georgia 斜体）
   static let brandSubtitle: Font = .custom("Georgia-Italic", size: 16)
