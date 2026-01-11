@@ -34,13 +34,12 @@ struct JournalItemView: View {
           .font(Theme.font.footnote)
           .foregroundColor(Theme.color.mutedForeground)
 
-        Text("·")
-          .font(Theme.font.footnote)
-          .foregroundColor(Theme.color.mutedForeground)
-
         if !tags.isEmpty {
+          Text("·")
+            .font(Theme.font.footnote)
+            .foregroundColor(Theme.color.mutedForeground)
           ForEach(tags, id: \.self) { tag in
-            TagText(tag: tag)
+            TagChip(name: tag, mode: .read)
           }
         }
 
@@ -64,21 +63,6 @@ struct JournalItemView: View {
     let formatter = DateFormatter()
     formatter.dateFormat = "HH:mm"
     return formatter.string(from: date)
-  }
-}
-
-/// 标签组件 - 极简设计,不加边框不加背景
-private struct TagText: View {
-  let tag: String
-
-  var body: some View {
-    HStack(spacing: 0) {
-      Text("#")
-        .opacity(0.6)
-      Text(tag)
-    }
-    .font(Theme.font.footnote)
-    .foregroundColor(Theme.color.mutedForeground)
   }
 }
 

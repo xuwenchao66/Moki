@@ -46,16 +46,16 @@ struct SideMenu: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       // 1. 头部：Logo + Slogan
-      VStack(alignment: .leading, spacing: Theme.spacing.sm) {
-        Text("Moki")
-          .font(Theme.font.title1)
+      VStack(alignment: .leading, spacing: Theme.spacing.xs) {
+        Text("某刻")
+          .font(Theme.font.brandTitle)
           .foregroundColor(Theme.color.foreground)
-          .tracking(1)
+          .tracking(14)
 
-        Text("Taste life twice.")
-          .font(.custom("Georgia-Italic", size: 16))
+        Text("MOKI JOURNAL")
+          .font(Theme.font.caption)
           .foregroundColor(Theme.color.mutedForeground)
-          .tracking(0.5)
+          .kerning(0.6)
       }
       .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
@@ -77,9 +77,8 @@ struct SideMenu: View {
       // 3. 底部区域 (分割线 + 设置 + 版本号)
       VStack(alignment: .leading, spacing: 0) {
         // 分割线
-        Rectangle()
-          .fill(Theme.color.border.opacity(0.3))
-          .frame(height: 1)
+        Divider()
+          .overlay(Theme.color.border)
           .padding(.bottom, Theme.spacing.xl)
 
         // 设置入口 (沉底)
@@ -90,19 +89,8 @@ struct SideMenu: View {
             action: { select(tab) }
           )
         }
-
-        // 落款信息
-        HStack(spacing: Theme.spacing.xs) {
-          Text("MOKI JOURNAL")
-          Text("·")
-          Text("V1.0.0")
-        }
-        .font(Theme.font.caption)
-        .foregroundColor(Theme.color.mutedForeground)
-        .tracking(1)
-        .padding(.top, Theme.spacing.xl)
-        .padding(.bottom, Theme.spacing.xxxl)
       }
+      .padding(.bottom, Theme.spacing.xxl)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding(.horizontal, Theme.spacing.xl)
@@ -131,7 +119,7 @@ private struct MenuButton: View {
       AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
 
       Text(title)
-        .font(Theme.font.body)
+        .font(Theme.font.menuItemTitle)
         .foregroundColor(Theme.color.secondaryForeground)
 
       Spacer()

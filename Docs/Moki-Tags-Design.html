@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moki - Unified Tag System</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      /* 核心色板 */
+      --bg-color: #FAF9F5;
+      --primary: #2C2825;
+      --meta: #999590;
+
+      /* [核心] 标签系统变量 */
+      --tag-text: #83827D;
+      /* 统一文字色：暖灰 */
+      --tag-hash: rgba(0, 0, 0, 0.2);
+      /* #号颜色：极淡 */
+      --tag-bg-read: transparent;
+      /* 阅读态背景：透明 */
+      --tag-bg-edit: rgba(0, 0, 0, 0.04);
+      /* 编辑态背景：淡灰 */
+      --tag-bg-active: #2C2825;
+      /* 选中态背景：深黑 */
+      --tag-fg-active: #FFFFFF;
+      /* 选中态文字：白 */
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 24px;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* 演示标题 */
+    h2 {
+      font-size: 14px;
+      color: #BBB;
+      margin-top: 40px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* =========================================
+           核心组件：统一标签 (.moki-tag)
+           ========================================= */
+    .moki-tag {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      /* 统一高度标准 */
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--tag-text);
+      font-family: -apple-system, sans-serif;
+      /* 坚持用无衬线 */
+      border-radius: 6px;
+      transition: all 0.2s;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    /* 统一的 # 号样式 */
+    .moki-tag::before {
+      content: "#";
+      margin-right: 2px;
+      color: var(--tag-hash);
+      font-weight: 400;
+    }
+
+    /* --- 变体 A: 阅读态 (用于首页列表) --- */
+    /* 特点：无背景，像文字链接，融入排版 */
+    .moki-tag.variant-read {
+      background-color: transparent;
+      padding: 0;
+      /* 不需要内边距，紧凑 */
+      margin-right: 12px;
+      /* 标签间距 */
+      height: auto;
+    }
+
+    /* --- 变体 B: 交互态 (用于编辑页/底部) --- */
+    /* 特点：有实体背景，像药丸，暗示可点击/删除 */
+    .moki-tag.variant-interactive {
+      background-color: var(--tag-bg-edit);
+      padding: 0 10px;
+      /* 舒服的内边距 */
+      height: 30px;
+      border-radius: 8px;
+      /* 方圆角，更现代 */
+      margin-right: 8px;
+    }
+
+    /* 交互态 - 选中/高亮 (用于管理页) */
+    .moki-tag.variant-interactive.selected {
+      background-color: var(--tag-bg-active);
+      color: var(--tag-fg-active);
+    }
+
+    .moki-tag.variant-interactive.selected::before {
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+
+    /* =========================================
+           场景演示容器
+           ========================================= */
+
+    /* 场景 1: 首页卡片 */
+    .home-card {
+      padding: 20px;
+      /* 模拟首页环境 */
+    }
+
+    .home-text {
+      font-family: "Songti SC", serif;
+      font-size: 17px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .home-footer {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #ccc;
+    }
+
+    /* 场景 2: 编辑页底部 */
+    .editor-bar {
+      background: #fff;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      padding: 12px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+    }
+
+    /* 场景 3: 管理页 */
+    .manager-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 场景 1: 首页列表 (Home Timeline) -->
+  <h2>1. Home Timeline (Read Mode)</h2>
+  <div class="home-card">
+    <div class="home-text">
+      首页保持“空气感”是最重要的。标签在这里是元数据，不应该抢正文的戏。所以我们使用 <strong>无背景</strong> 的形态。
+    </div>
+    <div class="home-footer">
+      <span style="margin-right:12px; color:var(--meta)">16:42</span>
+
+      <!-- 使用阅读态标签 -->
+      <span class="moki-tag variant-read">Photography</span>
+      <span class="moki-tag variant-read">Life</span>
+    </div>
+  </div>
+
+
+  <!-- 场景 2: 编辑页底部 (Editor Input) -->
+  <h2>2. Editor Bottom (Interactive Mode)</h2>
+  <div class="editor-bar">
+    <!-- 使用交互态标签 -->
+    <!-- 有背景色，暗示它们是可以被“拿掉”或“点击”的实体 -->
+    <div class="moki-tag variant-interactive">Life</div>
+    <div class="moki-tag variant-interactive">Thoughts</div>
+  </div>
+  <div style="margin-top:8px; font-size:12px; color:#999; margin-left:4px;">
+    * 在这里，标签是像积木一样加上去的，所以需要实体感。
+  </div>
+
+
+  <!-- 场景 3: 管理页/选择页 (Manager) -->
+  <h2>3. Tag Manager (Selection Mode)</h2>
+  <div class="manager-cloud">
+    <div class="moki-tag variant-interactive">Work</div>
+    <!-- 选中状态 -->
+    <div class="moki-tag variant-interactive selected">Design</div>
+    <div class="moki-tag variant-interactive">Travel</div>
+    <div class="moki-tag variant-interactive">Food</div>
+    <div class="moki-tag variant-interactive">Moki App</div>
+  </div>
+
+</body>
+
+</html>
