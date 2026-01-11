@@ -40,7 +40,7 @@ struct JournalItemView: View {
 
         if !tags.isEmpty {
           ForEach(tags, id: \.self) { tag in
-            TagText(tag: tag)
+            TagChip(name: tag, mode: .read)
           }
         }
 
@@ -67,20 +67,6 @@ struct JournalItemView: View {
   }
 }
 
-/// 标签组件 - 极简设计,不加边框不加背景
-private struct TagText: View {
-  let tag: String
-
-  var body: some View {
-    HStack(spacing: 0) {
-      Text("#")
-        .opacity(0.6)
-      Text(tag)
-    }
-    .font(Theme.font.footnote)
-    .foregroundColor(Theme.color.mutedForeground)
-  }
-}
 
 /// 媒体展示组件 - 圆角矩形,通栏显示
 private struct MediaRowView: View {

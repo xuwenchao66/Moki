@@ -140,9 +140,9 @@ struct TagsView: View {
       .padding(.horizontal, Theme.spacing.md)
       .padding(.vertical, Theme.spacing.xs)
       .background(Theme.color.background)
-      .clipShape(Capsule())
+      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous))
       .overlay(
-        Capsule()
+        RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous)
           .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
           .foregroundColor(Theme.color.mutedForeground)
       )
@@ -155,22 +155,11 @@ struct TagsView: View {
   private func tagChip(for tag: MokiTag) -> some View {
     let isSelected = selectedTagIds.contains(tag.id)
 
-    return Button {
-      toggleSelection(for: tag)
-    } label: {
-      Text("#\(tag.name)")
-        .font(Theme.font.subheadline)
-        .foregroundColor(isSelected ? Theme.color.primaryForeground : Theme.color.foreground)
-        .padding(.horizontal, Theme.spacing.md)
-        .padding(.vertical, Theme.spacing.xs)
-        .background(isSelected ? Theme.color.foreground : Theme.color.card)
-        .clipShape(Capsule())
-        .overlay(
-          Capsule()
-            .stroke(isSelected ? Color.clear : Theme.color.border, lineWidth: 1)
-        )
-    }
-    .buttonStyle(.plain)
+    return TagChip(
+      name: tag.name,
+      mode: .selectable(isSelected: isSelected),
+      onTap: { toggleSelection(for: tag) }
+    )
     .contextMenu {
       tagContextMenu(for: tag)
     }
