@@ -55,12 +55,12 @@ struct TagsView: View {
 
       // 排序 Tab
       sortTabs
-        .padding(.top, Theme.spacing.xl)
+        .padding(.top, Theme.spacing.lg)
 
       // 标签流式布局
       ScrollView {
         tagFlowLayout
-          .padding(.top, Theme.spacing.md)
+          .padding(.top, Theme.spacing.lg2)
       }
 
       Spacer()
