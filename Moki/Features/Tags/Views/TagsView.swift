@@ -11,10 +11,19 @@ struct TagsView: View {
 
   var onMenuButtonTapped: (() -> Void)? = nil
 
+  // MARK: - Sort Tab
+
+  enum SortTab: String, CaseIterable {
+    case recent = "最近使用"
+    case frequency = "频率最高"
+    case alphabetical = "A-Z"
+  }
+
   // MARK: - State
 
   @State private var searchText: String = ""
   @State private var selectedTagIds: Set<UUID> = []
+  @State private var selectedSortTab: SortTab = .frequency
 
   // MARK: - Computed
 
@@ -44,10 +53,14 @@ struct TagsView: View {
       // 搜索框
       searchBar
 
+      // 排序 Tab
+      sortTabs
+        .padding(.top, Theme.spacing.lg)
+
       // 标签流式布局
       ScrollView {
         tagFlowLayout
-          .padding(.top, Theme.spacing.lg2)
+          .padding(.top, Theme.spacing.md)
       }
 
       Spacer()
@@ -76,6 +89,39 @@ struct TagsView: View {
 
   private var searchBar: some View {
     SearchBar(text: $searchText, placeholder: "搜索或创建标签...")
+  }
+
+  // MARK: - Sort Tabs
+
+  private var sortTabs: some View {
+    HStack(spacing: Theme.spacing.lg) {
+      ForEach(SortTab.allCases, id: \.self) { tab in
+        sortTabItem(tab)
+      }
+      Spacer()
+    }
+  }
+
+  private func sortTabItem(_ tab: SortTab) -> some View {
+    let isSelected = selectedSortTab == tab
+
+    return Button {
+      HapticManager.shared.light()
+      selectedSortTab = tab
+    } label: {
+      VStack(spacing: Theme.spacing.xxs) {
+        Text(tab.rawValue)
+          .font(Theme.font.subheadline)
+          .fontWeight(isSelected ? .medium : .regular)
+          .foregroundColor(isSelected ? Theme.color.foreground : Theme.color.mutedForeground)
+
+        // 选中指示器 - 小圆点
+        Circle()
+          .fill(isSelected ? Theme.color.foreground : Color.clear)
+          .frame(width: 4, height: 4)
+      }
+    }
+    .buttonStyle(.plain)
   }
 
   // MARK: - Tag Flow Layout

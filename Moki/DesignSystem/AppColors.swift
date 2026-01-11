@@ -85,7 +85,7 @@ struct AppColors {
   // MARK: - 语义色 (Semantic)
 
   /// 边框色
-  static let border = Color(hex: "dad9d4")
+  static let border = Color(hex: "dad9d4").opacity(0.7)
 
   /// 输入框边框色
   static let input = Color(hex: "b4b2a7")
