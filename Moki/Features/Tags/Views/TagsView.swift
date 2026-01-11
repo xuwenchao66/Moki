@@ -47,13 +47,12 @@ struct TagsView: View {
       // 标签流式布局
       ScrollView {
         tagFlowLayout
-          .padding(.top, Theme.spacing.lg)
+          .padding(.top, Theme.spacing.lg2)
       }
 
       Spacer()
     }
     .padding(.horizontal, Theme.spacing.md2)
-    .padding(.top, Theme.spacing.md)
     .background(Theme.color.background)
     .navigationTitle("标签")
     .navigationBarTitleDisplayMode(.inline)

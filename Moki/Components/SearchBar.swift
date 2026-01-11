@@ -30,7 +30,7 @@ struct SearchBar: View {
           .buttonStyle(.plain)
         }
       }
-      .padding(.vertical, Theme.spacing.sm)
+      .padding(.vertical, Theme.spacing.md)
 
       // 底部分隔线
       Rectangle()
