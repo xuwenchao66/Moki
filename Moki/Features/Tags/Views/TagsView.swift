@@ -127,7 +127,7 @@ struct TagsView: View {
   // MARK: - Tag Flow Layout
 
   private var tagFlowLayout: some View {
-    FlowLayout(spacing: Theme.spacing.xs) {
+    FlowLayout(spacing: Theme.spacing.sm) {
       // 创建按钮（如果需要）
       if shouldShowCreateButton {
         createTagButton
