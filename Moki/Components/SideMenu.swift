@@ -50,12 +50,12 @@ struct SideMenu: View {
         Text("某刻")
           .font(Theme.font.brandTitle)
           .foregroundColor(Theme.color.foreground)
-          .tracking(16)
+          .tracking(14)
 
         Text("MOKI JOURNAL")
           .font(Theme.font.caption)
           .foregroundColor(Theme.color.mutedForeground)
-          .kerning(1)
+          .kerning(0.6)
       }
       .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
