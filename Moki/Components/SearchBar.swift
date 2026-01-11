@@ -9,9 +9,7 @@ struct SearchBar: View {
   var body: some View {
     VStack(spacing: 0) {
       HStack(spacing: Theme.spacing.sm) {
-        Image(systemName: "magnifyingglass")
-          .font(.system(size: 18, weight: .regular))
-          .foregroundColor(Theme.color.mutedForeground)
+        AppIcon(icon: .magnifyingGlass, size: .sm, color: Theme.color.mutedForeground)
 
         TextField(placeholder, text: $text)
           .font(Theme.font.body)
@@ -23,9 +21,7 @@ struct SearchBar: View {
           Button {
             text = ""
           } label: {
-            Image(systemName: "xmark.circle.fill")
-              .font(.system(size: 16))
-              .foregroundColor(Theme.color.mutedForeground)
+            AppIcon(icon: .xCircle, size: .sm, color: Theme.color.mutedForeground)
           }
           .buttonStyle(.plain)
         }
