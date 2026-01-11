@@ -60,7 +60,7 @@ struct TagsView: View {
       // 标签流式布局
       ScrollView {
         tagFlowLayout
-          .padding(.top, Theme.spacing.lg2)
+          .padding(.top, Theme.spacing.lg)
       }
 
       Spacer()
