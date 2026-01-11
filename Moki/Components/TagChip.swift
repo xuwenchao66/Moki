@@ -99,7 +99,7 @@ struct TagChip: View {
       .clipShape(chipShape)
       .overlay(
         chipShape
-          .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 1)
+          .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 0.5)
       )
       .contentShape(chipShape)
       .onTapGesture {
