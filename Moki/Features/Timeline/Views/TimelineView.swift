@@ -19,8 +19,8 @@ struct TimelineView: View {
   // 2. 数据源切换
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-    return mockEntries  // 🟢 Mock Data
-    // return dbEntries  // 🔵 Real Data
+    // return mockEntries  // 🟢 Mock Data
+    return dbEntries  // 🔵 Real Data
   }
 
   // 3. Mock 数据适配
