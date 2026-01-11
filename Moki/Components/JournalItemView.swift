@@ -34,11 +34,10 @@ struct JournalItemView: View {
           .font(Theme.font.footnote)
           .foregroundColor(Theme.color.mutedForeground)
 
-        Text("·")
-          .font(Theme.font.footnote)
-          .foregroundColor(Theme.color.mutedForeground)
-
         if !tags.isEmpty {
+          Text("·")
+            .font(Theme.font.footnote)
+            .foregroundColor(Theme.color.mutedForeground)
           ForEach(tags, id: \.self) { tag in
             TagChip(name: tag, mode: .read)
           }
@@ -66,7 +65,6 @@ struct JournalItemView: View {
     return formatter.string(from: date)
   }
 }
-
 
 /// 媒体展示组件 - 圆角矩形,通栏显示
 private struct MediaRowView: View {
