@@ -33,9 +33,8 @@ struct SearchBar: View {
       .padding(.vertical, Theme.spacing.md)
 
       // 底部分隔线
-      Rectangle()
-        .fill(Theme.color.border)
-        .frame(height: 1)
+      Divider()
+        .overlay(Theme.color.border)
     }
   }
 }

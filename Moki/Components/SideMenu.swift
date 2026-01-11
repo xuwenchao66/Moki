@@ -77,9 +77,8 @@ struct SideMenu: View {
       // 3. 底部区域 (分割线 + 设置 + 版本号)
       VStack(alignment: .leading, spacing: 0) {
         // 分割线
-        Rectangle()
-          .fill(Theme.color.border.opacity(0.3))
-          .frame(height: 1)
+        Divider()
+          .overlay(Theme.color.border)
           .padding(.bottom, Theme.spacing.xl)
 
         // 设置入口 (沉底)
