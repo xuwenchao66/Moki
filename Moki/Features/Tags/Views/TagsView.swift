@@ -47,7 +47,7 @@ struct TagsView: View {
       // 标签流式布局
       ScrollView {
         tagFlowLayout
-          .padding(.top, Theme.spacing.md)
+          .padding(.top, Theme.spacing.lg)
       }
 
       Spacer()
@@ -76,35 +76,7 @@ struct TagsView: View {
   // MARK: - Search Bar
 
   private var searchBar: some View {
-    HStack(spacing: Theme.spacing.sm) {
-      Image(systemName: "magnifyingglass")
-        .font(.system(size: 18))
-        .foregroundColor(Theme.color.mutedForeground)
-
-      TextField("搜索或创建标签...", text: $searchText)
-        .font(Theme.font.body)
-        .foregroundColor(Theme.color.foreground)
-        .textInputAutocapitalization(.never)
-        .autocorrectionDisabled()
-
-      if !searchText.isEmpty {
-        Button {
-          searchText = ""
-        } label: {
-          Image(systemName: "xmark.circle.fill")
-            .font(.system(size: 16))
-            .foregroundColor(Theme.color.mutedForeground)
-        }
-      }
-    }
-    .padding(.horizontal, Theme.spacing.md)
-    .padding(.vertical, Theme.spacing.sm)
-    .background(Theme.color.card)
-    .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg))
-    .overlay(
-      RoundedRectangle(cornerRadius: Theme.radius.lg)
-        .stroke(Theme.color.border, lineWidth: 1)
-    )
+    SearchBar(text: $searchText, placeholder: "搜索或创建标签...")
   }
 
   // MARK: - Tag Flow Layout
