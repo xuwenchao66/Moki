@@ -54,7 +54,7 @@ struct TagChip: View {
 
   /// 标签圆角 - 固定圆角矩形，不是胶囊
   private var chipShape: RoundedRectangle {
-    RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous)
+    RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous)
   }
 
   // MARK: - Interactive Mode (Editor Bottom)
@@ -95,11 +95,11 @@ struct TagChip: View {
       .foregroundColor(isSelected ? Theme.color.primaryForeground : Theme.color.foreground)
       .padding(.horizontal, Theme.spacing.md)
       .padding(.vertical, Theme.spacing.xs)
-      .background(isSelected ? Theme.color.foreground : Theme.color.background)
+      .background(isSelected ? Theme.color.buttonBackground : Theme.color.primaryForeground)
       .clipShape(chipShape)
       .overlay(
         chipShape
-          .stroke(Theme.color.border, lineWidth: 1)
+          .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 1)
       )
       .contentShape(chipShape)
       .onTapGesture {

@@ -140,9 +140,9 @@ struct TagsView: View {
       .padding(.horizontal, Theme.spacing.md)
       .padding(.vertical, Theme.spacing.xs)
       .background(Theme.color.background)
-      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous))
+      .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous))
       .overlay(
-        RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous)
+        RoundedRectangle(cornerRadius: Theme.radius.lg, style: .continuous)
           .strokeBorder(style: StrokeStyle(lineWidth: 1, dash: [4, 3]))
           .foregroundColor(Theme.color.mutedForeground)
       )
