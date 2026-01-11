@@ -68,11 +68,9 @@ struct TimelineView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       if entries.isEmpty {
-        EmptyStateView(
-          title: "还没有记录",
-          message: "点击 + 创建你的独家记忆",
-          action: { showAddEntry = true }
-        )
+        EmptyDiaryView {
+          showAddEntry = true
+        }
       } else {
         ScrollView {
           LazyVStack(alignment: .leading, spacing: 0) {

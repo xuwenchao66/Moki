@@ -1,25 +1,24 @@
-//
-//  EmptyStateView.swift
-//  Moki
-//
-//  空状态占位图
-//  提供友好的空状态提示
-//
-
 import Logging
 import SwiftUI
 
 /// 空状态视图
+/// 提供统一的空状态展示样式，包含图标、标题和描述
 struct EmptyStateView: View {
+  let icon: AppIconName?
   let title: String
   let message: String
   var action: (() -> Void)?
 
+  /// 空状态图标尺寸
+  private let iconSize: CGFloat = 64
+
   init(
+    icon: AppIconName? = nil,
     title: String,
     message: String,
     action: (() -> Void)? = nil
   ) {
+    self.icon = icon
     self.title = title
     self.message = message
     self.action = action
@@ -29,24 +28,32 @@ struct EmptyStateView: View {
     Button {
       action?()
     } label: {
-      VStack(spacing: Theme.spacing.lg) {
+      VStack(spacing: 0) {
         Spacer()
 
+        // 图标
+        if let icon = icon {
+          AppIcon(icon: icon, size: iconSize, color: Theme.color.secondary)
+            .padding(.bottom, Theme.spacing.lg)
+        }
+
         // 标题和描述
-        VStack(spacing: Theme.spacing.xs) {
+        VStack(spacing: Theme.spacing.sm) {
           Text(title)
-            .font(Theme.font.title3)
+            .font(Theme.font.serif(20, weight: .semibold))
             .foregroundColor(Theme.color.foreground)
+            .tracking(1)
 
           Text(message)
-            .font(Theme.font.callout)
+            .font(Theme.font.footnote)
             .foregroundColor(Theme.color.mutedForeground)
             .multilineTextAlignment(.center)
+            .lineSpacing(4)
         }
 
         Spacer()
       }
-      .padding(Theme.spacing.xl)
+      .padding(.horizontal, 40)
       .frame(maxWidth: .infinity, maxHeight: .infinity)
       .contentShape(Rectangle())
     }
@@ -57,25 +64,41 @@ struct EmptyStateView: View {
 // MARK: - Preview
 
 #Preview("空状态预览") {
-  VStack(spacing: 0) {
-    // 无日记记录
-    EmptyStateView(
-      title: "还没有日记",
-      message: "开始记录你的第一条想法吧\n每一个当下都值得被记住",
-    ) {
-      AppLogger.preview.debug("👆 点击创建日记")
+  ScrollView {
+    VStack(spacing: 0) {
+      // 无日记记录
+      EmptyStateView(
+        icon: .bookOpenText,
+        title: "空白的纸张",
+        message: "生活值得再品味一次。\n点击底部的 + 号，写下第一篇。"
+      ) {
+        AppLogger.preview.debug("👆 点击创建日记")
+      }
+      .frame(height: 400)
+      .background(Theme.color.background)
+
+      Separator()
+
+      // 无搜索结果
+      EmptyStateView(
+        icon: .magnifyingGlass,
+        title: "未找到相关日记",
+        message: "换个关键词试试？\n或许它藏在另一个时刻里。"
+      )
+      .frame(height: 400)
+      .background(Theme.color.background)
+
+      Separator()
+
+      // 无标签
+      EmptyStateView(
+        icon: .hash,
+        title: "暂无标签",
+        message: "标签能帮你串联起生活的线索。\n去创建第一个标签吧。"
+      )
+      .frame(height: 400)
+      .background(Theme.color.background)
     }
-    .frame(height: 400)
-    .background(Theme.color.background)
-
-    Separator()
-
-    // 无搜索结果
-    EmptyStateView(
-      title: "没有找到相关内容",
-      message: "试试其他关键词"
-    )
-    .frame(height: 400)
-    .background(Theme.color.background)
   }
+  .background(Theme.color.background)
 }

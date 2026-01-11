@@ -57,10 +57,16 @@ struct TagsView: View {
       // sortTabs
       //   .padding(.top, Theme.spacing.lg)
 
-      // 标签流式布局
-      ScrollView {
-        tagFlowLayout
-          .padding(.top, Theme.spacing.lg)
+      if filteredTags.isEmpty {
+        EmptyTagsView {
+          // TODO: Create Tag
+        }
+      } else {
+        // 标签流式布局
+        ScrollView {
+          tagFlowLayout
+            .padding(.top, Theme.spacing.lg)
+        }
       }
 
       Spacer()
