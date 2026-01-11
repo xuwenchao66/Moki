@@ -119,7 +119,7 @@ private struct MenuButton: View {
       AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
 
       Text(title)
-        .font(Theme.font.body)
+        .font(Theme.font.menuItemTitle)
         .foregroundColor(Theme.color.secondaryForeground)
 
       Spacer()
