@@ -103,10 +103,11 @@ struct TimelineView: View {
 
               // 天与天之间的大留白
               Color.clear
-                .frame(height: Theme.spacing.xl)
+                .frame(height: Theme.spacing.xxl)
             }
           }
         }
+        .padding(.bottom, Theme.spacing.lg)
         .background(Theme.color.background)
       }
 

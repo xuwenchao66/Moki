@@ -20,12 +20,12 @@ struct JournalItemView: View {
       Text(content)
         .journalBodyStyle()
         .fixedSize(horizontal: false, vertical: true)
-        .padding(.bottom, Theme.spacing.md)
+        .padding(.bottom, Theme.spacing.md2)
 
       // Layer 2: 媒体层 - 图片
       if !images.isEmpty {
         MediaRowView(images: images)
-          .padding(.bottom, Theme.spacing.md)
+          .padding(.bottom, Theme.spacing.md2)
       }
 
       // Layer 3: 信息层 - 极度弱化,像书页页码
