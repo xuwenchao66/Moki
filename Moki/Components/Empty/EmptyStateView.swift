@@ -6,7 +6,7 @@ import SwiftUI
 struct EmptyStateView: View {
   let icon: AppIconName?
   let title: String
-  let message: String
+  let description: String
   var action: (() -> Void)?
 
   /// 空状态图标尺寸
@@ -15,12 +15,12 @@ struct EmptyStateView: View {
   init(
     icon: AppIconName? = nil,
     title: String,
-    message: String,
+    description: String,
     action: (() -> Void)? = nil
   ) {
     self.icon = icon
     self.title = title
-    self.message = message
+    self.description = description
     self.action = action
   }
 
@@ -44,7 +44,7 @@ struct EmptyStateView: View {
             .foregroundColor(Theme.color.foreground)
             .tracking(1)
 
-          Text(message)
+          Text(description)
             .font(Theme.font.footnote)
             .foregroundColor(Theme.color.mutedForeground)
             .multilineTextAlignment(.center)
@@ -70,7 +70,7 @@ struct EmptyStateView: View {
       EmptyStateView(
         icon: .bookOpenText,
         title: "空白的纸张",
-        message: "生活值得再品味一次。\n点击底部的 + 号，写下第一篇。"
+        description: "生活值得再品味一次。\n点击底部的 + 号，写下第一篇。"
       ) {
         AppLogger.preview.debug("👆 点击创建日记")
       }
@@ -83,7 +83,7 @@ struct EmptyStateView: View {
       EmptyStateView(
         icon: .magnifyingGlass,
         title: "未找到相关日记",
-        message: "换个关键词试试？\n或许它藏在另一个时刻里。"
+        description: "换个关键词试试？\n或许它藏在另一个时刻里。"
       )
       .frame(height: 400)
       .background(Theme.color.background)
@@ -94,7 +94,7 @@ struct EmptyStateView: View {
       EmptyStateView(
         icon: .hash,
         title: "暂无标签",
-        message: "标签能帮你串联起生活的线索。\n去创建第一个标签吧。"
+        description: "标签能帮你串联起生活的线索。\n去创建第一个标签吧。"
       )
       .frame(height: 400)
       .background(Theme.color.background)

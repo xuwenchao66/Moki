@@ -9,7 +9,7 @@ struct EmptyTagsView: View {
     EmptyStateView(
       icon: .hash,
       title: "暂无标签",
-      message: "标签能帮你串联起生活的线索。\n去创建第一个标签吧。",
+      description: "标签能帮你串联起生活的线索。\n去创建第一个标签吧。",
       action: onTap
     )
   }

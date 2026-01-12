@@ -9,7 +9,7 @@ struct EmptySearchResultView: View {
     EmptyStateView(
       icon: .magnifyingGlass,
       title: "未找到相关日记",
-      message: "换个关键词试试？\n或许它藏在另一个时刻里。",
+      description: "换个关键词试试？\n或许它藏在另一个时刻里。",
       action: onTap
     )
   }

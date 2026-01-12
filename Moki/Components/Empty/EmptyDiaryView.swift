@@ -16,7 +16,7 @@ struct EmptyDiaryView: View {
     EmptyStateView(
       icon: .bookOpenText,
       title: "空白的纸张",
-      message: "生活值得再品味一次。\n点击底部的 + 号，写下第一篇。",
+      description: "生活值得再品味一次。\n点击底部的 + 号，写下第一篇。",
       action: onTap
     )
   }
