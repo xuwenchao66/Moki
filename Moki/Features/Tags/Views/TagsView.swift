@@ -58,12 +58,13 @@ struct TagsView: View {
       // sortTabs
       //   .padding(.top, Theme.spacing.lg)
 
-      if filteredTags.isEmpty {
+      if allTags.isEmpty && !shouldShowCreateButton {
+        // 完全无标签时显示空状态引导
         EmptyTagsView {
           isSearchFocused = true
         }
       } else {
-        // 标签流式布局
+        // 标签流式布局（包含创建按钮 + 匹配的标签）
         ScrollView {
           tagFlowLayout
             .padding(.top, Theme.spacing.lg)
