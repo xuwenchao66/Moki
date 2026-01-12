@@ -24,6 +24,7 @@ struct TagsView: View {
   @State private var searchText: String = ""
   @State private var selectedTagIds: Set<UUID> = []
   @State private var selectedSortTab: SortTab = .frequency
+  @FocusState private var isSearchFocused: Bool
 
   // MARK: - Computed
 
@@ -59,7 +60,7 @@ struct TagsView: View {
 
       if filteredTags.isEmpty {
         EmptyTagsView {
-          // TODO: Create Tag
+          isSearchFocused = true
         }
       } else {
         // 标签流式布局
@@ -94,7 +95,7 @@ struct TagsView: View {
   // MARK: - Search Bar
 
   private var searchBar: some View {
-    SearchBar(text: $searchText, placeholder: "搜索或创建标签...")
+    SearchBar(text: $searchText, placeholder: "搜索或创建标签...", isFocused: $isSearchFocused)
   }
 
   // MARK: - Sort Tabs
