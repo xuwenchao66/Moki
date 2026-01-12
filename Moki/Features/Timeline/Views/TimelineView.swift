@@ -170,7 +170,17 @@ struct TimelineView: View {
 
       // 小辅助信息
       HStack(spacing: 0) {
-        Text("\(month)月 / \(weekday)")
+        let weekdayString: String = {
+          if Calendar.current.isDateInToday(date) {
+            return "今天"
+          } else if Calendar.current.isDateInYesterday(date) {
+            return "昨天"
+          } else {
+            return weekday
+          }
+        }()
+
+        Text("\(month)月 / \(weekdayString)")
         if isPastYear {
           Text(" · \(String(year))")
             .foregroundColor(Theme.color.mutedForeground.opacity(0.8))
