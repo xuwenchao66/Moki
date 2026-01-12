@@ -46,7 +46,13 @@ struct JournalItemView: View {
         Spacer(minLength: 0)
       }
     }
-    .contentShape(Rectangle())
+    // MARK: - Layout Export
+    // 将原本需要在外部设置的边距收拢到组件内部
+    // 放在 contextMenu 之后，确保预览时不包含这个透明边距
+    .padding(Theme.spacing.lg)
+    .background(Theme.color.background)
+    .clipShape(RoundedRectangle(cornerRadius: Theme.radius.md, style: .continuous))
+    .contentShape(RoundedRectangle(cornerRadius: Theme.radius.md))
     .contextMenu {
       if let onEditTapped {
         Button(action: onEditTapped) { Label("编辑", systemImage: "pencil") }

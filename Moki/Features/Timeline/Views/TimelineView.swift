@@ -19,8 +19,8 @@ struct TimelineView: View {
   // 2. 数据源切换
   // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
   private var entries: [MokiDiary] {
-    // return mockEntries  // 🟢 Mock Data
-    return dbEntries  // 🔵 Real Data
+    return mockEntries  // 🟢 Mock Data
+    // return dbEntries  // 🔵 Real Data
   }
 
   // 3. Mock 数据适配
@@ -80,8 +80,7 @@ struct TimelineView: View {
             ForEach(dayGroups, id: \.id) { group in
               // 日期头部
               dayHeader(for: group.day)
-                .padding(.top, Theme.spacing.xs)
-                .padding(.bottom, Theme.spacing.lg)
+                .padding(.vertical, Theme.spacing.xs)
                 .padding(.horizontal, Theme.spacing.lg)
 
               // 该天的所有条目
@@ -100,8 +99,7 @@ struct TimelineView: View {
                     diaryService.delete(entry)
                   }
                 )
-                .padding(.horizontal, Theme.spacing.lg)
-                .padding(.bottom, Theme.spacing.xxl)
+                .padding(.bottom, Theme.spacing.md)
               }
 
               // 天与天之间的大留白 - 代替分割线
