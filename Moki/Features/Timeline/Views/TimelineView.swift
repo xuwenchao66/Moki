@@ -80,7 +80,6 @@ struct TimelineView: View {
             ForEach(dayGroups, id: \.id) { group in
               // 日期头部
               dayHeader(for: group.day)
-                .padding(.vertical, Theme.spacing.xs)
                 .padding(.horizontal, Theme.spacing.lg)
 
               // 该天的所有条目
@@ -102,9 +101,9 @@ struct TimelineView: View {
                 .padding(.bottom, Theme.spacing.md)
               }
 
-              // 天与天之间的大留白 - 代替分割线
+              // 天与天之间的大留白
               Color.clear
-                .frame(height: Theme.spacing.xxl)
+                .frame(height: Theme.spacing.xl)
             }
           }
         }
