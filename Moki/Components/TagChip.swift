@@ -82,8 +82,10 @@ struct TagChip: View {
     }
     .padding(.horizontal, Theme.spacing.sm)
     .padding(.vertical, Theme.spacing.xs)
-    .background(Theme.color.muted)
-    .clipShape(chipShape)
+    .background(
+      chipShape
+        .fill(Theme.color.muted)
+    )
     .contentShape(chipShape)
     .onTapGesture {
       onTap?()
@@ -102,8 +104,10 @@ struct TagChip: View {
     .font(Theme.font.subheadline)
     .padding(.horizontal, Theme.spacing.md)
     .padding(.vertical, Theme.spacing.xs)
-    .background(isSelected ? Theme.color.buttonBackground : Theme.color.primaryForeground)
-    .clipShape(chipShape)
+    .background(
+      chipShape
+        .fill(isSelected ? Theme.color.buttonBackground : Theme.color.primaryForeground)
+    )
     .overlay(
       chipShape
         .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 0.5)

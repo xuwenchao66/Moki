@@ -1,3 +1,4 @@
+import SQLiteData
 import SwiftUI
 
 struct EditView: View {
@@ -5,8 +6,18 @@ struct EditView: View {
 
   @State private var content: String = ""
   @State private var isFocused: Bool = false
+  @State private var showTagsSheet = false
+  @State private var selectedTagIds: Set<UUID> = []
+
+  @FetchAll(MokiTag.order { $0.createdAt.desc() })
+  private var allTags: [MokiTag]
+
+  private var selectedTags: [MokiTag] {
+    allTags.filter { selectedTagIds.contains($0.id) }
+  }
 
   private let diaryService = DiaryService()
+  private let tagService = TagService()
 
   // 保持当前时间用于显示
   private let entryDate = Date()
@@ -32,6 +43,19 @@ struct EditView: View {
     }
     .background(Theme.color.background)
     .toolbar(.hidden, for: .navigationBar)
+    .sheet(isPresented: $showTagsSheet) {
+      NavigationStack {
+        TagsView(selection: $selectedTagIds)
+          .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+              Button("完成") {
+                showTagsSheet = false
+              }
+            }
+          }
+      }
+      .presentationDetents([.medium, .large])
+    }
     .onAppear {
       isFocused = true
     }
@@ -55,6 +79,25 @@ struct EditView: View {
 
   private var toolbarView: some View {
     VStack(spacing: 0) {
+      if !selectedTags.isEmpty {
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(spacing: Theme.spacing.xs) {
+            ForEach(selectedTags) { tag in
+              TagChip(
+                name: tag.name,
+                mode: .interactive,
+                onRemove: {
+                  HapticManager.shared.light()
+                  selectedTagIds.remove(tag.id)
+                }
+              )
+            }
+          }
+          .padding(.horizontal, Theme.spacing.lg)
+          .padding(.bottom, Theme.spacing.sm)
+        }
+      }
+
       Divider()
         .overlay(Theme.color.border)
 
@@ -63,7 +106,7 @@ struct EditView: View {
         HStack(spacing: Theme.spacing.lg) {
           Button(action: {
             HapticManager.shared.light()
-            /* TODO: Tags */
+            showTagsSheet = true
           }) {
             AppIcon(icon: .hash, size: .md, color: Theme.color.secondaryForeground)
               .contentShape(Rectangle())
@@ -114,12 +157,19 @@ struct EditView: View {
   // MARK: - Actions
 
   private func saveEntry() {
+    let id = UUID()
     let entry = MokiDiary(
+      id: id,
       text: content,
       createdAt: entryDate,
       timeZone: TimeZone.current.identifier
     )
     diaryService.create(entry)
+
+    if !selectedTags.isEmpty {
+      tagService.updateTags(selectedTags, forDiary: id)
+    }
+
     dismiss()
   }
 

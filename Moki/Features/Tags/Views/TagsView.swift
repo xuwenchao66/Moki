@@ -11,6 +11,27 @@ struct TagsView: View {
 
   var onMenuButtonTapped: (() -> Void)? = nil
 
+  // MARK: - Mode
+
+  enum Mode {
+    case management
+    case selection
+  }
+
+  let mode: Mode
+  @Binding var selectedIds: Set<UUID>
+  @State private var internalSelectedIds: Set<UUID> = []
+
+  init(selection: Binding<Set<UUID>>? = nil) {
+    if let selection {
+      self.mode = .selection
+      self._selectedIds = selection
+    } else {
+      self.mode = .management
+      self._selectedIds = .constant([])
+    }
+  }
+
   // MARK: - Sort Tab
 
   enum SortTab: String, CaseIterable {
@@ -22,7 +43,6 @@ struct TagsView: View {
   // MARK: - State
 
   @State private var searchText: String = ""
-  @State private var selectedTagIds: Set<UUID> = []
   @State private var selectedSortTab: SortTab = .frequency
   @FocusState private var isSearchFocused: Bool
 
@@ -178,7 +198,10 @@ struct TagsView: View {
   // MARK: - Tag Chip
 
   private func tagChip(for tag: MokiTag) -> some View {
-    let isSelected = selectedTagIds.contains(tag.id)
+    let isSelected =
+      mode == .selection
+      ? selectedIds.contains(tag.id)
+      : internalSelectedIds.contains(tag.id)
 
     return TagChip(
       name: tag.name,
@@ -223,10 +246,18 @@ struct TagsView: View {
 
   private func toggleSelection(for tag: MokiTag) {
     HapticManager.shared.light()
-    if selectedTagIds.contains(tag.id) {
-      selectedTagIds.remove(tag.id)
+    if mode == .selection {
+      if selectedIds.contains(tag.id) {
+        selectedIds.remove(tag.id)
+      } else {
+        selectedIds.insert(tag.id)
+      }
     } else {
-      selectedTagIds.insert(tag.id)
+      if internalSelectedIds.contains(tag.id) {
+        internalSelectedIds.remove(tag.id)
+      } else {
+        internalSelectedIds.insert(tag.id)
+      }
     }
   }
 
