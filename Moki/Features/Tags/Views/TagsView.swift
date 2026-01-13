@@ -20,7 +20,6 @@ struct TagsView: View {
 
   let mode: Mode
   @Binding var selectedIds: Set<UUID>
-  @State private var internalSelectedIds: Set<UUID> = []
 
   init(selection: Binding<Set<UUID>>? = nil) {
     if let selection {
@@ -198,16 +197,21 @@ struct TagsView: View {
   // MARK: - Tag Chip
 
   private func tagChip(for tag: MokiTag) -> some View {
-    let isSelected =
-      mode == .selection
-      ? selectedIds.contains(tag.id)
-      : internalSelectedIds.contains(tag.id)
-
-    return TagChip(
-      name: tag.name,
-      mode: .selectable(isSelected: isSelected),
-      onTap: { toggleSelection(for: tag) }
-    )
+    Group {
+      switch mode {
+      case .management:
+        TagChip(
+          name: tag.name,
+          mode: .interactive
+        )
+      case .selection:
+        TagChip(
+          name: tag.name,
+          mode: .selectable(isSelected: selectedIds.contains(tag.id)),
+          onTap: { toggleSelection(for: tag) }
+        )
+      }
+    }
     .contextMenu {
       tagContextMenu(for: tag)
     }
@@ -246,17 +250,11 @@ struct TagsView: View {
 
   private func toggleSelection(for tag: MokiTag) {
     HapticManager.shared.light()
-    if mode == .selection {
+    if case .selection = mode {
       if selectedIds.contains(tag.id) {
         selectedIds.remove(tag.id)
       } else {
         selectedIds.insert(tag.id)
-      }
-    } else {
-      if internalSelectedIds.contains(tag.id) {
-        internalSelectedIds.remove(tag.id)
-      } else {
-        internalSelectedIds.insert(tag.id)
       }
     }
   }
