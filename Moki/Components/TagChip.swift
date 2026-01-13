@@ -84,7 +84,7 @@ struct TagChip: View {
     .padding(.vertical, Theme.spacing.xs)
     .background(
       chipShape
-        .fill(Theme.color.muted)
+        .fill(Theme.color.muted.opacity(0.4))
     )
     .contentShape(chipShape)
     .onTapGesture {
