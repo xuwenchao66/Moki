@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moki - Empty States</title>
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    :root {
+      /* Moki 核心色板 */
+      --bg-color: #FAF9F5;
+      --primary: #2C2825;
+      --meta: #999590;
+
+      /* 空状态专用色 */
+      --empty-icon: #D6D3C9;
+      /* 像纸张纹理一样的淡灰 */
+    }
+
+    body {
+      background-color: var(--bg-color);
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      color: var(--primary);
+      -webkit-font-smoothing: antialiased;
+      height: 100vh;
+
+      /* 演示用：垂直排列多个示例 */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 80px;
+    }
+
+    /* =========================================
+           通用空状态组件 (Generic Empty State)
+           ========================================= */
+    .empty-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 0 40px;
+      max-width: 300px;
+
+      /* 进场动画：轻微上浮 */
+      animation: floatUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    @keyframes floatUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* 1. Icon: 水印质感 */
+    .empty-icon {
+      font-size: 64px;
+      /* 足够大，撑起构图 */
+      color: var(--empty-icon);
+      margin-bottom: 24px;
+
+      /* 可选：极微弱的呼吸感 */
+      /* animation: breathe 4s ease-in-out infinite; */
+    }
+
+    /* 2. Title: 宋体，仪式感 */
+    .empty-title {
+      font-family: "Songti SC", "Noto Serif SC", serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+    }
+
+    /* 3. Description: 温暖的引导 */
+    .empty-desc {
+      font-family: -apple-system, sans-serif;
+      font-size: 14px;
+      color: var(--meta);
+      line-height: 1.6;
+    }
+
+    /* (可选) 强调文字 */
+    .highlight {
+      color: #888;
+      font-weight: 500;
+      border-bottom: 1px dashed #CCC;
+      padding-bottom: 2px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- 场景 1: 首页无日记 (Initial State) -->
+  <div class="empty-container">
+    <!-- Icon: 书本或羽毛笔 -->
+    <i class="ph-light ph-book-open-text empty-icon"></i>
+
+    <div class="empty-title">空白的纸张</div>
+
+    <div class="empty-desc">
+      生活值得再品味一次。<br>
+      点击底部的 <span class="highlight">+</span> 号，写下第一篇。
+    </div>
+  </div>
+
+
+  <!-- 场景 2: 搜索无结果 (No Results) -->
+  <div class="empty-container" style="animation-delay: 0.2s;">
+    <!-- Icon: 幽灵或放大镜 -->
+    <i class="ph-light ph-magnifying-glass empty-icon"></i>
+
+    <div class="empty-title">未找到相关日记</div>
+
+    <div class="empty-desc">
+      换个关键词试试？<br>
+      或许它藏在另一个时刻里。
+    </div>
+  </div>
+
+
+  <!-- 场景 3: 暂无标签 (No Tags) -->
+  <div class="empty-container" style="animation-delay: 0.4s;">
+    <!-- Icon: 标签 -->
+    <i class="ph-light ph-hash empty-icon"></i>
+
+    <div class="empty-title">暂无标签</div>
+
+    <div class="empty-desc">
+      标签能帮你串联起生活的线索。<br>
+      去创建第一个标签吧。
+    </div>
+  </div>
+
+</body>
+
+</html>

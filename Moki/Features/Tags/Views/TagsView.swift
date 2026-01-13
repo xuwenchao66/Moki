@@ -24,6 +24,7 @@ struct TagsView: View {
   @State private var searchText: String = ""
   @State private var selectedTagIds: Set<UUID> = []
   @State private var selectedSortTab: SortTab = .frequency
+  @FocusState private var isSearchFocused: Bool
 
   // MARK: - Computed
 
@@ -57,10 +58,17 @@ struct TagsView: View {
       // sortTabs
       //   .padding(.top, Theme.spacing.lg)
 
-      // 标签流式布局
-      ScrollView {
-        tagFlowLayout
-          .padding(.top, Theme.spacing.lg)
+      if allTags.isEmpty && !shouldShowCreateButton {
+        // 完全无标签时显示空状态引导
+        EmptyTagsView {
+          isSearchFocused = true
+        }
+      } else {
+        // 标签流式布局（包含创建按钮 + 匹配的标签）
+        ScrollView {
+          tagFlowLayout
+            .padding(.top, Theme.spacing.lg)
+        }
       }
 
       Spacer()
@@ -88,7 +96,7 @@ struct TagsView: View {
   // MARK: - Search Bar
 
   private var searchBar: some View {
-    SearchBar(text: $searchText, placeholder: "搜索或创建标签...")
+    SearchBar(text: $searchText, placeholder: "搜索或创建标签...", isFocused: $isSearchFocused)
   }
 
   // MARK: - Sort Tabs

@@ -45,9 +45,11 @@ struct TagChip: View {
 
   /// 阅读模式：纯文字，无背景，极简
   private var readModeView: some View {
-    Text(tagText())
-      .font(Theme.font.footnote)
-      .foregroundColor(Theme.color.mutedForeground)
+    styledTagText(
+      hashColor: Theme.color.mutedForeground.opacity(0.6),
+      nameColor: Theme.color.mutedForeground
+    )
+    .font(Theme.font.footnote)
   }
 
   // MARK: - Chip Shape
@@ -62,9 +64,11 @@ struct TagChip: View {
   /// 交互模式：有实体感，可移除
   private var interactiveModeView: some View {
     HStack(spacing: Theme.spacing.xxs) {
-      Text(tagText())
-        .font(Theme.font.subheadline)
-        .foregroundColor(Theme.color.secondaryForeground)
+      styledTagText(
+        hashColor: Theme.color.mutedForeground,
+        nameColor: Theme.color.secondaryForeground
+      )
+      .font(Theme.font.subheadline)
 
       // 移除按钮（如果提供了 onRemove）
       if let onRemove {
@@ -90,28 +94,34 @@ struct TagChip: View {
 
   /// 选择模式：支持选中/未选中状态
   private func selectableModeView(isSelected: Bool) -> some View {
-    Text(tagText())
-      .font(Theme.font.subheadline)
-      .foregroundColor(isSelected ? Theme.color.primaryForeground : Theme.color.foreground)
-      .padding(.horizontal, Theme.spacing.md)
-      .padding(.vertical, Theme.spacing.xs)
-      .background(isSelected ? Theme.color.buttonBackground : Theme.color.primaryForeground)
-      .clipShape(chipShape)
-      .overlay(
-        chipShape
-          .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 0.5)
-      )
-      .contentShape(chipShape)
-      .onTapGesture {
-        onTap?()
-      }
+    styledTagText(
+      hashColor: isSelected
+        ? Theme.color.primaryForeground.opacity(0.6) : Theme.color.mutedForeground,
+      nameColor: isSelected ? Theme.color.primaryForeground : Theme.color.foreground
+    )
+    .font(Theme.font.subheadline)
+    .padding(.horizontal, Theme.spacing.md)
+    .padding(.vertical, Theme.spacing.xs)
+    .background(isSelected ? Theme.color.buttonBackground : Theme.color.primaryForeground)
+    .clipShape(chipShape)
+    .overlay(
+      chipShape
+        .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 0.5)
+    )
+    .contentShape(chipShape)
+    .onTapGesture {
+      onTap?()
+    }
   }
 
   // MARK: - Helper
 
-  /// 统一的标签文本：在名称前拼接 #
-  private func tagText() -> String {
-    "#\(name)"
+  /// 带样式的标签文本：# 符号使用更浅的颜色
+  private func styledTagText(hashColor: Color, nameColor: Color) -> Text {
+    Text("#")
+      .foregroundColor(hashColor)
+      + Text(name)
+      .foregroundColor(nameColor)
   }
 }
 

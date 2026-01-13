@@ -218,14 +218,51 @@
       align-items: center;
     }
 
-    /* 5. Sidebar Style Demo */
+    /* 5. Sidebar Style Demo - 使用黑体，因为菜单是 UI 控件 */
     .sidebar-item-demo {
-      font-family: var(--font-serif);
-      font-size: 18px;
+      font-family: var(--font-sans);
+      font-size: 16px;
       color: #535146;
       display: flex;
       align-items: center;
       gap: 16px;
+    }
+
+    /* 6. 黄金法则表格 */
+    .golden-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+
+    .golden-table th {
+      text-align: left;
+      padding: 12px 16px;
+      background: rgba(44, 40, 37, 0.05);
+      font-weight: 600;
+      border-bottom: 2px solid var(--border);
+    }
+
+    .golden-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    .golden-table .font-serif {
+      color: #C96442;
+      font-weight: 500;
+    }
+
+    .golden-table .font-sans {
+      color: #4A90D9;
+      font-weight: 500;
+    }
+
+    .golden-table .reason {
+      color: #666;
+      font-size: 13px;
     }
 
     /* 手机端适配 */
@@ -272,19 +309,78 @@
 
     <!-- 2. 字体法则 -->
     <h2>02. 字体法则 (Typography)</h2>
-    <p>不要全局使用同一种字体。利用<strong>宋体</strong>和<strong>黑体</strong>的性格差异，区分“内容”与“UI”。</p>
+    <p>我们使用两种字体，分别服务于<strong>两种时间维度</strong>。不要改为全局统一字体。</p>
 
     <div class="insight-box">
-      <span class="insight-title">💡 规则：感性 vs 理性</span>
+      <span class="insight-title">1️⃣ 宋体 (Serif) — 用于「被记录、被回忆、被阅读的内容」</span>
       <p class="insight-text">
-        <span
-          style="display:inline-block; width:10px; height:10px; background:#C96442; border-radius:50%; margin-right:6px;"></span><strong>宋体
-          (Serif):</strong> 用于情感、故事、沉浸阅读、品牌调性。<br>
-        <span
-          style="display:inline-block; width:10px; height:10px; background:#4A90D9; border-radius:50%; margin-right:6px; margin-top:6px;"></span><strong>黑体
-          (Sans):</strong> 用于工具、数据、操作指引、标签。
+        包括但不限于：日记正文、日期/星期、引用/灵感句、中文品牌名「某刻」、空状态文案（偏情绪型）<br>
+        <em style="color:#C96442;">宋体代表：时间、沉淀、个人记忆</em>
       </p>
     </div>
+
+    <div class="insight-box">
+      <span class="insight-title">2️⃣ 系统黑体 (San Francisco / 无衬线) — 用于「操作、结构、功能」</span>
+      <p class="insight-text">
+        包括但不限于：搜索/统计/标签/设置、按钮文案、辅助信息（如 #标签、时间戳）、英文品牌副标题 (MOKI JOURNAL)<br>
+        <em style="color:#4A90D9;">黑体代表：现在、功能、清晰</em>
+      </p>
+    </div>
+
+    <!-- 黄金字体法则表格 -->
+    <h3 style="font-family: var(--font-sans); font-size: 16px; margin-top: 32px; margin-bottom: 16px;">📐 Moki "黄金字体法则"
+    </h3>
+    <table class="golden-table">
+      <thead>
+        <tr>
+          <th>元素 (Element)</th>
+          <th>字体类型</th>
+          <th>理由 (Why)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>App 标题 / Logo</td>
+          <td class="font-serif">宋体 (Serif)</td>
+          <td class="reason">确立品牌基调，像书名。</td>
+        </tr>
+        <tr>
+          <td>日记大标题 / 日期大数字</td>
+          <td class="font-serif">宋体 (Serif)</td>
+          <td class="reason">仪式感，视觉焦点。</td>
+        </tr>
+        <tr>
+          <td>日记正文</td>
+          <td class="font-serif">宋体 (Serif)</td>
+          <td class="reason">沉浸式阅读体验，模拟纸张书写。</td>
+        </tr>
+        <tr>
+          <td>正文中的英文/数字</td>
+          <td class="font-serif">Serif 或 System Serif</td>
+          <td class="reason">保持行内流线性，不要在宋体中文里夹杂黑体英文。</td>
+        </tr>
+        <tr>
+          <td>时间戳 (23:42)</td>
+          <td class="font-sans">黑体 (Sans-serif)</td>
+          <td class="reason">数据需要高可读性，等宽数字对齐更好看。</td>
+        </tr>
+        <tr>
+          <td>标签 (#Tag)</td>
+          <td class="font-sans">黑体 (Sans-serif)</td>
+          <td class="reason">标签是功能索引，需要清晰跳出。</td>
+        </tr>
+        <tr>
+          <td>侧边栏菜单 / 设置项</td>
+          <td class="font-sans">黑体 (Sans-serif)</td>
+          <td class="reason">这是 UI 控件，应高效清晰；这也是目前主流的做法。</td>
+        </tr>
+        <tr>
+          <td>底部 Tab Bar / 按钮</td>
+          <td class="font-sans">黑体 (Sans-serif)</td>
+          <td class="reason">纯粹的功能操作区。</td>
+        </tr>
+      </tbody>
+    </table>
 
     <div class="demo-block">
       <div class="demo-label">字体混合示例</div>
@@ -314,15 +410,15 @@
 
     <!-- 3. 侧边栏 -->
     <h2>03. 侧边栏 (The Sidebar)</h2>
-    <p>侧边栏不是简单的列表，而是这本“书”的<strong>扉页/目录</strong>。</p>
+    <p>侧边栏不是简单的列表，而是这本"书"的<strong>扉页/目录</strong>。</p>
 
     <div class="insight-box">
       <span class="insight-title">💡 布局：X (Twitter) 式分层</span>
       <p class="insight-text">
-        <strong>顶部：</strong> 只有 Logo，极其自信。<br>
-        <strong>中部：</strong> 高频内容入口（搜索、统计）。<br>
-        <strong>底部：</strong> 低频系统入口（设置）+ 品牌落款。<br>
-        <em>注：菜单项文字也回归宋体，增强“目录感”。</em>
+        <strong>顶部：</strong> 只有 Logo（宋体），极其自信。<br>
+        <strong>中部：</strong> 高频内容入口（搜索、统计、标签）。<br>
+        <strong>底部：</strong> 低频系统入口（设置）。<br>
+        <em>注：菜单项作为 UI 控件，使用<strong style="color:#4A90D9;">黑体</strong>，保持高效清晰。</em>
       </p>
     </div>
 
@@ -331,35 +427,41 @@
       <div style="display:flex; flex-direction:column; gap:16px; margin-top:10px;">
         <!-- Logo -->
         <div style="display:flex; align-items:center; gap:20px;">
-          <span style="font-family: 'Songti SC', serif; font-size:36px; color:#2C2825;">Moki</span>
+          <span style="font-family: 'Songti SC', serif; font-size:36px; color:#2C2825; letter-spacing: 8px;">某刻</span>
           <span style="color:#C96442; font-size:13px; font-style:italic;">← 品牌名：宋体 (书籍封面感)</span>
         </div>
         <!-- Slogan -->
         <div style="display:flex; align-items:center; gap:20px;">
-          <span style="font-family: Georgia, serif; font-size:15px; color:#999590; font-style:italic;">Taste life
-            twice.</span>
-          <span style="color:#C96442; font-size:13px; font-style:italic;">← Slogan：衬线斜体 (优雅引用)</span>
+          <span
+            style="font-family: -apple-system, sans-serif; font-size:12px; color:#999590; letter-spacing:0.6px;">MOKI
+            JOURNAL</span>
+          <span style="color:#4A90D9; font-size:13px; font-style:italic;">← 英文副标题：黑体</span>
         </div>
         <hr style="border:0; border-top:1px solid rgba(0,0,0,0.06); width:100%; margin:8px 0;">
         <!-- 菜单项 -->
         <div style="display:flex; align-items:center; gap:20px;">
           <div class="sidebar-item-demo">
             <i class="ph ph-magnifying-glass" style="color:#5E5E5E"></i>
-            <span>搜索日记</span>
+            <span>搜索</span>
           </div>
-          <span style="color:#C96442; font-size:13px; font-style:italic;">← 菜单项：宋体 (目录感)</span>
+          <span style="color:#4A90D9; font-size:13px; font-style:italic;">← 菜单项：黑体 (UI 控件)</span>
+        </div>
+        <div class="sidebar-item-demo">
+          <i class="ph ph-chart-bar" style="color:#5E5E5E"></i>
+          <span>统计</span>
         </div>
         <div class="sidebar-item-demo">
           <i class="ph ph-hash" style="color:#5E5E5E"></i>
-          <span>标签管理</span>
+          <span>标签</span>
         </div>
         <hr style="border:0; border-top:1px solid rgba(0,0,0,0.06); width:100%; margin:8px 0;">
-        <!-- 版本号 -->
+        <!-- 设置 -->
         <div style="display:flex; align-items:center; gap:20px;">
-          <span
-            style="font-family: -apple-system, sans-serif; font-size:12px; color:#B0B0B0; letter-spacing:1px; text-transform:uppercase;">Moki
-            Journal v1.0</span>
-          <span style="color:#4A90D9; font-size:13px; font-style:italic;">← 版本号：黑体 (数据信息)</span>
+          <div class="sidebar-item-demo">
+            <i class="ph ph-gear-six" style="color:#5E5E5E"></i>
+            <span>设置</span>
+          </div>
+          <span style="color:#4A90D9; font-size:13px; font-style:italic;">← 设置入口：黑体</span>
         </div>
       </div>
     </div>

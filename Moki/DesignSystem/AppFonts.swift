@@ -57,9 +57,7 @@ struct AppFonts {
   static let dateLarge = serif(36, weight: .semibold)
 
   /// 日期小标签 - 辅助信息 (月份/星期)
-  static let dateSmall: Font = serif(14, weight: .medium)
-
-  static let menuItemTitle: Font = serif(18)
+  static let dateSmall: Font = serif(14, weight: .semibold)
 
   // MARK: - 标题字体（系统字体）
 
@@ -84,7 +82,7 @@ struct AppFonts {
   /// 四级标题
   static let title4: Font = .system(size: 18, weight: .medium)
 
-  // MARK: - 正文字体（系统字体）
+  static let menuItemTitle: Font = .system(size: 18)
 
   /// 正文
   static let body: Font = .system(size: 17)

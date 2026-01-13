@@ -78,7 +78,7 @@ extension MockEntry {
 
       // MARK: - 上个月数据 (-1)
       MockEntry(
-        content: "上个月的总结：\n1. 完成了 Moki 的基础架构\n2. 读完了两本书\n3. 坚持跑步 50 公里\n\n继续加油！",
+        content: "上个月的总结：\n1. 完成了 Moki 的基础架构\n2. 读完了两本书\n3. 坚持跑步 50 公里\n继续加油！",
         date: time(-1, 0, 21, 30),
         images: [],
         tags: ["复盘", "总结"]

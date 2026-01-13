@@ -68,11 +68,9 @@ struct TimelineView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       if entries.isEmpty {
-        EmptyStateView(
-          title: "还没有记录",
-          message: "点击 + 创建你的独家记忆",
-          action: { showAddEntry = true }
-        )
+        EmptyDiaryView {
+          showAddEntry = true
+        }
       } else {
         ScrollView {
           LazyVStack(alignment: .leading, spacing: 0) {
@@ -82,8 +80,6 @@ struct TimelineView: View {
             ForEach(dayGroups, id: \.id) { group in
               // 日期头部
               dayHeader(for: group.day)
-                .padding(.top, Theme.spacing.xs)
-                .padding(.bottom, Theme.spacing.lg)
                 .padding(.horizontal, Theme.spacing.lg)
 
               // 该天的所有条目
@@ -102,16 +98,16 @@ struct TimelineView: View {
                     diaryService.delete(entry)
                   }
                 )
-                .padding(.horizontal, Theme.spacing.lg)
-                .padding(.bottom, Theme.spacing.xxl)
+                .padding(.bottom, Theme.spacing.md)
               }
 
-              // 天与天之间的大留白 - 代替分割线
+              // 天与天之间的大留白
               Color.clear
                 .frame(height: Theme.spacing.xxl)
             }
           }
         }
+        .padding(.bottom, Theme.spacing.lg)
         .background(Theme.color.background)
       }
 
@@ -174,7 +170,17 @@ struct TimelineView: View {
 
       // 小辅助信息
       HStack(spacing: 0) {
-        Text("\(month)月 / \(weekday)")
+        let weekdayString: String = {
+          if Calendar.current.isDateInToday(date) {
+            return "今天"
+          } else if Calendar.current.isDateInYesterday(date) {
+            return "昨天"
+          } else {
+            return weekday
+          }
+        }()
+
+        Text("\(month)月 / \(weekdayString)")
         if isPastYear {
           Text(" · \(String(year))")
             .foregroundColor(Theme.color.mutedForeground.opacity(0.8))

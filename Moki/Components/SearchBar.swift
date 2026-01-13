@@ -5,6 +5,7 @@ import SwiftUI
 struct SearchBar: View {
   @Binding var text: String
   var placeholder: String = "搜索..."
+  var isFocused: FocusState<Bool>.Binding
 
   var body: some View {
     VStack(spacing: 0) {
@@ -16,6 +17,7 @@ struct SearchBar: View {
           .foregroundColor(Theme.color.foreground)
           .textInputAutocapitalization(.never)
           .autocorrectionDisabled()
+          .focused(isFocused)
 
         if !text.isEmpty {
           Button {
@@ -37,12 +39,20 @@ struct SearchBar: View {
 
 // MARK: - Preview
 
-#Preview {
-  VStack(spacing: Theme.spacing.xl) {
-    SearchBar(text: .constant(""), placeholder: "搜索或创建标签...")
+struct SearchBarPreview: View {
+  @FocusState private var isFocused: Bool
 
-    SearchBar(text: .constant("Design"), placeholder: "搜索或创建标签...")
+  var body: some View {
+    VStack(spacing: Theme.spacing.xl) {
+      SearchBar(text: .constant(""), placeholder: "搜索或创建标签...", isFocused: $isFocused)
+
+      SearchBar(text: .constant("Design"), placeholder: "搜索或创建标签...", isFocused: $isFocused)
+    }
+    .padding(.horizontal, Theme.spacing.md2)
+    .background(Theme.color.background)
   }
-  .padding(.horizontal, Theme.spacing.md2)
-  .background(Theme.color.background)
+}
+
+#Preview {
+  SearchBarPreview()
 }
