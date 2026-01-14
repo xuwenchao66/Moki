@@ -105,4 +105,9 @@ struct AppColors {
 
   /// 阴影基础色
   static let shadow = Color(hex: "2C2523")
+
+  // MARK: - 组件色 (Component)
+
+  /// 标签背景色
+  static let tagBackground = muted.opacity(0.5)
 }
