@@ -109,6 +109,7 @@ struct TimelineView: View {
         }
         .padding(.bottom, Theme.spacing.lg)
         .background(Theme.color.background)
+        .ignoresSafeArea(edges: .bottom)
       }
 
       // Dock View
