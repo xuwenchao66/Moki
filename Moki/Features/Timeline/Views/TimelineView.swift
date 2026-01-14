@@ -186,7 +186,7 @@ struct TimelineView: View {
             .foregroundColor(Theme.color.mutedForeground.opacity(0.8))
         }
       }
-      .font(Theme.font.dateSmall)
+      .font(Theme.font.footnote)
       .foregroundColor(Theme.color.mutedForeground)
       .offset(y: -2)
 

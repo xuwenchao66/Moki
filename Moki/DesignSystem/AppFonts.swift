@@ -22,9 +22,6 @@ struct AppFonts {
   /// 日期大数字 - 视觉锚点
   static let dateLarge: Font = .system(size: 36, weight: .semibold)
 
-  /// 日期小标签 - 辅助信息 (月份/星期)
-  static let dateSmall: Font = .system(size: 14, weight: .semibold)
-
   // MARK: - 标题字体
 
   /// 顶栏标题（UIKit / UINavigationBarAppearance 用）
