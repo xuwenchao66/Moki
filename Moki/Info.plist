@@ -10,10 +10,6 @@
 		</array>
 		<key>CFBundleDevelopmentRegion</key>
 		<string>zh_CN</string>
-		<key>UIAppFonts</key>
-		<array>
-			<string>NotoSerifSC-VariableFont_wght.ttf</string>
-		</array>
 		<key>CFBundleLocalizations</key>
 		<array>
 			<string>zh_CN</string>

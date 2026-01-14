@@ -40,9 +40,8 @@ struct EmptyStateView: View {
         // 标题和描述
         VStack(spacing: Theme.spacing.sm) {
           Text(title)
-            .font(Theme.font.serif(20, weight: .semibold))
+            .font(Theme.font.title3)
             .foregroundColor(Theme.color.foreground)
-            .tracking(1)
 
           Text(description)
             .font(Theme.font.footnote)
