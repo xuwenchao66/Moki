@@ -113,11 +113,11 @@ private struct MenuButton: View {
 
   var body: some View {
     HStack(spacing: Theme.spacing.md2) {
-      AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
+      AppIcon(icon: icon, size: .sm, color: Theme.color.foreground)
 
       Text(title)
         .font(Theme.font.menuItemTitle)
-        .foregroundColor(Theme.color.secondaryForeground)
+        .foregroundColor(Theme.color.foreground)
 
       Spacer()
     }
