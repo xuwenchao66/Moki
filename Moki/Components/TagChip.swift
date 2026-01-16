@@ -63,15 +63,33 @@ struct TagChip: View {
 
   /// 交互模式：有实体感，可移除
   private var interactiveModeView: some View {
-    HStack(spacing: Theme.spacing.xxs) {
-      styledTagText(
-        hashColor: Theme.color.mutedForeground,
-        nameColor: Theme.color.secondaryForeground
-      )
-      .font(Theme.font.subheadline)
+    commonTagView(isSelected: true, isInteractive: true)
+  }
 
-      // 移除按钮（如果提供了 onRemove）
-      if let onRemove {
+  // MARK: - Selectable Mode (Tag Manager)
+
+  /// 选择模式：支持选中/未选中状态
+  private func selectableModeView(isSelected: Bool) -> some View {
+    commonTagView(isSelected: isSelected, isInteractive: false)
+  }
+
+  // MARK: - Common Tag View
+
+  /// 通用标签样式构建器
+  private func commonTagView(isSelected: Bool, isInteractive: Bool) -> some View {
+    let hashColor =
+      isSelected
+      ? Theme.color.mutedForeground : Theme.color.mutedForeground.opacity(0.6)
+    let nameColor = isSelected ? Theme.color.secondaryForeground : Theme.color.mutedForeground
+    let bgColor = isSelected ? Theme.color.tagBackground : Color.clear
+    let borderColor = isSelected ? Theme.color.tagBackground : Theme.color.border
+
+    return HStack(spacing: Theme.spacing.xxs) {
+      styledTagText(hashColor: hashColor, nameColor: nameColor)
+        .font(Theme.font.footnote)
+
+      // 移除按钮（仅交互模式且提供了回调时显示）
+      if isInteractive, let onRemove {
         Button(action: onRemove) {
           Image(systemName: "xmark")
             .font(.system(size: 10, weight: .medium))
@@ -82,31 +100,13 @@ struct TagChip: View {
     }
     .padding(.horizontal, Theme.spacing.sm)
     .padding(.vertical, Theme.spacing.xs)
-    .background(Theme.color.muted)
-    .clipShape(chipShape)
-    .contentShape(chipShape)
-    .onTapGesture {
-      onTap?()
-    }
-  }
-
-  // MARK: - Selectable Mode (Tag Manager)
-
-  /// 选择模式：支持选中/未选中状态
-  private func selectableModeView(isSelected: Bool) -> some View {
-    styledTagText(
-      hashColor: isSelected
-        ? Theme.color.primaryForeground.opacity(0.6) : Theme.color.mutedForeground,
-      nameColor: isSelected ? Theme.color.primaryForeground : Theme.color.foreground
+    .background(
+      chipShape
+        .fill(bgColor)
     )
-    .font(Theme.font.subheadline)
-    .padding(.horizontal, Theme.spacing.md)
-    .padding(.vertical, Theme.spacing.xs)
-    .background(isSelected ? Theme.color.buttonBackground : Theme.color.primaryForeground)
-    .clipShape(chipShape)
     .overlay(
       chipShape
-        .stroke(isSelected ? Theme.color.buttonBackground : Theme.color.border, lineWidth: 0.5)
+        .stroke(borderColor, lineWidth: 0.5)
     )
     .contentShape(chipShape)
     .onTapGesture {
@@ -127,57 +127,65 @@ struct TagChip: View {
 
 // MARK: - Preview
 
-#Preview("Read Mode - Timeline") {
-  VStack(alignment: .leading, spacing: Theme.spacing.md) {
-    Text("1. HOME TIMELINE (READ MODE)")
-      .font(.caption)
-      .foregroundColor(.secondary)
+#Preview {
+  ScrollView {
+    VStack(spacing: Theme.spacing.xl) {
+      // 1. Read Mode
+      VStack(alignment: .leading, spacing: Theme.spacing.md) {
+        Text("1. HOME TIMELINE (READ MODE)")
+          .font(.caption)
+          .foregroundColor(.secondary)
 
-    HStack(spacing: Theme.spacing.sm) {
-      Text("16:42")
-        .font(Theme.font.footnote)
-        .foregroundColor(Theme.color.mutedForeground)
+        HStack(spacing: Theme.spacing.sm) {
+          Text("16:42")
+            .font(Theme.font.footnote)
+            .foregroundColor(Theme.color.mutedForeground)
 
-      TagChip(name: "Photography", mode: .read)
-      TagChip(name: "Life", mode: .read)
-    }
-  }
-  .padding()
-  .background(Theme.color.background)
-}
+          TagChip(name: "Photography", mode: .read)
+          TagChip(name: "Life", mode: .read)
+        }
+      }
+      .padding()
+      .background(Theme.color.background)
+      .cornerRadius(Theme.radius.md)
 
-#Preview("Interactive Mode - Editor") {
-  VStack(alignment: .leading, spacing: Theme.spacing.md) {
-    Text("2. EDITOR BOTTOM (INTERACTIVE MODE)")
-      .font(.caption)
-      .foregroundColor(.secondary)
+      // 2. Interactive Mode
+      VStack(alignment: .leading, spacing: Theme.spacing.md) {
+        Text("2. EDITOR BOTTOM (INTERACTIVE MODE)")
+          .font(.caption)
+          .foregroundColor(.secondary)
 
-    HStack(spacing: Theme.spacing.xs) {
-      TagChip(name: "Life", mode: .interactive, onRemove: {})
-      TagChip(name: "Thoughts", mode: .interactive, onRemove: {})
+        HStack(spacing: Theme.spacing.xs) {
+          TagChip(name: "Life", mode: .interactive, onRemove: {})
+          TagChip(name: "Thoughts", mode: .interactive, onRemove: {})
+        }
+        .padding()
+        .background(Theme.color.card)
+        .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg))
+      }
+      .padding()
+      .background(Theme.color.background)
+      .cornerRadius(Theme.radius.md)
+
+      // 3. Selectable Mode
+      VStack(alignment: .leading, spacing: Theme.spacing.md) {
+        Text("3. TAG MANAGER (SELECTION MODE)")
+          .font(.caption)
+          .foregroundColor(.secondary)
+
+        FlowLayout(spacing: Theme.spacing.xs) {
+          TagChip(name: "Work", mode: .selectable(isSelected: false))
+          TagChip(name: "Design", mode: .selectable(isSelected: true))
+          TagChip(name: "Travel", mode: .selectable(isSelected: false))
+          TagChip(name: "Food", mode: .selectable(isSelected: false))
+          TagChip(name: "Moki App", mode: .selectable(isSelected: false))
+        }
+      }
+      .padding()
+      .background(Theme.color.background)
+      .cornerRadius(Theme.radius.md)
     }
     .padding()
-    .background(Theme.color.card)
-    .clipShape(RoundedRectangle(cornerRadius: Theme.radius.lg))
   }
-  .padding()
-  .background(Theme.color.background)
-}
-
-#Preview("Selectable Mode - Tag Manager") {
-  VStack(alignment: .leading, spacing: Theme.spacing.md) {
-    Text("3. TAG MANAGER (SELECTION MODE)")
-      .font(.caption)
-      .foregroundColor(.secondary)
-
-    FlowLayout(spacing: Theme.spacing.xs) {
-      TagChip(name: "Work", mode: .selectable(isSelected: false))
-      TagChip(name: "Design", mode: .selectable(isSelected: true))
-      TagChip(name: "Travel", mode: .selectable(isSelected: false))
-      TagChip(name: "Food", mode: .selectable(isSelected: false))
-      TagChip(name: "Moki App", mode: .selectable(isSelected: false))
-    }
-  }
-  .padding()
-  .background(Theme.color.background)
+  .background(Color(uiColor: .systemGroupedBackground))
 }

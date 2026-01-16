@@ -39,7 +39,7 @@ struct ContentView: View {
   private func destinationView(for tab: SideMenu.Tab) -> some View {
     switch tab {
     case .tags:
-      TagsView(onMenuButtonTapped: { isMenuOpen = true })
+      TagsView()
     case .search:
       FeaturePlaceholderView(
         title: placeholderTitle(.search),
