@@ -141,11 +141,10 @@ struct TagService {
   func removeTag(_ tag: MokiTag, fromDiary diaryId: UUID) {
     do {
       try database.write { db in
-        // 复合主键表使用 SQL 删除
-        try db.execute(
-          sql: "DELETE FROM diary_tags WHERE diaryId = ? AND tagId = ?",
-          arguments: [diaryId.uuidString, tag.id.uuidString]
-        )
+        try MokiDiaryTag
+          .delete()
+          .where { $0.diaryId.eq(diaryId) && $0.tagId.eq(tag.id) }
+          .execute(db)
       }
       AppLogger.database.info("✅ 移除标签关联: \(tag.name)")
     } catch {
@@ -171,10 +170,10 @@ struct TagService {
   /// - Note: 供 DiaryService 等在同一事务中调用
   static func updateTags(_ tags: [MokiTag], forDiary diaryId: UUID, in db: Database) throws {
     // 1. 删除所有现有关联
-    try db.execute(
-      sql: "DELETE FROM diary_tags WHERE diaryId = ?",
-      arguments: [diaryId.uuidString]
-    )
+    try MokiDiaryTag
+      .delete()
+      .where { $0.diaryId.eq(diaryId) }
+      .execute(db)
 
     // 2. 添加新关联（按顺序）
     for (index, tag) in tags.enumerated() {
