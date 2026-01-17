@@ -148,4 +148,32 @@ struct DiaryWithTags: Identifiable, Equatable {
   let tags: [MokiTag]
 
   var id: UUID { diary.id }
+
+  /// 从三个数据源组装 DiaryWithTags 数组
+  /// - Parameters:
+  ///   - diaries: 日记列表
+  ///   - diaryTags: 日记-标签关联列表
+  ///   - allTags: 所有标签
+  /// - Returns: 组装后的数据（保持 diaries 的原始顺序）
+  static func assemble(
+    diaries: [MokiDiary],
+    diaryTags: [MokiDiaryTag],
+    allTags: [MokiTag]
+  ) -> [DiaryWithTags] {
+    // 1. 构建 tagId -> MokiTag 映射
+    let tagMap = Dictionary(uniqueKeysWithValues: allTags.map { ($0.id, $0) })
+
+    // 2. 构建 diaryId -> [MokiTag] 映射
+    var diaryTagsMap: [UUID: [MokiTag]] = [:]
+    for relation in diaryTags {
+      if let tag = tagMap[relation.tagId] {
+        diaryTagsMap[relation.diaryId, default: []].append(tag)
+      }
+    }
+
+    // 3. 组装结果
+    return diaries.map { diary in
+      DiaryWithTags(diary: diary, tags: diaryTagsMap[diary.id] ?? [])
+    }
+  }
 }

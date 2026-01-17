@@ -26,24 +26,7 @@ struct TimelineView: View {
 
   // 4. 组装后的数据（自动响应上面三个数据源的变化）
   private var entries: [DiaryWithTags] {
-    // 构建 tagId -> MokiTag 映射
-    let tagMap = Dictionary(uniqueKeysWithValues: allTags.map { ($0.id, $0) })
-
-    // 构建 diaryId -> [MokiTag] 映射
-    var diaryTagsMap: [UUID: [MokiTag]] = [:]
-    for relation in diaryTags {
-      if let tag = tagMap[relation.tagId] {
-        diaryTagsMap[relation.diaryId, default: []].append(tag)
-      }
-    }
-
-    // 组装结果
-    return dbEntries.map { diary in
-      DiaryWithTags(
-        diary: diary,
-        tags: diaryTagsMap[diary.id] ?? []
-      )
-    }
+    DiaryWithTags.assemble(diaries: dbEntries, diaryTags: diaryTags, allTags: allTags)
   }
 
   // MARK: - Formatters
