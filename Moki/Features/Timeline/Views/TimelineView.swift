@@ -8,7 +8,7 @@ struct TimelineView: View {
   @State private var showAddEntry = false
   private let diaryService = DiaryService()
 
-  // 1. 真实数据源
+  // 1. 日记数据（响应式）
   @FetchAll(
     MokiDiary
       .where { $0.deletedAt == nil }
@@ -16,50 +16,42 @@ struct TimelineView: View {
   )
   private var dbEntries: [MokiDiary]
 
-  // 2. 数据源切换
-  // 💡 Tip: 取消注释下面一行即可使用 Mock 数据调试 UI
-  private var entries: [MokiDiary] {
-    return mockEntries  // 🟢 Mock Data
-    // return dbEntries  // 🔵 Real Data
-  }
+  // 2. 标签关联数据（响应式）
+  @FetchAll(MokiDiaryTag.order { $0.order.asc() })
+  private var diaryTags: [MokiDiaryTag]
 
-  // 3. Mock 数据适配
-  private var mockEntries: [MokiDiary] {
-    MockEntry.examples.map { mock in
-      let tagsJson = mock.tags.map { "\"\($0)\"" }.joined(separator: ",")
-      let imagesJson = mock.images.map { "\"\($0)\"" }.joined(separator: ",")
-      let metadata = "{\"tags\":[\(tagsJson)], \"images\":[\(imagesJson)]}"
+  // 3. 所有标签（响应式）
+  @FetchAll(MokiTag.order { $0.order.asc() })
+  private var allTags: [MokiTag]
 
-      return MokiDiary(
-        id: mock.id,
-        text: mock.content,
-        createdAt: mock.date,
-        timeZone: TimeZone.current.identifier,
-        metadata: metadata
+  // 4. 组装后的数据（自动响应上面三个数据源的变化）
+  private var entries: [DiaryWithTags] {
+    // 构建 tagId -> MokiTag 映射
+    let tagMap = Dictionary(uniqueKeysWithValues: allTags.map { ($0.id, $0) })
+
+    // 构建 diaryId -> [MokiTag] 映射
+    var diaryTagsMap: [UUID: [MokiTag]] = [:]
+    for relation in diaryTags {
+      if let tag = tagMap[relation.tagId] {
+        diaryTagsMap[relation.diaryId, default: []].append(tag)
+      }
+    }
+
+    // 组装结果
+    return dbEntries.map { diary in
+      DiaryWithTags(
+        diary: diary,
+        tags: diaryTagsMap[diary.id] ?? []
       )
     }
   }
 
   // MARK: - Formatters
 
-  private static let monthDayFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "M月d日"
-    return formatter
-  }()
-
   private static let weekdayFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "zh_CN")
     formatter.dateFormat = "EEE"  // 周日/周一…
-    return formatter
-  }()
-
-  private static let yearFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "yyyy"
     return formatter
   }()
 
@@ -83,19 +75,20 @@ struct TimelineView: View {
                 .padding(.horizontal, Theme.spacing.lg)
 
               // 该天的所有条目
-              ForEach(group.entries, id: \.id) { entry in
-                let extra = parseMetadata(entry.metadata)
+              ForEach(group.entries, id: \.id) { item in
+                let images = parseMetadataImages(item.diary.metadata)
+                let tagNames = item.tags.map { $0.name }
 
                 JournalItemView(
-                  content: entry.text,
-                  date: entry.createdAt,
-                  tags: extra.tags,
-                  images: extra.images,
+                  content: item.diary.text,
+                  date: item.diary.createdAt,
+                  tags: tagNames,
+                  images: images,
                   onEditTapped: {
                     // TODO: Edit Action
                   },
                   onDeleteTapped: {
-                    diaryService.delete(entry)
+                    diaryService.delete(item.diary)
                   }
                 )
                 .padding(.bottom, Theme.spacing.md)
@@ -132,21 +125,21 @@ struct TimelineView: View {
   private struct DayGroup: Identifiable {
     let id: String
     let day: Date
-    let entries: [MokiDiary]
+    let entries: [DiaryWithTags]
   }
 
   private var dayGroups: [DayGroup] {
     guard !entries.isEmpty else { return [] }
 
-    // 简洁、好维护：直接按“当天 00:00”分组，再按日期倒序输出
+    // 简洁、好维护：直接按"当天 00:00"分组，再按日期倒序输出
     let grouped = Dictionary(grouping: entries) { entry in
-      Calendar.current.startOfDay(for: entry.createdAt)
+      Calendar.current.startOfDay(for: entry.diary.createdAt)
     }
 
     return grouped.keys
       .sorted(by: >)
       .map { day in
-        let list = (grouped[day] ?? []).sorted { $0.createdAt > $1.createdAt }
+        let list = (grouped[day] ?? []).sorted { $0.diary.createdAt > $1.diary.createdAt }
         return DayGroup(id: day.toMokiDateString(), day: day, entries: list)
       }
   }
@@ -195,15 +188,13 @@ struct TimelineView: View {
     }
   }
 
-  private func parseMetadata(_ json: String) -> (tags: [String], images: [String]) {
+  private func parseMetadataImages(_ json: String) -> [String] {
     guard let data = json.data(using: .utf8),
       let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any]
     else {
-      return ([], [])
+      return []
     }
-    let tags = dict["tags"] as? [String] ?? []
-    let images = dict["images"] as? [String] ?? []
-    return (tags, images)
+    return dict["images"] as? [String] ?? []
   }
 }
 

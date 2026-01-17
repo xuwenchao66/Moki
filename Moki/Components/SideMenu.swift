@@ -46,16 +46,13 @@ struct SideMenu: View {
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       // 1. 头部：Logo + Slogan
-      VStack(alignment: .leading, spacing: Theme.spacing.xs) {
-        Text("某刻")
-          .font(Theme.font.brandTitle)
-          .foregroundColor(Theme.color.foreground)
-          .tracking(14)
+      VStack(alignment: .leading, spacing: Theme.spacing.sm) {
+        AppIcon(icon: .appLogo, width: 90, color: Theme.color.foreground)
 
         Text("MOKI JOURNAL")
           .font(Theme.font.caption)
           .foregroundColor(Theme.color.mutedForeground)
-          .kerning(0.6)
+          .kerning(0.2)
       }
       .padding(.top, Theme.spacing.xxxl + Theme.spacing.sm)
       .padding(.bottom, Theme.spacing.xxl)
@@ -116,11 +113,11 @@ private struct MenuButton: View {
 
   var body: some View {
     HStack(spacing: Theme.spacing.md2) {
-      AppIcon(icon: icon, size: .sm, color: Theme.color.secondaryForeground)
+      AppIcon(icon: icon, size: .sm, color: Theme.color.foreground)
 
       Text(title)
         .font(Theme.font.menuItemTitle)
-        .foregroundColor(Theme.color.secondaryForeground)
+        .foregroundColor(Theme.color.foreground)
 
       Spacer()
     }

@@ -27,9 +27,6 @@ struct AppFonts {
   /// 顶栏标题（UIKit / UINavigationBarAppearance 用）
   static let headerTitleUIFont = UIFont.systemFont(ofSize: 18, weight: .bold)
 
-  /// 品牌标题
-  static let brandTitle: Font = .system(size: 40, weight: .semibold)
-
   /// 品牌副标题（Georgia 斜体）
   static let brandSubtitle: Font = .custom("Georgia-Italic", size: 16)
 

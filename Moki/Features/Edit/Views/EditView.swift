@@ -17,7 +17,6 @@ struct EditView: View {
   }
 
   private let diaryService = DiaryService()
-  private let tagService = TagService()
 
   // 保持当前时间用于显示
   private let entryDate = Date()
@@ -157,19 +156,13 @@ struct EditView: View {
   // MARK: - Actions
 
   private func saveEntry() {
-    let id = UUID()
     let entry = MokiDiary(
-      id: id,
+      id: UUID(),
       text: content,
       createdAt: entryDate,
       timeZone: TimeZone.current.identifier
     )
-    diaryService.create(entry)
-
-    if !selectedTags.isEmpty {
-      tagService.updateTags(selectedTags, forDiary: id)
-    }
-
+    diaryService.create(entry, tags: selectedTags)
     dismiss()
   }
 

@@ -16,6 +16,7 @@ enum AppIconName: String {
   case x = "x"
   case xCircle = "x-circle"
   case bookOpenText = "book-open-text"
+  case appLogo = "app-logo"
 }
 
 enum AppIconSize: String {
@@ -40,18 +41,37 @@ enum AppIconSize: String {
 
 struct AppIcon: View {
   let icon: AppIconName
-  var size: CGFloat
+  var width: CGFloat?
+  var height: CGFloat?
   var color: Color?
 
   init(icon: AppIconName, size: CGFloat = 24, color: Color? = AppColors.foreground) {
     self.icon = icon
-    self.size = size
+    self.width = size
+    self.height = size
     self.color = color
   }
 
   init(icon: AppIconName, size: AppIconSize = .md, color: Color? = AppColors.foreground) {
     self.icon = icon
-    self.size = size.value
+    self.width = size.value
+    self.height = size.value
+    self.color = color
+  }
+
+  /// 指定宽度，高度自适应
+  init(icon: AppIconName, width: CGFloat, color: Color? = AppColors.foreground) {
+    self.icon = icon
+    self.width = width
+    self.height = nil
+    self.color = color
+  }
+
+  /// 指定高度，宽度自适应
+  init(icon: AppIconName, height: CGFloat, color: Color? = AppColors.foreground) {
+    self.icon = icon
+    self.width = nil
+    self.height = height
     self.color = color
   }
 
@@ -60,7 +80,7 @@ struct AppIcon: View {
       .renderingMode(.template)
       .resizable()
       .scaledToFit()
-      .frame(width: size, height: size)
+      .frame(width: width, height: height)
       .foregroundColor(color)
   }
 }

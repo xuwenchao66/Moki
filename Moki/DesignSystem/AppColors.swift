@@ -34,6 +34,11 @@ extension Color {
 
 struct AppColors {
 
+  // MARK: - 品牌色 (Brand)
+
+  /// 品牌主色 (朱砂红/铁锈红)
+  static let brand = Color(hex: "C94F38")
+
   // MARK: - 基础色 (Foundation)
 
   /// 主背景色
@@ -89,19 +94,6 @@ struct AppColors {
 
   /// 输入框边框色
   static let input = Color(hex: "b4b2a7")
-
-  /// 焦点环颜色
-  static let ring = Color(hex: "c96442")
-
-  // MARK: - 警示色 (Destructive)
-
-  /// 危险/删除操作色
-  static let destructive = Color(hex: "1A1D20")
-
-  /// 危险操作前景色
-  static let destructiveForeground = Color(hex: "FFFFFF")
-
-  // MARK: - 阴影色 (Shadow)
 
   /// 阴影基础色
   static let shadow = Color(hex: "2C2523")
