@@ -48,24 +48,10 @@ struct TimelineView: View {
 
   // MARK: - Formatters
 
-  private static let monthDayFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "M月d日"
-    return formatter
-  }()
-
   private static let weekdayFormatter: DateFormatter = {
     let formatter = DateFormatter()
     formatter.locale = Locale(identifier: "zh_CN")
     formatter.dateFormat = "EEE"  // 周日/周一…
-    return formatter
-  }()
-
-  private static let yearFormatter: DateFormatter = {
-    let formatter = DateFormatter()
-    formatter.locale = Locale(identifier: "zh_CN")
-    formatter.dateFormat = "yyyy"
     return formatter
   }()
 
