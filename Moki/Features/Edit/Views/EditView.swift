@@ -192,12 +192,7 @@ struct EditView: View {
       diaryService.update(updatedEntry, tags: selectedTags)
     } else {
       // 新建模式：创建
-      let entry = MokiDiary(
-        id: UUID(),
-        text: content,
-        createdAt: Date(),
-        timeZone: TimeZone.current.identifier
-      )
+      let entry = MokiDiary(text: content)
       diaryService.create(entry, tags: selectedTags)
     }
     dismiss()
