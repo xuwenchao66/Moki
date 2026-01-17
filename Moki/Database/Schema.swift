@@ -138,3 +138,14 @@ struct MokiDiaryTag: Codable, Equatable, Hashable {
     self.createdAt = createdAt
   }
 }
+
+// MARK: - DTOs (View Models)
+
+/// 日记 + 关联标签的聚合数据
+/// 用于 UI 层展示，避免在 View 中进行数据拼接
+struct DiaryWithTags: Identifiable, Equatable {
+  let diary: MokiDiary
+  let tags: [MokiTag]
+
+  var id: UUID { diary.id }
+}

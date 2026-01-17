@@ -6,6 +6,8 @@ import SQLiteData
 struct DiaryService {
   @Dependency(\.defaultDatabase) private var database
 
+  // MARK: - Create
+
   /// 创建日记（可附带标签）
   func create(_ entry: MokiDiary, tags: [MokiTag] = []) {
     AppLogger.database.info("请求创建日记")
