@@ -6,6 +6,7 @@ struct TimelineView: View {
   @Binding var isSideMenuPresented: Bool
   @State private var isViewActive = false
   @State private var showAddEntry = false
+  @State private var editingItem: DiaryWithTags? = nil
   private let diaryService = DiaryService()
 
   // 1. 日记数据（响应式）
@@ -68,7 +69,7 @@ struct TimelineView: View {
                   tags: tagNames,
                   images: images,
                   onEditTapped: {
-                    // TODO: Edit Action
+                    editingItem = item
                   },
                   onDeleteTapped: {
                     diaryService.delete(item.diary)
@@ -97,6 +98,9 @@ struct TimelineView: View {
     .background(Theme.color.background)
     .navigationDestination(isPresented: $showAddEntry) {
       EditView()
+    }
+    .navigationDestination(item: $editingItem) { item in
+      EditView(editing: item)
     }
     .onAppear { isViewActive = true }
     .onDisappear { isViewActive = false }

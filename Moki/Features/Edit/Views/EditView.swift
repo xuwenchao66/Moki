@@ -4,6 +4,15 @@ import SwiftUI
 struct EditView: View {
   @Environment(\.dismiss) private var dismiss
 
+  // MARK: - 编辑模式
+
+  /// 传入则为编辑模式，nil 则为新建模式
+  let editingItem: DiaryWithTags?
+
+  private var isEditMode: Bool { editingItem != nil }
+
+  // MARK: - State
+
   @State private var content: String = ""
   @State private var isFocused: Bool = false
   @State private var showTagsSheet = false
@@ -18,8 +27,16 @@ struct EditView: View {
 
   private let diaryService = DiaryService()
 
-  // 保持当前时间用于显示
-  private let entryDate = Date()
+  /// 显示的日期（编辑模式用原日期，新建模式用当前时间）
+  private var entryDate: Date {
+    editingItem?.diary.createdAt ?? Date()
+  }
+
+  // MARK: - Init
+
+  init(editing item: DiaryWithTags? = nil) {
+    self.editingItem = item
+  }
 
   var body: some View {
     VStack(spacing: 0) {
@@ -57,6 +74,12 @@ struct EditView: View {
     }
     .onAppear {
       isFocused = true
+
+      // 编辑模式：加载现有数据
+      if let item = editingItem {
+        content = item.diary.text
+        selectedTagIds = Set(item.tags.map { $0.id })
+      }
     }
   }
 
@@ -156,13 +179,27 @@ struct EditView: View {
   // MARK: - Actions
 
   private func saveEntry() {
-    let entry = MokiDiary(
-      id: UUID(),
-      text: content,
-      createdAt: entryDate,
-      timeZone: TimeZone.current.identifier
-    )
-    diaryService.create(entry, tags: selectedTags)
+    if let existingItem = editingItem {
+      // 编辑模式：更新
+      let updatedEntry = MokiDiary(
+        id: existingItem.diary.id,
+        text: content,
+        createdAt: existingItem.diary.createdAt,
+        isStarred: existingItem.diary.isStarred,
+        timeZone: existingItem.diary.timeZone,
+        metadata: existingItem.diary.metadata
+      )
+      diaryService.update(updatedEntry, tags: selectedTags)
+    } else {
+      // 新建模式：创建
+      let entry = MokiDiary(
+        id: UUID(),
+        text: content,
+        createdAt: Date(),
+        timeZone: TimeZone.current.identifier
+      )
+      diaryService.create(entry, tags: selectedTags)
+    }
     dismiss()
   }
 
