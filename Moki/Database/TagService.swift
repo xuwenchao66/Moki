@@ -158,28 +158,34 @@ struct TagService {
   func updateTags(_ tags: [MokiTag], forDiary diaryId: UUID) {
     do {
       try database.write { db in
-        // 1. 删除所有现有关联
-        try db.execute(
-          sql: "DELETE FROM diary_tags WHERE diaryId = ?",
-          arguments: [diaryId.uuidString]
-        )
-
-        // 2. 添加新关联（按顺序）
-        for (index, tag) in tags.enumerated() {
-          let association = MokiDiaryTag(
-            diaryId: diaryId,
-            tagId: tag.id,
-            order: index
-          )
-          try MokiDiaryTag
-            .insert { association }
-            .execute(db)
-        }
+        try Self.updateTags(tags, forDiary: diaryId, in: db)
       }
       AppLogger.database.info("✅ 更新日记标签: \(tags.count) 个")
     } catch {
       AppLogger.database.error("❌ 更新日记标签失败", metadata: ["error": "\(error)"])
       AppToast.show("更新标签失败：\(error.localizedDescription)")
+    }
+  }
+
+  /// 更新日记的标签列表（在已有事务中执行）
+  /// - Note: 供 DiaryService 等在同一事务中调用
+  static func updateTags(_ tags: [MokiTag], forDiary diaryId: UUID, in db: Database) throws {
+    // 1. 删除所有现有关联
+    try db.execute(
+      sql: "DELETE FROM diary_tags WHERE diaryId = ?",
+      arguments: [diaryId.uuidString]
+    )
+
+    // 2. 添加新关联（按顺序）
+    for (index, tag) in tags.enumerated() {
+      let association = MokiDiaryTag(
+        diaryId: diaryId,
+        tagId: tag.id,
+        order: index
+      )
+      try MokiDiaryTag
+        .insert { association }
+        .execute(db)
     }
   }
 

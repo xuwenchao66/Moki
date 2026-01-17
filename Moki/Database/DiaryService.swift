@@ -17,15 +17,8 @@ struct DiaryService {
           .execute(db)
 
         // 2. 关联标签
-        for (index, tag) in tags.enumerated() {
-          let association = MokiDiaryTag(
-            diaryId: entry.id,
-            tagId: tag.id,
-            order: index
-          )
-          try MokiDiaryTag
-            .insert { association }
-            .execute(db)
+        if !tags.isEmpty {
+          try TagService.updateTags(tags, forDiary: entry.id, in: db)
         }
       }
       AppLogger.database.info("✅ 创建日记成功，关联 \(tags.count) 个标签")
@@ -51,22 +44,7 @@ struct DiaryService {
 
         // 2. 更新标签关联（如果传入了标签）
         if let tags = tags {
-          // 删除旧关联
-          try db.execute(
-            sql: "DELETE FROM diary_tags WHERE diaryId = ?",
-            arguments: [entry.id.uuidString]
-          )
-          // 添加新关联
-          for (index, tag) in tags.enumerated() {
-            let association = MokiDiaryTag(
-              diaryId: entry.id,
-              tagId: tag.id,
-              order: index
-            )
-            try MokiDiaryTag
-              .insert { association }
-              .execute(db)
-          }
+          try TagService.updateTags(tags, forDiary: entry.id, in: db)
         }
       }
       AppLogger.database.info("✅ 更新日记成功")
