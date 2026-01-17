@@ -55,7 +55,7 @@ struct DiaryService {
 
   /// 软删除日记（可恢复）
   func delete(_ entry: MokiDiary) {
-    AppLogger.database.info("软删除日记", metadata: ["id": "\(entry.id)"])
+    AppLogger.database.info("请求软删除日记", metadata: ["id": "\(entry.id)"])
     do {
       try database.write { db in
         try MokiDiary
@@ -66,14 +66,16 @@ struct DiaryService {
           .where { $0.id.eq(entry.id) }
           .execute(db)
       }
+      AppLogger.database.info("✅ 软删除日记成功")
     } catch {
+      AppLogger.database.error("❌ 软删除日记失败", metadata: ["error": "\(error)"])
       AppToast.show("删除失败：\(error.localizedDescription)")
     }
   }
 
   /// 恢复已删除的日记
   func restore(_ entry: MokiDiary) {
-    AppLogger.database.info("恢复日记", metadata: ["id": "\(entry.id)"])
+    AppLogger.database.info("请求恢复日记", metadata: ["id": "\(entry.id)"])
     do {
       try database.write { db in
         try MokiDiary
@@ -84,21 +86,25 @@ struct DiaryService {
           .where { $0.id.eq(entry.id) }
           .execute(db)
       }
+      AppLogger.database.info("✅ 恢复日记成功")
     } catch {
+      AppLogger.database.error("❌ 恢复日记失败", metadata: ["error": "\(error)"])
       AppToast.show("恢复失败：\(error.localizedDescription)")
     }
   }
 
   /// 永久删除日记（不可恢复）
   func deletePermanently(_ entry: MokiDiary) {
-    AppLogger.database.info("永久删除日记", metadata: ["id": "\(entry.id)"])
+    AppLogger.database.info("请求永久删除日记", metadata: ["id": "\(entry.id)"])
     do {
       try database.write { db in
         try MokiDiary
           .delete(entry)
           .execute(db)
       }
+      AppLogger.database.info("✅ 永久删除日记成功")
     } catch {
+      AppLogger.database.error("❌ 永久删除日记失败", metadata: ["error": "\(error)"])
       AppToast.show("删除失败：\(error.localizedDescription)")
     }
   }
